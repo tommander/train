@@ -14,7 +14,11 @@ type
   { TfMain }
 
   TfMain = class(TForm)
-      BCFluentSlider1: TBCFluentSlider;
+      BitBtn1: TBitBtn;
+      BitBtn2: TBitBtn;
+      BitBtn3: TBitBtn;
+      sldForce: TBCLeaRingSlider;
+      tbDirection: TBCFluentSlider;
       btnMinusDynBrake: TBitBtn;
       btnMinusPower: TBitBtn;
       btnMinuxAirBrake: TBitBtn;
@@ -24,13 +28,10 @@ type
       btnPlusElmagBrake: TBitBtn;
       btnPlusPower: TBitBtn;
       Button1: TButton;
-      Label1: TLabel;
       Label11: TLabel;
-      Label12: TLabel;
       Label2: TLabel;
       Label3: TLabel;
       Label4: TLabel;
-      Label5: TLabel;
       lblControlAirBrake: TLabel;
       lblControlDynBrake: TLabel;
       lblControlElmagBrake: TLabel;
@@ -123,6 +124,9 @@ type
     tbControlElmagBrake: TTrackBar;
     tbControlPower: TTrackBar;
     Timer1: TTimer;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
     procedure btnCabinlightsClick(Sender: TObject);
     procedure btnEmergencyClick(Sender: TObject);
     procedure btnDoorClick(Sender: TObject);
@@ -141,6 +145,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure IdleTimer1Timer(Sender: TObject);
     // ---
+    function DirectionChangeBlocked(): boolean;
     procedure RefreshUI();
     private
       var intPowerControl: shortint;
@@ -256,7 +261,7 @@ begin
   sim := TSimulation.Create();
   sim.SetMass(20000);
   sim.SetMaxPower(155000);
-  sim.SetMaxBrake(50000);
+  sim.SetMaxBrake(20000);
   sim.SetMaxForce(28000);
   sim.SetMaxVelocity(80, true);
   sim.SetBrakeElmagControl(1);
@@ -291,8 +296,12 @@ begin
   sldVelocity.Value := intVelocity;
 
   sldPower.MinValue := 0;
-  sldPower.MaxValue := Round(sim.MaxPower());
-  sldPower.Value := Round(sim.Power());
+  sldPower.MaxValue := Round(sim.MaxPower()/1000);
+  sldPower.Value := Round(sim.Power()/1000);
+
+  sldForce.MinValue := 0;
+  sldForce.MaxValue := Round(sim.MaxForce()/1000);
+  sldForce.Value := Round(sim.Force()/1000);
 
   sldAcceleration.MinValue := 0;
   sldAcceleration.MaxValue := 30;
@@ -327,6 +336,10 @@ begin
   pbAirBrake2.Min := 0;
   pbAirBrake2.Max := 1;
   pbAirBrake2.Position := 1;
+
+  tbDirection.MinValue := -1;
+  tbDirection.MaxValue := 1;
+  tbDirection.Value := Integer(sim.Direction());
 
   tbControlPower.Min := 0;
   tbControlPower.Max := intPowerControlMax;
@@ -422,6 +435,41 @@ end;
 procedure TfMain.btnCabinlightsClick(Sender: TObject);
 begin
   sim.SwitchPassengerlights();
+end;
+
+function TfMain.DirectionChangeBlocked(): boolean;
+begin
+  result := (abs(sim.Velocity()) > 0.01);
+end;
+
+procedure TfMain.BitBtn1Click(Sender: TObject);
+begin
+  if DirectionChangeBlocked then
+  begin
+    showmessage('Cannot change direction when moving.');
+    Exit;
+  end;
+  sim.SetDirection(dirForward);
+end;
+
+procedure TfMain.BitBtn2Click(Sender: TObject);
+begin
+  if DirectionChangeBlocked then
+  begin
+    showmessage('Cannot change direction when moving.');
+    Exit;
+  end;
+  sim.SetDirection(dirNeutral);
+end;
+
+procedure TfMain.BitBtn3Click(Sender: TObject);
+begin
+  if DirectionChangeBlocked then
+  begin
+    showmessage('Cannot change direction when moving.');
+    Exit;
+  end;
+  sim.SetDirection(dirReverse);
 end;
 
 procedure TfMain.btnEmergencyClick(Sender: TObject);

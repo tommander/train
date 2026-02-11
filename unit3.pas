@@ -34,6 +34,8 @@ type
   TTrainRangeControlType = (rctPower,rctBrakeDynamic,rctBrakeElmag,rctBrakeAir);
 //  TTrainToggleControlValue = (tcvDec=-1,tcvZero=0,tcvInc=1);
 
+  TTrainDirection = (dirForward = 1, dirNeutral = 0, dirReverse = -1);
+
   TSimulation = class
     private var slLog: TStringList;
 
@@ -102,6 +104,7 @@ type
     private var dblTrackResistanceArc: double; // [N]
     private var dblTrackResistanceTunnel: double; // [N]
 //    private var dblTrackResistanceSlope: double; // [N]
+    private var dirDirection: TTrainDirection; //
     public function Velocity(boolKmph: boolean = false): double;
     public function Position(): double;
     public function Acceleration(): double;
@@ -112,6 +115,8 @@ type
     public procedure SetMaxVelocity(AValue: double; boolKmph: boolean = false);
     public function TrainResistanceUseABC(): boolean;
     public procedure SetTrainResistanceUseABC(AValue: boolean);
+    public function Direction(): TTrainDirection;
+    public procedure SetDirection(AValue: TTrainDirection);
 
     private var dblTrackArc: double; //radius [m]
     private var tnlTrackTunnel: TTunnel;
@@ -152,7 +157,6 @@ type
 
     public constructor Create();
     public destructor Destroy(); override;
-//    public procedure Tick();
     public procedure Tick2();
     public function Export(): string;
   end;
@@ -220,11 +224,12 @@ begin
   tnlTrackTunnel := tnNone;
   dblTrackSlope := 0;
   boolTrackMain := false;
+  dirDirection := dirForward;
 
-  slLog.Add('{');
-  slLog.Add('"title": "Initial status",');
-  slLog.Add(Export());
-  slLog.Add('}');
+  //slLog.Add('{');
+  //slLog.Add('"title": "Initial status",');
+  //slLog.Add(Export());
+  //slLog.Add('}');
 end;
 
 function sign(AValue: double): double;
@@ -278,10 +283,14 @@ begin
   end;
   dblTrackResistance := dblTrackResistanceArc + dblTrackResistanceTunnel;
   lRealMaxForce := dblMaxForce;
-  dblAlsoMaxForce := dblMaxPower / dblLastV;
-  if (abs(dblLastV) > 0.1) and (dblAlsoMaxForce < lRealMaxForce) then
+  dblAlsoMaxForce := 0;
+  if (abs(dblLastV) > 0.1) then
   begin
-    lRealMaxForce := dblAlsoMaxForce;
+    dblAlsoMaxForce := dblMaxPower / dblLastV;
+    if (dblAlsoMaxForce < lRealMaxForce) then
+    begin
+      lRealMaxForce := dblAlsoMaxForce;
+    end;
   end;
   dblForce := lRealMaxForce * dblPowerControl;
   dblTotalPullForce := dblForce - dblTrainResistance - dblTrackResistance;
@@ -303,7 +312,14 @@ begin
 
   if abs(dblLastV) < 0.001 then
     dblLastV := 0;
-  dblLastX := dblLastX + (dblLastV * dt);
+  if dirDirection = dirForward then
+  begin
+    dblLastX := dblLastX + (dblLastV * dt);
+  end
+  else if dirDirection = dirReverse then
+  begin
+    dblLastX := dblLastX - (dblLastV * dt);
+  end;
   dblLastP := dblForce * dblLastV;
   dblLastEk := (dblMass/2)*dblLastV*dblLastV;
 
@@ -550,6 +566,16 @@ end;
 procedure TSimulation.SetTrainResistanceUseABC(AValue: boolean);
 begin
   boolTrainResistanceUseABC := AValue;
+end;
+
+function TSimulation.Direction(): TTrainDirection;
+begin
+  result := dirDirection;
+end;
+
+procedure TSimulation.SetDirection(AValue: TTrainDirection);
+begin
+  dirDirection := AValue;
 end;
 
 function TSimulation.TrackArc(): double;

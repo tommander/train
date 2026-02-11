@@ -1,7 +1,7 @@
 object fMain: TfMain
-  Left = 2762
+  Left = 2759
   Height = 704
-  Top = 154
+  Top = 155
   Width = 1414
   Caption = 'fMain'
   ClientHeight = 704
@@ -11,29 +11,30 @@ object fMain: TfMain
   OnDestroy = FormDestroy
   object pnlBottom2: TPanel
     Left = 0
-    Height = 78
-    Top = 536
+    Height = 86
+    Top = 528
     Width = 1414
     Align = alBottom
+    AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 78
+    ClientHeight = 86
     ClientWidth = 1414
     TabOrder = 0
     object Panel1: TPanel
-      Left = 234
-      Height = 78
+      Left = 308
+      Height = 86
       Top = 0
       Width = 67
       Align = alLeft
       AutoSize = True
       BorderSpacing.Left = 12
       BevelOuter = bvNone
-      ClientHeight = 78
+      ClientHeight = 86
       ClientWidth = 67
       TabOrder = 0
       object pbAirBrake1: TProgressBar
         Left = 0
-        Height = 66
+        Height = 74
         Top = 6
         Width = 32
         Align = alLeft
@@ -47,7 +48,7 @@ object fMain: TfMain
       end
       object pbAirBrake2: TProgressBar
         Left = 35
-        Height = 66
+        Height = 74
         Top = 6
         Width = 32
         Align = alLeft
@@ -63,7 +64,7 @@ object fMain: TfMain
     end
     object sldVelocity: TBCLeaRingSlider
       Left = 6
-      Height = 66
+      Height = 74
       Top = 6
       Width = 68
       Align = alLeft
@@ -82,8 +83,8 @@ object fMain: TfMain
       Altitude = 0
     end
     object sldAcceleration: TBCLeaRingSlider
-      Left = 154
-      Height = 66
+      Left = 228
+      Height = 74
       Top = 6
       Width = 68
       Align = alLeft
@@ -106,7 +107,7 @@ object fMain: TfMain
     end
     object sldPower: TBCLeaRingSlider
       Left = 80
-      Height = 66
+      Height = 74
       Top = 6
       Width = 68
       Align = alLeft
@@ -126,8 +127,8 @@ object fMain: TfMain
       Altitude = 0
     end
     object pnlControlXYZ: TPanel
-      Left = 319
-      Height = 66
+      Left = 393
+      Height = 74
       Top = 6
       Width = 151
       Align = alLeft
@@ -135,12 +136,12 @@ object fMain: TfMain
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
-      ClientHeight = 66
+      ClientHeight = 74
       ClientWidth = 151
       TabOrder = 4
       object btnMinusPower: TBitBtn
         Left = 8
-        Height = 27
+        Height = 35
         Top = 29
         Width = 28
         Align = alLeft
@@ -154,7 +155,7 @@ object fMain: TfMain
       end
       object btnPlusPower: TBitBtn
         Left = 118
-        Height = 27
+        Height = 35
         Top = 29
         Width = 25
         Align = alRight
@@ -188,20 +189,20 @@ object fMain: TfMain
       end
     end
     object pnlControlDynBrake: TPanel
-      Left = 633
-      Height = 66
+      Left = 707
+      Height = 74
       Top = 6
       Width = 151
       Align = alLeft
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
-      ClientHeight = 66
+      ClientHeight = 74
       ClientWidth = 151
       TabOrder = 5
       object btnMinusDynBrake: TBitBtn
         Left = 8
-        Height = 27
+        Height = 35
         Top = 29
         Width = 28
         Align = alLeft
@@ -215,7 +216,7 @@ object fMain: TfMain
       end
       object btnPlusDynBrake: TBitBtn
         Left = 118
-        Height = 27
+        Height = 35
         Top = 29
         Width = 25
         Align = alRight
@@ -251,20 +252,20 @@ object fMain: TfMain
       end
     end
     object pnlControlElmagBrake: TPanel
-      Left = 476
-      Height = 66
+      Left = 550
+      Height = 74
       Top = 6
       Width = 151
       Align = alLeft
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
-      ClientHeight = 66
+      ClientHeight = 74
       ClientWidth = 151
       TabOrder = 6
       object btnMinuxElmagBrake: TBitBtn
         Left = 8
-        Height = 27
+        Height = 35
         Top = 29
         Width = 28
         Align = alLeft
@@ -278,7 +279,7 @@ object fMain: TfMain
       end
       object btnPlusElmagBrake: TBitBtn
         Left = 118
-        Height = 27
+        Height = 35
         Top = 29
         Width = 25
         Align = alRight
@@ -312,20 +313,20 @@ object fMain: TfMain
       end
     end
     object pnlControlAirBrake: TPanel
-      Left = 790
-      Height = 66
+      Left = 864
+      Height = 74
       Top = 6
       Width = 151
       Align = alLeft
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
-      ClientHeight = 66
+      ClientHeight = 74
       ClientWidth = 151
       TabOrder = 7
       object btnMinuxAirBrake: TBitBtn
         Left = 8
-        Height = 27
+        Height = 35
         Top = 29
         Width = 28
         Align = alLeft
@@ -339,7 +340,7 @@ object fMain: TfMain
       end
       object btnPlusAirBrake: TBitBtn
         Left = 118
-        Height = 27
+        Height = 35
         Top = 29
         Width = 25
         Align = alRight
@@ -374,87 +375,116 @@ object fMain: TfMain
       end
     end
     object Panel3: TPanel
-      Left = 947
-      Height = 66
+      Left = 1021
+      Height = 74
       Top = 6
-      Width = 65
+      Width = 76
       Align = alLeft
       AutoSize = True
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
-      ClientHeight = 66
-      ClientWidth = 65
+      ClientHeight = 74
+      ClientWidth = 76
       TabOrder = 8
-      object BCFluentSlider1: TBCFluentSlider
+      object tbDirection: TBCFluentSlider
         Left = 8
-        Height = 50
+        Height = 58
         Top = 8
         Width = 32
         MinValue = -1
         MaxValue = 1
+        Value = 1
         Orientation = pbVertical
         Align = alLeft
         BorderSpacing.Around = 6
+        Enabled = False
       end
       object Panel4: TPanel
         Left = 46
-        Height = 62
+        Height = 70
         Top = 2
-        Width = 17
+        Width = 22
         Align = alClient
+        BorderSpacing.Right = 6
         BevelOuter = bvNone
-        ClientHeight = 62
-        ClientWidth = 17
+        ClientHeight = 70
+        ClientWidth = 22
         TabOrder = 0
-        object Label1: TLabel
+        object BitBtn1: TBitBtn
           Left = 0
-          Height = 19
+          Height = 22
           Top = 0
-          Width = 11
+          Width = 22
           Align = alTop
-          BorderSpacing.Right = 6
           Caption = 'F'
-          Layout = tlCenter
+          Font.Height = -8
+          ParentFont = False
+          TabOrder = 0
+          OnClick = BitBtn1Click
         end
-        object Label5: TLabel
+        object BitBtn2: TBitBtn
           Left = 0
-          Height = 19
-          Top = 43
-          Width = 11
-          Align = alBottom
-          BorderSpacing.Right = 6
-          Caption = 'R'
-          Layout = tlCenter
-        end
-        object Label12: TLabel
-          Left = 0
-          Height = 24
-          Top = 19
-          Width = 11
-          Align = alClient
-          BorderSpacing.Right = 6
+          Height = 22
+          Top = 22
+          Width = 22
+          Align = alTop
           Caption = 'N'
-          Layout = tlCenter
+          Font.Height = -8
+          ParentFont = False
+          TabOrder = 1
+          OnClick = BitBtn2Click
+        end
+        object BitBtn3: TBitBtn
+          Left = 0
+          Height = 22
+          Top = 44
+          Width = 22
+          Align = alTop
+          Caption = 'R'
+          Font.Height = -8
+          ParentFont = False
+          TabOrder = 2
+          OnClick = BitBtn3Click
         end
       end
+    end
+    object sldForce: TBCLeaRingSlider
+      Left = 154
+      Height = 74
+      Top = 6
+      Width = 68
+      Align = alLeft
+      BorderSpacing.Around = 6
+      Font.Color = clBlack
+      Font.Height = 20
+      ParentFont = False
+      TabOrder = 9
+      MaxValue = 720
+      Value = 640
+      MinAngle = 40
+      MaxAngle = 320
+      BackgroundColor = clBackground
+      Style = zsFlat
+      PointerSize = 3
+      Altitude = 0
     end
   end
   object pnlMiddle: TPanel
     Left = 0
-    Height = 536
+    Height = 528
     Top = 0
     Width = 1184
     Align = alClient
     BevelInner = bvRaised
     BevelOuter = bvLowered
     Caption = 'pnlMiddle'
-    ClientHeight = 536
+    ClientHeight = 528
     ClientWidth = 1184
     TabOrder = 1
     object Image1: TImage
       Left = 297
-      Height = 532
+      Height = 524
       Top = 2
       Width = 885
       Align = alClient
@@ -2087,7 +2117,7 @@ object fMain: TfMain
     end
     object Memo1: TMemo
       Left = 8
-      Height = 520
+      Height = 512
       Top = 8
       Width = 278
       Align = alLeft
@@ -2103,20 +2133,20 @@ object fMain: TfMain
     end
     object Splitter1: TSplitter
       Left = 292
-      Height = 532
+      Height = 524
       Top = 2
       Width = 5
     end
   end
   object ScrollBox1: TScrollBox
     Left = 1184
-    Height = 536
+    Height = 528
     Top = 0
     Width = 230
     HorzScrollBar.Page = 216
     VertScrollBar.Page = 473
     Align = alRight
-    ClientHeight = 534
+    ClientHeight = 526
     ClientWidth = 228
     TabOrder = 2
     object Panel8: TPanel
