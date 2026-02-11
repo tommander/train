@@ -150,8 +150,6 @@ type
     public procedure SetMaxBrake(AValue: double);
     public procedure SetMaxForce(AValue: double);
 
-//    private var dbl
-
     private dtLastT: TDateTime; // [s]
     public function SimTime(): TDateTime;
 
@@ -161,7 +159,26 @@ type
     public function Export(): string;
   end;
 
+function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
+function VirtualizeTime(ATime: TDateTime): TDateTime;
+function VirtualNow(): TDateTime;
+
 implementation
+
+function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
+begin
+  result := EncodeDateTime(1996,01,01,AHour, AMinute, ASecond, AMillsecond);
+end;
+
+function VirtualizeTime(ATime: TDateTime): TDateTime;
+begin
+  result := VirtualTime(HourOf(ATime), MinuteOf(ATime), SecondOf(ATime), MilliSecondOf(ATime));
+end;
+
+function VirtualNow(): TDateTime;
+begin
+  result := VirtualizeTime(Now());
+end;
 
 destructor TSimulation.Destroy();
 begin
@@ -422,38 +439,42 @@ end;
 
 procedure TSimulation.SwitchDoor();
 begin
-  intDoor := Succ(intDoor);
-  if (intDoor > High(TDoorStatus)) or (intDoor < Low(TDoorStatus)) then
+  if (intDoor >= High(TDoorStatus)) or (intDoor < Low(TDoorStatus)) then
   begin
     intDoor := Low(TDoorStatus);
+    Exit;
   end;
+  intDoor := Succ(intDoor);
 end;
 
 procedure TSimulation.SwitchTrainlights();
 begin
-  intTrainlights := Succ(intTrainlights);
-  if (intTrainlights > High(TTrainLights)) or (intTrainlights < Low(TTrainLights)) then
+  if (intTrainlights >= High(TTrainLights)) or (intTrainlights < Low(TTrainLights)) then
   begin
     intTrainlights := Low(TTrainLights);
+    Exit;
   end;
+  intTrainlights := Succ(intTrainlights);
 end;
 
 procedure TSimulation.SwitchPassengerlights();
 begin
-  intPassengerlights := Succ(intPassengerlights);
-  if (intPassengerlights > High(TInteriorLights)) or (intPassengerlights < Low(TInteriorLights)) then
+  if (intPassengerlights >= High(TInteriorLights)) or (intPassengerlights < Low(TInteriorLights)) then
   begin
     intPassengerlights := Low(TInteriorLights);
+    Exit;
   end;
+  intPassengerlights := Succ(intPassengerlights);
 end;
 
 procedure TSimulation.SwitchDriverlights();
 begin
-  intDriverlights := Succ(intDriverlights);
-  if (intDriverlights > High(TInteriorLights)) or (intDriverlights < Low(TInteriorLights)) then
+  if (intDriverlights >= High(TInteriorLights)) or (intDriverlights < Low(TInteriorLights)) then
   begin
     intDriverlights := Low(TInteriorLights);
+    Exit;
   end;
+  intDriverlights := Succ(intDriverlights);
 end;
 
 function TSimulation.Sander(): boolean;

@@ -7,8 +7,8 @@ object fMain: TfMain
   ClientHeight = 704
   ClientWidth = 1414
   LCLVersion = '4.4.0.0'
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
   object pnlBottom2: TPanel
     Left = 0
     Height = 86
@@ -21,113 +21,18 @@ object fMain: TfMain
     ClientWidth = 1414
     TabOrder = 0
     object Panel1: TPanel
-      Left = 308
+      Left = 264
       Height = 86
       Top = 0
-      Width = 67
+      Width = 1
       Align = alLeft
       AutoSize = True
       BorderSpacing.Left = 12
       BevelOuter = bvNone
-      ClientHeight = 86
-      ClientWidth = 67
       TabOrder = 0
-      object pbAirBrake1: TProgressBar
-        Left = 0
-        Height = 74
-        Top = 6
-        Width = 32
-        Align = alLeft
-        BorderSpacing.Top = 6
-        BorderSpacing.Bottom = 6
-        Max = 10
-        Orientation = pbVertical
-        Position = 1
-        Smooth = True
-        TabOrder = 0
-      end
-      object pbAirBrake2: TProgressBar
-        Left = 35
-        Height = 74
-        Top = 6
-        Width = 32
-        Align = alLeft
-        BorderSpacing.Left = 3
-        BorderSpacing.Top = 6
-        BorderSpacing.Bottom = 6
-        Max = 10
-        Orientation = pbVertical
-        Position = 1
-        Smooth = True
-        TabOrder = 1
-      end
-    end
-    object sldVelocity: TBCLeaRingSlider
-      Left = 6
-      Height = 74
-      Top = 6
-      Width = 68
-      Align = alLeft
-      BorderSpacing.Around = 6
-      Font.Color = clBlack
-      Font.Height = 20
-      ParentFont = False
-      TabOrder = 1
-      MaxValue = 240
-      Value = 42
-      MinAngle = 40
-      MaxAngle = 320
-      BackgroundColor = clBackground
-      Style = zsFlat
-      PointerSize = 3
-      Altitude = 0
-    end
-    object sldAcceleration: TBCLeaRingSlider
-      Left = 228
-      Height = 74
-      Top = 6
-      Width = 68
-      Align = alLeft
-      BorderSpacing.Around = 6
-      Font.Color = clBlack
-      Font.Height = 20
-      ParentFont = False
-      TabOrder = 2
-      MaxValue = 30
-      Value = 15
-      LineColor = clOlive
-      LineWidth = 12
-      Sensitivity = 1
-      MinAngle = 40
-      MaxAngle = 320
-      BackgroundColor = clBackground
-      Style = zsFlat
-      PointerSize = 3
-      Altitude = 0
-    end
-    object sldPower: TBCLeaRingSlider
-      Left = 80
-      Height = 74
-      Top = 6
-      Width = 68
-      Align = alLeft
-      BorderSpacing.Around = 6
-      Caption = 'sldPower'
-      Font.Color = clBlack
-      Font.Height = 20
-      ParentFont = False
-      TabOrder = 3
-      MaxValue = 720
-      Value = 640
-      MinAngle = 40
-      MaxAngle = 320
-      BackgroundColor = clBackground
-      Style = zsFlat
-      PointerSize = 3
-      Altitude = 0
     end
     object pnlControlXYZ: TPanel
-      Left = 393
+      Left = 283
       Height = 74
       Top = 6
       Width = 151
@@ -138,7 +43,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 4
+      TabOrder = 1
       object btnMinusPower: TBitBtn
         Left = 8
         Height = 35
@@ -189,7 +94,7 @@ object fMain: TfMain
       end
     end
     object pnlControlDynBrake: TPanel
-      Left = 707
+      Left = 597
       Height = 74
       Top = 6
       Width = 151
@@ -199,7 +104,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 5
+      TabOrder = 2
       object btnMinusDynBrake: TBitBtn
         Left = 8
         Height = 35
@@ -252,7 +157,7 @@ object fMain: TfMain
       end
     end
     object pnlControlElmagBrake: TPanel
-      Left = 550
+      Left = 440
       Height = 74
       Top = 6
       Width = 151
@@ -262,7 +167,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 6
+      TabOrder = 3
       object btnMinuxElmagBrake: TBitBtn
         Left = 8
         Height = 35
@@ -313,7 +218,7 @@ object fMain: TfMain
       end
     end
     object pnlControlAirBrake: TPanel
-      Left = 864
+      Left = 754
       Height = 74
       Top = 6
       Width = 151
@@ -323,7 +228,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 7
+      TabOrder = 4
       object btnMinuxAirBrake: TBitBtn
         Left = 8
         Height = 35
@@ -375,33 +280,20 @@ object fMain: TfMain
       end
     end
     object Panel3: TPanel
-      Left = 1021
+      Left = 911
       Height = 74
       Top = 6
-      Width = 76
+      Width = 62
       Align = alLeft
       AutoSize = True
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
       ClientHeight = 74
-      ClientWidth = 76
-      TabOrder = 8
-      object tbDirection: TBCFluentSlider
-        Left = 8
-        Height = 58
-        Top = 8
-        Width = 32
-        MinValue = -1
-        MaxValue = 1
-        Value = 1
-        Orientation = pbVertical
-        Align = alLeft
-        BorderSpacing.Around = 6
-        Enabled = False
-      end
+      ClientWidth = 62
+      TabOrder = 5
       object Panel4: TPanel
-        Left = 46
+        Left = 32
         Height = 70
         Top = 2
         Width = 22
@@ -448,26 +340,291 @@ object fMain: TfMain
           OnClick = BitBtn3Click
         end
       end
+      object tbDirection: TTrackBar
+        Left = 2
+        Height = 70
+        Top = 2
+        Width = 30
+        AutoSize = True
+        Max = 1
+        Min = -1
+        Orientation = trVertical
+        Position = 0
+        Reversed = True
+        ShowSelRange = False
+        TickStyle = tsNone
+        Align = alLeft
+        Enabled = False
+        TabOrder = 1
+      end
     end
-    object sldForce: TBCLeaRingSlider
-      Left = 154
-      Height = 74
-      Top = 6
-      Width = 68
+    object Panel5: TPanel
+      Left = 0
+      Height = 86
+      Top = 0
+      Width = 44
       Align = alLeft
-      BorderSpacing.Around = 6
-      Font.Color = clBlack
-      Font.Height = 20
-      ParentFont = False
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 86
+      ClientWidth = 44
+      TabOrder = 6
+      object pbVelocity: TProgressBar
+        Left = 6
+        Height = 48
+        Top = 19
+        Width = 32
+        Align = alClient
+        BorderSpacing.Left = 6
+        BorderSpacing.Right = 6
+        Constraints.MaxWidth = 32
+        Max = 10
+        Orientation = pbVertical
+        Position = 1
+        Smooth = True
+        TabOrder = 0
+      end
+      object lblVelocity: TLabel
+        Left = 0
+        Height = 19
+        Top = 67
+        Width = 44
+        Align = alBottom
+        Alignment = taCenter
+        Caption = '100'
+      end
+      object lblVelocityMax: TLabel
+        Left = 0
+        Height = 19
+        Top = 0
+        Width = 44
+        Align = alTop
+        Alignment = taCenter
+        Caption = '100'
+      end
+    end
+    object Panel6: TPanel
+      Left = 44
+      Height = 86
+      Top = 0
+      Width = 44
+      Align = alLeft
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 86
+      ClientWidth = 44
+      TabOrder = 7
+      object pbPower: TProgressBar
+        Left = 6
+        Height = 48
+        Top = 19
+        Width = 32
+        Align = alClient
+        BorderSpacing.Left = 6
+        BorderSpacing.Right = 6
+        Constraints.MaxWidth = 32
+        Max = 10
+        Orientation = pbVertical
+        Position = 1
+        Smooth = True
+        TabOrder = 0
+      end
+      object lblPower: TLabel
+        Left = 0
+        Height = 19
+        Top = 67
+        Width = 44
+        Align = alBottom
+        Alignment = taCenter
+        Caption = '100'
+      end
+      object lblPowerMax: TLabel
+        Left = 0
+        Height = 19
+        Top = 0
+        Width = 44
+        Align = alTop
+        Alignment = taCenter
+        Caption = '100'
+      end
+    end
+    object Panel12: TPanel
+      Left = 88
+      Height = 86
+      Top = 0
+      Width = 44
+      Align = alLeft
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 86
+      ClientWidth = 44
+      TabOrder = 8
+      object pbForce: TProgressBar
+        Left = 6
+        Height = 48
+        Top = 19
+        Width = 32
+        Align = alClient
+        BorderSpacing.Left = 6
+        BorderSpacing.Right = 6
+        Constraints.MaxWidth = 32
+        Max = 10
+        Orientation = pbVertical
+        Position = 1
+        Smooth = True
+        TabOrder = 0
+      end
+      object lblForce: TLabel
+        Left = 0
+        Height = 19
+        Top = 67
+        Width = 44
+        Align = alBottom
+        Alignment = taCenter
+        Caption = '100'
+      end
+      object lblForceMax: TLabel
+        Left = 0
+        Height = 19
+        Top = 0
+        Width = 44
+        Align = alTop
+        Alignment = taCenter
+        Caption = '100'
+      end
+    end
+    object Panel13: TPanel
+      Left = 132
+      Height = 86
+      Top = 0
+      Width = 44
+      Align = alLeft
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 86
+      ClientWidth = 44
       TabOrder = 9
-      MaxValue = 720
-      Value = 640
-      MinAngle = 40
-      MaxAngle = 320
-      BackgroundColor = clBackground
-      Style = zsFlat
-      PointerSize = 3
-      Altitude = 0
+      object pbAccel: TProgressBar
+        Left = 6
+        Height = 48
+        Top = 19
+        Width = 32
+        Align = alClient
+        BorderSpacing.Left = 6
+        BorderSpacing.Right = 6
+        Constraints.MaxWidth = 32
+        Max = 10
+        Orientation = pbVertical
+        Position = 1
+        Smooth = True
+        TabOrder = 0
+      end
+      object lblAccel: TLabel
+        Left = 0
+        Height = 19
+        Top = 67
+        Width = 44
+        Align = alBottom
+        Alignment = taCenter
+        Caption = '100'
+      end
+      object lblAccelMax: TLabel
+        Left = 0
+        Height = 19
+        Top = 0
+        Width = 44
+        Align = alTop
+        Alignment = taCenter
+        Caption = '100'
+      end
+    end
+    object Panel14: TPanel
+      Left = 176
+      Height = 86
+      Top = 0
+      Width = 38
+      Align = alLeft
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 86
+      ClientWidth = 38
+      TabOrder = 10
+      object pbAirBrake1: TProgressBar
+        Left = 6
+        Height = 48
+        Top = 19
+        Width = 32
+        Align = alClient
+        BorderSpacing.Left = 6
+        Constraints.MaxWidth = 32
+        Max = 10
+        Orientation = pbVertical
+        Position = 1
+        Smooth = True
+        TabOrder = 0
+      end
+      object lblAirBrake1: TLabel
+        Left = 0
+        Height = 19
+        Top = 67
+        Width = 38
+        Align = alBottom
+        Alignment = taCenter
+        Caption = '100'
+      end
+      object lblAirBrake1Max: TLabel
+        Left = 0
+        Height = 19
+        Top = 0
+        Width = 38
+        Align = alTop
+        Alignment = taCenter
+        Caption = '100'
+      end
+    end
+    object Panel24: TPanel
+      Left = 214
+      Height = 86
+      Top = 0
+      Width = 38
+      Align = alLeft
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 86
+      ClientWidth = 38
+      TabOrder = 11
+      object pbAirBrake2: TProgressBar
+        Left = 0
+        Height = 48
+        Top = 19
+        Width = 32
+        Align = alClient
+        BorderSpacing.Right = 6
+        Constraints.MaxWidth = 32
+        Max = 10
+        Orientation = pbVertical
+        Position = 1
+        Smooth = True
+        TabOrder = 0
+      end
+      object lblAirBrake2: TLabel
+        Left = 0
+        Height = 19
+        Top = 67
+        Width = 38
+        Align = alBottom
+        Alignment = taCenter
+        Caption = '100'
+      end
+      object lblAirBrake2Max: TLabel
+        Left = 0
+        Height = 19
+        Top = 0
+        Width = 38
+        Align = alTop
+        Alignment = taCenter
+        Caption = '100'
+      end
     end
   end
   object pnlMiddle: TPanel
@@ -2143,401 +2300,15 @@ object fMain: TfMain
     Height = 528
     Top = 0
     Width = 230
-    HorzScrollBar.Page = 216
-    VertScrollBar.Page = 473
+    HorzScrollBar.Page = 159
+    VertScrollBar.Page = 85
     Align = alRight
     ClientHeight = 526
     ClientWidth = 228
     TabOrder = 2
-    object Panel8: TPanel
-      Left = 6
-      Height = 95
-      Top = 54
-      Width = 216
-      Align = alTop
-      AutoSize = True
-      BorderSpacing.Around = 6
-      BevelInner = bvRaised
-      BevelOuter = bvLowered
-      ClientHeight = 95
-      ClientWidth = 216
-      Enabled = False
-      TabOrder = 0
-      object Panel9: TPanel
-        Left = 8
-        Height = 19
-        Top = 5
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Top = 3
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        TabOrder = 0
-        object Label6: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 18
-          Align = alLeft
-          Caption = '🚉'
-        end
-        object Label7: TLabel
-          Left = 18
-          Height = 19
-          Top = 0
-          Width = 182
-          Align = alClient
-          Caption = 'Jabluňkov, hlavní nádraží'
-          Font.Style = [fsBold]
-          ParentFont = False
-        end
-      end
-      object Panel11: TPanel
-        Left = 8
-        Height = 19
-        Top = 30
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        TabOrder = 1
-        object Label8: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 57
-          Align = alLeft
-          Caption = '⬇️ 12.48'
-        end
-        object Label9: TLabel
-          Left = 57
-          Height = 19
-          Top = 0
-          Width = 143
-          Align = alClient
-          Alignment = taRightJustify
-          Caption = '12.50 ⬆️'
-        end
-      end
-      object Label10: TLabel
-        Left = 8
-        Height = 19
-        Top = 68
-        Width = 200
-        Align = alTop
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        Caption = '🛤️ -1,23 km'
-      end
-      object Label11: TLabel
-        Left = 8
-        Height = 19
-        Top = 49
-        Width = 200
-        Align = alTop
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        Caption = '⌚ 12.47'
-      end
-    end
-    object Panel18: TPanel
-      Left = 6
-      Height = 76
-      Top = 256
-      Width = 216
-      Align = alTop
-      AutoSize = True
-      BorderSpacing.Around = 6
-      BevelInner = bvRaised
-      BevelOuter = bvLowered
-      ClientHeight = 76
-      ClientWidth = 216
-      TabOrder = 1
-      object Panel19: TPanel
-        Left = 8
-        Height = 19
-        Top = 5
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Top = 3
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        TabOrder = 0
-        object Label25: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 18
-          Align = alLeft
-          Caption = '🚉'
-        end
-        object Label26: TLabel
-          Left = 18
-          Height = 19
-          Top = 0
-          Width = 182
-          Align = alClient
-          Caption = 'Jabluňkov, hlavní nádraží'
-          Font.Style = [fsBold]
-          ParentFont = False
-        end
-      end
-      object Panel20: TPanel
-        Left = 8
-        Height = 19
-        Top = 30
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        TabOrder = 1
-        object Label27: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 57
-          Align = alLeft
-          Caption = '⬇️ 12.48'
-        end
-        object Label28: TLabel
-          Left = 57
-          Height = 19
-          Top = 0
-          Width = 143
-          Align = alClient
-          Alignment = taRightJustify
-          Caption = '12.50 ⬆️'
-        end
-      end
-      object Label29: TLabel
-        Left = 8
-        Height = 19
-        Top = 49
-        Width = 200
-        Align = alTop
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        Caption = '🛤️ 1,23 km'
-      end
-    end
-    object Panel15: TPanel
-      Left = 6
-      Height = 95
-      Top = 155
-      Width = 216
-      Align = alTop
-      AutoSize = True
-      BorderSpacing.Around = 6
-      BevelInner = bvRaised
-      BevelOuter = bvLowered
-      ClientHeight = 95
-      ClientWidth = 216
-      Color = clMoneyGreen
-      ParentBackground = False
-      ParentColor = False
-      TabOrder = 2
-      object Panel16: TPanel
-        Left = 8
-        Height = 19
-        Top = 5
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Top = 3
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        ParentBackground = False
-        TabOrder = 0
-        object Label19: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 18
-          Align = alLeft
-          Caption = '🚉'
-        end
-        object Label20: TLabel
-          Left = 18
-          Height = 19
-          Top = 0
-          Width = 182
-          Align = alClient
-          Caption = 'Jabluňkov, hlavní nádraží'
-          Font.Style = [fsBold]
-          ParentFont = False
-        end
-      end
-      object Panel17: TPanel
-        Left = 8
-        Height = 19
-        Top = 30
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        ParentBackground = False
-        TabOrder = 1
-        object Label21: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 57
-          Align = alLeft
-          Caption = '⬇️ 12.48'
-        end
-        object Label22: TLabel
-          Left = 57
-          Height = 19
-          Top = 0
-          Width = 143
-          Align = alClient
-          Alignment = taRightJustify
-          Caption = '12.50 ⬆️'
-        end
-      end
-      object Label23: TLabel
-        Left = 8
-        Height = 19
-        Top = 68
-        Width = 200
-        Align = alTop
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        Caption = '🛤️ 1,23 km'
-      end
-      object Label24: TLabel
-        Left = 8
-        Height = 19
-        Top = 49
-        Width = 200
-        Align = alTop
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        Caption = '⌚ 12.47'
-      end
-    end
-    object Panel21: TPanel
-      Left = 6
-      Height = 76
-      Top = 338
-      Width = 216
-      Align = alTop
-      AutoSize = True
-      BorderSpacing.Around = 6
-      BevelInner = bvRaised
-      BevelOuter = bvLowered
-      ClientHeight = 76
-      ClientWidth = 216
-      TabOrder = 3
-      object Panel22: TPanel
-        Left = 8
-        Height = 19
-        Top = 5
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Top = 3
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        TabOrder = 0
-        object Label31: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 18
-          Align = alLeft
-          Caption = '🚉'
-        end
-        object Label32: TLabel
-          Left = 18
-          Height = 19
-          Top = 0
-          Width = 182
-          Align = alClient
-          Caption = 'Jabluňkov, hlavní nádraží'
-          Font.Style = [fsBold]
-          ParentFont = False
-        end
-      end
-      object Panel23: TPanel
-        Left = 8
-        Height = 19
-        Top = 30
-        Width = 200
-        Align = alTop
-        AutoSize = True
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 200
-        TabOrder = 1
-        object Label33: TLabel
-          Left = 0
-          Height = 19
-          Top = 0
-          Width = 57
-          Align = alLeft
-          Caption = '⬇️ 12.48'
-        end
-        object Label34: TLabel
-          Left = 57
-          Height = 19
-          Top = 0
-          Width = 143
-          Align = alClient
-          Alignment = taRightJustify
-          Caption = '12.50 ⬆️'
-        end
-      end
-      object Label35: TLabel
-        Left = 8
-        Height = 19
-        Top = 49
-        Width = 200
-        Align = alTop
-        BorderSpacing.Left = 6
-        BorderSpacing.Right = 6
-        BorderSpacing.Bottom = 6
-        Caption = '🛤️ 1,23 km'
-      end
-    end
     object Panel2: TPanel
       Left = 6
-      Height = 42
+      Height = 72
       Top = 6
       Width = 216
       Align = alTop
@@ -2545,56 +2316,83 @@ object fMain: TfMain
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
-      ClientHeight = 42
+      ClientHeight = 72
       ClientWidth = 216
-      TabOrder = 4
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 0
       object Label2: TLabel
         Left = 2
-        Height = 19
-        Top = 2
-        Width = 212
+        Height = 30
+        Top = 9
+        Width = 194
         Align = alTop
         Alignment = taCenter
-        Caption = '12:34:56'
+        BorderSpacing.Right = 18
+        Caption = '⌚ 12:34:56'
+        Font.Height = -24
+        Font.Name = 'Quicksand Medium'
+        ParentFont = False
       end
       object Panel10: TPanel
-        Left = 2
-        Height = 19
-        Top = 21
-        Width = 212
+        Left = 5
+        Height = 22
+        Top = 45
+        Width = 206
         Align = alTop
         AutoSize = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 6
+        BorderSpacing.Right = 3
+        BorderSpacing.Bottom = 3
         BevelOuter = bvNone
-        ClientHeight = 19
-        ClientWidth = 212
+        ClientHeight = 22
+        ClientWidth = 206
+        ParentBackground = False
         TabOrder = 0
         object Label3: TLabel
           Left = 0
-          Height = 19
+          Height = 22
           Top = 0
-          Width = 72
+          Width = 86
           Align = alLeft
           Caption = 'Sat, Mar 13'
+          Font.Height = -17
+          Font.Name = 'Quicksand Medium'
+          ParentFont = False
         end
         object Label4: TLabel
-          Left = 158
-          Height = 19
+          Left = 141
+          Height = 22
           Top = 0
-          Width = 54
+          Width = 65
           Align = alRight
           Caption = '1.234 m '
+          Font.Height = -17
+          Font.Name = 'Quicksand Medium'
+          ParentFont = False
         end
       end
+      object Label1: TLabel
+        Left = 2
+        Height = 1
+        Top = 5
+        Width = 212
+        Align = alTop
+        Alignment = taCenter
+        BorderSpacing.Top = 3
+        BorderSpacing.Bottom = 3
+      end
     end
-    object Button1: TButton
-      Left = 80
-      Height = 49
-      Top = 424
-      Width = 107
-      Caption = '⏳ Timer is ?'
-      Color = clGreen
-      TabOrder = 5
-      OnClick = Button1Click
+    object pnlStationList: TPanel
+      Left = 0
+      Height = 442
+      Top = 84
+      Width = 228
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
     end
   end
   object pnlBottom1: TPanel
@@ -3016,11 +2814,32 @@ object fMain: TfMain
         TabOrder = 1
       end
     end
+    object Button1: TButton
+      Left = 696
+      Height = 38
+      Top = 26
+      Width = 120
+      Align = alLeft
+      AutoSize = True
+      BorderSpacing.Top = 24
+      BorderSpacing.Bottom = 24
+      Caption = '⏳ Timer is OFF'
+      Color = clGreen
+      TabOrder = 9
+      OnClick = Button1Click
+    end
   end
   object Timer1: TTimer
+    Enabled = False
     Interval = 40
     OnTimer = IdleTimer1Timer
     Left = 484
     Top = 201
+  end
+  object tmrDoor: TTimer
+    Enabled = False
+    Interval = 4000
+    Left = 639
+    Top = 211
   end
 end

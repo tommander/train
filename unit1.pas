@@ -6,10 +6,25 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  StdCtrls, Buttons, DateUtils, Unit3, DTAnalogGauge, BCLeaRingSlider,
-  BCFluentSlider;
+  StdCtrls, Buttons, DateUtils, Math{, anysort}, Unit3;
 
 type
+  TStationID = longword;
+  TStation = packed record
+    strName: shortstring;
+    dtArrival: TDateTime;
+    dtDeparture: TDateTime;
+    dblPosition: double;
+    dtRealArrival: TDateTime;
+    dtRealDeparture: TDateTime;
+    dblRealPosition: double;
+    dblMaxPassengers: double;
+    dblStretchRushHours: double;
+    intPassengersOut: word;
+    intPassengersIn: word;
+    boolVisited: boolean;
+  end;
+  TStationList = array of TStation;
 
   { TfMain }
 
@@ -17,8 +32,27 @@ type
       BitBtn1: TBitBtn;
       BitBtn2: TBitBtn;
       BitBtn3: TBitBtn;
-      sldForce: TBCLeaRingSlider;
-      tbDirection: TBCFluentSlider;
+      Button1: TButton;
+      Label1: TLabel;
+      lblAirBrake1: TLabel;
+      lblAirBrake2: TLabel;
+      lblAirBrake1Max: TLabel;
+      lblAirBrake2Max: TLabel;
+      lblVelocity: TLabel;
+      lblForce: TLabel;
+      lblAccel: TLabel;
+      lblAccelMax: TLabel;
+      lblForceMax: TLabel;
+      lblPowerMax: TLabel;
+      lblVelocityMax: TLabel;
+      lblPower: TLabel;
+      Panel12: TPanel;
+      Panel13: TPanel;
+      Panel14: TPanel;
+      Panel24: TPanel;
+      pnlStationList: TPanel;
+      Panel5: TPanel;
+      Panel6: TPanel;
       btnMinusDynBrake: TBitBtn;
       btnMinusPower: TBitBtn;
       btnMinuxAirBrake: TBitBtn;
@@ -27,8 +61,6 @@ type
       btnPlusDynBrake: TBitBtn;
       btnPlusElmagBrake: TBitBtn;
       btnPlusPower: TBitBtn;
-      Button1: TButton;
-      Label11: TLabel;
       Label2: TLabel;
       Label3: TLabel;
       Label4: TLabel;
@@ -42,13 +74,14 @@ type
       Panel4: TPanel;
       pbAirBrake1: TProgressBar;
       pbAirBrake2: TProgressBar;
+      pbForce: TProgressBar;
+      pbAccel: TProgressBar;
+      pbVelocity: TProgressBar;
+      pbPower: TProgressBar;
       pnlControlAirBrake: TPanel;
       pnlControlDynBrake: TPanel;
       pnlControlElmagBrake: TPanel;
       pnlControlXYZ: TPanel;
-    sldVelocity: TBCLeaRingSlider;
-    sldAcceleration: TBCLeaRingSlider;
-    sldPower: TBCLeaRingSlider;
     btnDoor: TBitBtn;
     btnLock: TBitBtn;
     btnWakeUp: TBitBtn;
@@ -61,42 +94,11 @@ type
     il32: TImageList;
     il64: TImageList;
     Image1: TImage;
-    Label10: TLabel;
-    Label19: TLabel;
-    Label20: TLabel;
-    Label21: TLabel;
-    Label22: TLabel;
-    Label23: TLabel;
-    Label24: TLabel;
-    Label25: TLabel;
-    Label26: TLabel;
-    Label27: TLabel;
-    Label28: TLabel;
-    Label29: TLabel;
-    Label31: TLabel;
-    Label32: TLabel;
-    Label33: TLabel;
-    Label34: TLabel;
-    Label35: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
-    Panel11: TPanel;
     pnlSanderLight: TPanel;
     pnlEmergencyLight: TPanel;
     pnlMainSwitchLight: TPanel;
-    Panel15: TPanel;
-    Panel16: TPanel;
-    Panel17: TPanel;
-    Panel18: TPanel;
-    Panel19: TPanel;
-    Panel20: TPanel;
-    Panel21: TPanel;
-    Panel22: TPanel;
-    Panel23: TPanel;
     pnlLockLight: TPanel;
     pnlWakeupLight: TPanel;
     pnlCabinlights: TPanel;
@@ -105,8 +107,6 @@ type
     pnlWakeUp: TPanel;
     pnlHeadlightsLight: TPanel;
     Panel7: TPanel;
-    Panel8: TPanel;
-    Panel9: TPanel;
     pnlBottom1: TPanel;
     pnlBottom2: TPanel;
     pnlDoor: TPanel;
@@ -124,6 +124,8 @@ type
     tbControlElmagBrake: TTrackBar;
     tbControlPower: TTrackBar;
     Timer1: TTimer;
+    tmrDoor: TTimer;
+    tbDirection: TTrackBar;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
@@ -141,11 +143,12 @@ type
     procedure btnSanderClick(Sender: TObject);
     procedure btnWakeUpClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure IdleTimer1Timer(Sender: TObject);
     // ---
     function DirectionChangeBlocked(): boolean;
+    procedure RefreshStations();
     procedure RefreshUI();
     private
       var intPowerControl: shortint;
@@ -156,6 +159,26 @@ type
       var intBrakeDynaControlMax: shortint;
       var intBrakeElmagControlMax: shortint;
       var intBrakeAirControlMax: shortint;
+    private
+      var sim: TSimulation;
+      var boolTickBlocker: boolean;
+    // Stations - props
+    private intCurrentStation: TStationID;
+    private arrStations: array of TStation;
+    private boolBlockSort: boolean;
+    // Stations - methods
+    public procedure BlockSort();
+    public procedure UnblockSort();
+    public function BlockedSort(): boolean;
+    public function CurrentStationId(): TStationID;
+    public function CurrentStation(): TStation;
+    public procedure AdvanceStation(AValue: longint);
+    public procedure BoardCurrentStation(ADate: TDateTime; APosition: double);
+    public procedure SortStations();
+    public function AddStation(AStation: TStation): TStationID;
+    public procedure UpdateStation(AID: TStationID; AStation: TStation);
+    public procedure DeleteStation(AID: TStationID);
+    public function ListStations(): TStationList;
   end;
   TLEDColor = (ledOff, ledWhite, ledSilver, ledGray, ledBlack, ledRed, ledYellow, ledGreen, ledAqua, ledBlue, ledViolet);
   TLEDPower = (ledLight, ledNormal, ledDark);
@@ -172,9 +195,16 @@ function NiceNumber(ANum: double; const AUnit: shortstring; ADigits: byte = 1): 
 procedure LED(APanel: TPanel; AStatus: TLED);
 function LEDStatus(AColor: TLEDColor; APower: TLEDPower = ledNormal; AText: shortstring = ''): TLED;
 
+// STATIONS - GLOBAL
+function SameStation(AStation1, AStation2: TStation): boolean;
+function IsNullStation(AStation: TStation): boolean;
+function NullStation(): TStation;
+function Station(AName: shortstring = ''; AArrival: TDateTime = 0; ADeparture: TDateTime = 0; APosition: double = 0; AMaxPassengers: double = 1; AStretchRushHours: double = 2): TStation;
+function CompareStations(const s1,s2): integer;
+function timeint(ATime: TDateTime): double;
+function gauss(ATime,AMaxPassengers,AStretchRushHours: double): double;
 var
   fMain: TfMain;
-  sim: TSimulation;
 
 
 implementation
@@ -257,8 +287,13 @@ end;
 { TfMain }
 
 procedure TfMain.FormCreate(Sender: TObject);
+var LNow: TDateTime;
 begin
-  sim := TSimulation.Create();
+    intCurrentStation := 0;
+    SetLength(arrStations, 0);
+    boolBlockSort := false;
+
+    sim := TSimulation.Create();
   sim.SetMass(20000);
   sim.SetMaxPower(155000);
   sim.SetMaxBrake(20000);
@@ -274,60 +309,156 @@ begin
   intBrakeAirControlMax := 7;
   intBrakeElmagControlMax := 7;
   intBrakeDynaControlMax := 7;
+
+  LNow := VirtualNow();
+  BlockSort();
+  AddStation(Station('Stanice A 000-80-2', LNow,                IncMinute(LNow,  5), 0,   80, 2));
+  AddStation(Station('Stanice B 200-40-3', IncMinute(LNow, 15), IncMinute(LNow, 20), 200, 40, 3));
+  AddStation(Station('Stanice C 500-01-1', IncMinute(LNow, 30), IncMinute(LNow, 35), 500,  1, 1));
+  AddStation(Station('Stanice D 765-50-8', IncMinute(LNow, 50), IncMinute(LNow, 55), 765, 50, 8));
+  UnblockSort();
+
+  RefreshStations();
 end;
 
-procedure TfMain.FormDestroy(Sender: TObject);
+procedure TfMain.RefreshStations();
+
+  procedure RenderStation(AIndex: integer; AStation: TStation);
+  var lPanel: TPanel;
+      lTitle: TLabel;
+      lTimes: TPanel;
+      lReal: TPanel;
+      lArr: TLabel;
+      lDep: TLabel;
+      lRealArr: TLabel;
+      lRealDep: TLabel;
+      lDist: TLabel;
+  begin
+    lPanel := TPanel.Create(pnlStationList);
+    lPanel.Parent := pnlStationList;
+    lPanel.AutoSize := true;
+    lPanel.Align := alTop;
+    lPanel.BevelInner := bvRaised;
+    lPanel.BevelOuter := bvLowered;
+    lPanel.BorderSpacing.Around := 6;
+    lPanel.Caption := '';
+    if (AIndex = intCurrentStation) then
+    begin
+      lPanel.Color := clMoneyGreen;
+    end;
+
+    lDist := TLabel.Create(lPanel);
+    lDist.Parent := lPanel;
+    lDist.Align := alTop;
+    lDist.BorderSpacing.Bottom := 6;
+    lDist.BorderSpacing.Left := 6;
+    lDist.BorderSpacing.Right := 6;
+    lDist.Caption := '🛤️ 0,00 km';
+
+    lReal := TPanel.Create(lPanel);
+    lReal.Parent := lPanel;
+    lReal.Align := alTop;
+    lReal.AutoSize := true;
+    lReal.BorderSpacing.Left := 6;
+    lReal.BorderSpacing.Right := 6;
+    lReal.BevelOuter := bvNone;
+    lReal.Caption := '';
+
+      lRealArr := TLabel.Create(lReal);
+      lRealArr.Parent := lReal;
+      lRealArr.Align := alLeft;
+      lRealArr.Caption := Format('⬇️ %.2d:%.2d', [HourOf(Astation.dtRealArrival), MinuteOf(Astation.dtRealArrival)]);
+
+      lRealDep := TLabel.Create(lReal);
+      lRealDep.Parent := lReal;
+      lRealDep.Align := alRight;
+      lRealDep.Alignment := taRightJustify;
+      lRealDep.Caption := Format('%.2d:%.2d ⬆️', [HourOf(Astation.dtRealDeparture), MinuteOf(Astation.dtRealDeparture)]);
+
+    lTimes := TPanel.Create(lPanel);
+    lTimes.Parent := lPanel;
+    lTimes.Align := alTop;
+    lTimes.AutoSize := true;
+    lTimes.BorderSpacing.Left := 6;
+    lTimes.BorderSpacing.Right := 6;
+    lTimes.BevelOuter := bvNone;
+    lTimes.Caption := '';
+
+      lArr := TLabel.Create(lTimes);
+      lArr.Parent := lTimes;
+      lArr.Align := alLeft;
+      lArr.Caption := Format('⬇️ %.2d:%.2d', [HourOf(Astation.dtArrival), MinuteOf(Astation.dtArrival)]);
+
+      lDep := TLabel.Create(lTimes);
+      lDep.Parent := lTimes;
+      lDep.Align := alRight;
+      lDep.Alignment := taRightJustify;
+      lDep.Caption := Format('%.2d:%.2d ⬆️', [HourOf(Astation.dtDeparture), MinuteOf(Astation.dtDeparture)]);
+
+    lTitle := TLabel.Create(lPanel);
+    lTitle.Parent := lPanel;
+    lTitle.Align := alTop;
+    lTitle.BorderSpacing.Top := 3;
+    lTitle.BorderSpacing.Left := 6;
+    lTitle.BorderSpacing.Right := 6;
+    lTitle.Caption := '🚉 ' + AStation.strName;
+  end;
+
+var i: integer;
 begin
-  FreeAndNil(sim);
+  for i := Low(arrStations) to High(arrStations) do
+  begin
+    RenderStation(i, arrStations[i]);
+  end;
 end;
 
 procedure TfMain.RefreshUI();
 var intVelocity: int64;
     lAccel: double;
 begin
-  sldVelocity.MinValue := 0;
-  sldVelocity.MaxValue := 160;
+  pbVelocity.Min := 0;
+  pbVelocity.Max := 160;
   intVelocity := Round(sim.Velocity(true));
   if intVelocity > 160 then
     intVelocity := 160;
   if intVelocity < -160 then
     intVelocity := -160;
 
-  sldVelocity.Value := intVelocity;
+  pbVelocity.Position := intVelocity;
 
-  sldPower.MinValue := 0;
-  sldPower.MaxValue := Round(sim.MaxPower()/1000);
-  sldPower.Value := Round(sim.Power()/1000);
+  pbPower.Min := 0;
+  pbPower.Max := Round(sim.MaxPower()/1000);
+  pbPower.Position := Round(sim.Power()/1000);
 
-  sldForce.MinValue := 0;
-  sldForce.MaxValue := Round(sim.MaxForce()/1000);
-  sldForce.Value := Round(sim.Force()/1000);
+  pbForce.Min := 0;
+  pbForce.Max := Round(sim.MaxForce()/1000);
+  pbForce.Position := Round(sim.Force()/1000);
 
-  sldAcceleration.MinValue := 0;
-  sldAcceleration.MaxValue := 30;
+  pbAccel.Min := 0;
+  pbAccel.Max := 30;
 
   lAccel := abs(sim.Acceleration());
   if lAccel > 3 then
   begin
     lAccel := 3;
   end;
-  sldAcceleration.Value := Round(lAccel*10);
-  sldAcceleration.LineColor := clWhite;
+  pbAccel.Position := Round(lAccel*10);
+  //pbAccel.LineColor := clWhite;
   if lAccel <= 0.05 then
   begin
-    sldAcceleration.LineColor := clSilver;
+    //pbAccel.LineColor := clSilver;
   end
   else if lAccel <= 1 then
   begin
-    sldAcceleration.LineColor := clGreen;
+    //pbAccel.LineColor := clGreen;
   end
   else if lAccel <= 2 then
   begin
-    sldAcceleration.LineColor := clOlive;
+    //pbAccel.LineColor := clOlive;
   end
   else
   begin
-    sldAcceleration.LineColor := clRed;
+    //pbAccel.LineColor := clRed;
   end;
 
   pbAirBrake1.Min := 0;
@@ -337,9 +468,9 @@ begin
   pbAirBrake2.Max := 1;
   pbAirBrake2.Position := 1;
 
-  tbDirection.MinValue := -1;
-  tbDirection.MaxValue := 1;
-  tbDirection.Value := Integer(sim.Direction());
+  tbDirection.Min := -1;
+  tbDirection.Max := 1;
+  tbDirection.Position := Integer(sim.Direction());
 
   tbControlPower.Min := 0;
   tbControlPower.Max := intPowerControlMax;
@@ -419,8 +550,8 @@ begin
     false: LED(pnlWakeupLight, LEDStatus(ledOff));
   end;
 
-  Label2.Caption := TimeToStr(sim.SimTime());
-  Label3.Caption := DateToStr(sim.SimTime());
+  Label2.Caption := TimeToStr(VirtualNow());
+  Label3.Caption := DateToStr(VirtualNow());
   Label4.Caption := NiceNumber(sim.Position(), 'm', 1);
 
   Memo1.Lines.Text := sim.Export();
@@ -560,10 +691,252 @@ begin
   end;
 end;
 
+procedure TfMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var i: integer;
+begin
+  CanClose := false;
+  if Assigned(Timer1) and Timer1.Enabled then
+  begin
+    Timer1.Enabled := false;
+  end;
+  if Assigned(tmrDoor) and tmrDoor.Enabled then
+  begin
+    tmrDoor.Enabled := false;
+  end;
+  try
+    intCurrentStation := 0;
+    boolBlockSort := false;
+      delete(arrStations, Low(arrStations), Length(arrStations));
+      arrStations := nil;
+    if Assigned(sim) then
+    begin
+      FreeAndNil(sim);
+    end;
+  finally
+    CanClose := true;
+  end;
+end;
+
 procedure TfMain.IdleTimer1Timer(Sender: TObject);
 begin
-  sim.Tick2();
-  RefreshUI();
+  if boolTickBlocker then
+  begin
+    Exit;
+  end;
+  boolTickBlocker := true;
+  try
+    sim.Tick2();
+    RefreshUI();
+  finally
+    boolTickBlocker := false;
+  end;
+end;
+
+// STATIONS
+
+//constructor TfMain.Create();
+//begin
+//  intCurrentStation := 0;
+//  SetLength(arrStations, 0);
+//  boolBlockSort := false;
+//end;
+//
+//destructor TfMain.Destroy();
+//var i: integer;
+//begin
+//  intCurrentStation := 0;
+//  boolBlockSort := false;
+//  //delete(arrStations, Low(arrStations), Length(arrStations));
+//  //arrStations := nil;
+//  //inherited Destroy();
+//end;
+
+procedure TfMain.BlockSort();
+begin
+  boolBlockSort := true;
+end;
+
+procedure TfMain.UnblockSort();
+begin
+  boolBlockSort := false;
+  SortStations();
+end;
+
+function TfMain.BlockedSort(): boolean;
+begin
+  result := boolBlockSort;
+end;
+
+function TfMain.CurrentStationId(): TStationID;
+begin
+  result := intCurrentStation;
+end;
+
+function TfMain.CurrentStation(): TStation;
+begin
+  if (intCurrentStation > High(arrStations)) then
+  begin
+    result := NullStation();
+    Exit;
+  end;
+
+  result := arrStations[intCurrentStation];
+end;
+
+procedure TfMain.AdvanceStation(AValue: longint);
+begin
+  if AValue < (-1*intCurrentStation) then
+  begin
+    intCurrentStation := 0;
+    Exit;
+  end;
+  if (intCurrentStation + AValue) > High(arrStations) then
+  begin
+    intCurrentStation := High(arrStations);
+    Exit;
+  end;
+  intCurrentStation := intCurrentStation + AValue;
+end;
+
+procedure TfMain.BoardCurrentStation(ADate: TDateTime; APosition: double);
+var st: TStation;
+    id: TStationID;
+begin
+  id := CurrentStationId();
+  st := CurrentStation();
+  if IsNullStation(st) or st.boolVisited then
+  begin
+    Exit;
+  end;
+
+  st.dblRealPosition := APosition;
+  st.dtRealArrival := ADate;
+  st.intPassengersIn := Round(gauss(timeint(now), st.dblMaxPassengers, st.dblStretchRushHours));
+  st.intPassengersOut := Round(gauss(timeint(now), st.dblMaxPassengers, st.dblStretchRushHours));
+  st.boolVisited := true;
+  st.dtRealDeparture := Now();
+
+  UpdateStation(id, st);
+  AdvanceStation(1);
+end;
+
+procedure TfMain.SortStations();
+begin
+  if BlockedSort() then
+  begin
+    Exit;
+  end;
+//  anysort.AnySort(arrStations, Length(arrStations), SizeOf(TStation), @CompareStations);
+end;
+
+function TfMain.AddStation(AStation: TStation): TStationID;
+begin
+  result := 0;
+  SetLength(arrStations, Length(arrStations) + 1);
+  result := High(arrStations);
+  arrStations[result] := AStation;
+  SortStations();
+end;
+
+procedure TfMain.UpdateStation(AID: TStationID; AStation: TStation);
+begin
+  if (AID <= High(arrStations)) then
+  begin
+    arrStations[AID] := AStation;
+    SortStations();
+  end;
+end;
+
+procedure TfMain.DeleteStation(AID: TStationID);
+begin
+  if (AID <= High(arrStations)) then
+  begin
+    arrStations[AID] := NullStation();
+    SortStations();
+  end;
+end;
+
+function TfMain.ListStations(): TStationList;
+begin
+  result := arrStations;
+end;
+
+// STATIONS - GLOBAL
+
+function SameStation(AStation1, AStation2: TStation): boolean;
+begin
+  result :=
+  (AStation1.strName = AStation2.strName) and
+  (AStation1.dtArrival = AStation2.dtArrival) and
+  (AStation1.dtDeparture = AStation2.dtDeparture) and
+  (AStation1.dblPosition = AStation2.dblPosition) and
+  (AStation1.dtRealArrival = AStation2.dtRealArrival) and
+  (AStation1.dtRealDeparture = AStation2.dtRealDeparture) and
+  (AStation1.dblRealPosition = AStation2.dblRealPosition) and
+  (AStation1.dblMaxPassengers = AStation2.dblMaxPassengers) and
+  (AStation1.dblStretchRushHours = AStation2.dblStretchRushHours) and
+  (AStation1.intPassengersOut = AStation2.intPassengersOut) and
+  (AStation1.intPassengersIn = AStation2.intPassengersIn) and
+  (AStation1.boolVisited = AStation2.boolVisited);
+end;
+
+function IsNullStation(AStation: TStation): boolean;
+begin
+  result := SameStation(AStation, NullStation);
+end;
+
+function NullStation(): TStation;
+begin
+  result.strName := '';
+  result.dtArrival := 0;
+  result.dtDeparture := 0;
+  result.dblPosition := 0;
+  result.dtRealArrival := 0;
+  result.dtRealDeparture := 0;
+  result.dblRealPosition := 0;
+  result.dblMaxPassengers := 1;
+  result.dblStretchRushHours := 2;
+  result.intPassengersOut := 0;
+  result.intPassengersIn := 0;
+  result.boolVisited := false;
+end;
+
+function Station(AName: shortstring = ''; AArrival: TDateTime = 0; ADeparture: TDateTime = 0; APosition: double = 0; AMaxPassengers: double = 1; AStretchRushHours: double = 2): TStation;
+begin
+  result := NullStation();
+  result.strName := AName;
+  result.dtArrival := AArrival;
+  result.dtDeparture := ADeparture;
+  result.dblPosition := APosition;
+  result.dblMaxPassengers := AMaxPassengers;
+  result.dblStretchRushHours := AStretchRushHours;
+end;
+
+function CompareStations(const s1,s2): integer;
+var
+  i1 : TStation absolute s1;
+  i2 : TStation absolute s2;
+begin
+  if i1.dblPosition=i2.dblPosition then Result:=0
+  else if i1.dblPosition<i2.dblPosition then Result:=-1
+  else Result:=1;
+end;
+
+function timeint(ATime: TDateTime): double;
+begin
+  result := HourOf(ATime) + (MinuteOf(ATime) / 60);
+end;
+
+{
+ATime ... Real number interval <0;24)
+AMaxPassengers ... Real positive number
+AStretchRushHours ... Real number, default is 2, 4 = medium, 8 = busy place
+}
+function gauss(ATime,AMaxPassengers,AStretchRushHours: double): double;
+const e: double = 2.71828;
+      u: double = 12;
+begin
+  result := Math.Power(AMaxPassengers * e, Power(ATime - u, 2)/(2*Power(AStretchRushHours, 2)));
 end;
 
 end.
