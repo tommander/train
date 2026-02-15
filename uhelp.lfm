@@ -1,0 +1,9 @@
+object fHelp: TfHelp
+  Left = 2907
+  Height = 240
+  Top = 17
+  Width = 320
+  Caption = 'Help'
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+end

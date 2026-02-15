@@ -1,0 +1,9 @@
+object fTrains: TfTrains
+  Left = 4144
+  Height = 240
+  Top = 789
+  Width = 320
+  Caption = 'fTrains'
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+end

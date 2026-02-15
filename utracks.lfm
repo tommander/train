@@ -1,0 +1,9 @@
+object fTracks: TfTracks
+  Left = 2574
+  Height = 240
+  Top = 14
+  Width = 320
+  Caption = 'fTracks'
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+end

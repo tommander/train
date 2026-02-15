@@ -1,0 +1,158 @@
+object fDashboard: TfDashboard
+  Left = 3452
+  Height = 601
+  Top = 15
+  Width = 1002
+  Caption = 'fDashboard'
+  ClientHeight = 601
+  ClientWidth = 1002
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 50
+    Top = 0
+    Width = 1002
+    Align = alTop
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    TabOrder = 0
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 491
+    Top = 55
+    Width = 170
+    Align = alLeft
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 491
+    ClientWidth = 170
+    TabOrder = 1
+    object Label2: TLabel
+      Left = 2
+      Height = 19
+      Top = 2
+      Width = 166
+      Align = alTop
+      Caption = '1 234 567.89 FVM'
+    end
+    object ListView1: TListView
+      Left = 2
+      Height = 468
+      Top = 21
+      Width = 166
+      Align = alClient
+      Columns = <>
+      TabOrder = 0
+    end
+  end
+  object Panel3: TPanel
+    Left = 832
+    Height = 491
+    Top = 55
+    Width = 170
+    Align = alRight
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 491
+    ClientWidth = 170
+    TabOrder = 2
+    object ScrollBox1: TScrollBox
+      Left = 2
+      Height = 487
+      Top = 2
+      Width = 166
+      HorzScrollBar.Page = 13
+      VertScrollBar.Page = 118
+      Align = alClient
+      BorderStyle = bsNone
+      ClientHeight = 487
+      ClientWidth = 166
+      TabOrder = 0
+      object Panel6: TPanel
+        Left = 6
+        Height = 50
+        Top = 6
+        Width = 154
+        Align = alTop
+        BorderSpacing.Around = 6
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        TabOrder = 0
+      end
+      object Panel7: TPanel
+        Left = 6
+        Height = 50
+        Top = 62
+        Width = 154
+        Align = alTop
+        BorderSpacing.Around = 6
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        TabOrder = 1
+      end
+    end
+  end
+  object Panel4: TPanel
+    Left = 175
+    Height = 491
+    Top = 55
+    Width = 652
+    Align = alClient
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 491
+    ClientWidth = 652
+    TabOrder = 3
+    object Label1: TLabel
+      Left = 24
+      Height = 19
+      Top = 16
+      Width = 78
+      Caption = 'john.doe123'
+    end
+  end
+  object Panel5: TPanel
+    Left = 0
+    Height = 50
+    Top = 551
+    Width = 1002
+    Align = alBottom
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    TabOrder = 4
+  end
+  object Splitter1: TSplitter
+    Left = 170
+    Height = 491
+    Top = 55
+    Width = 5
+  end
+  object Splitter2: TSplitter
+    Left = 827
+    Height = 491
+    Top = 55
+    Width = 5
+    Align = alRight
+    ResizeAnchor = akRight
+  end
+  object Splitter3: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 50
+    Width = 1002
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object Splitter4: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 546
+    Width = 1002
+    Align = alBottom
+    ResizeAnchor = akBottom
+  end
+end

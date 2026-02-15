@@ -1,0 +1,34 @@
+object fDebug: TfDebug
+  Left = 3205
+  Height = 448
+  Top = 582
+  Width = 652
+  Caption = 'fDebug'
+  ClientHeight = 448
+  ClientWidth = 652
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+  object Memo1: TMemo
+    Left = 6
+    Height = 415
+    Top = 6
+    Width = 640
+    Align = alClient
+    BorderSpacing.Around = 6
+    BorderStyle = bsNone
+    Color = clBackground
+    Lines.Strings = (
+      'Memo1'
+    )
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 21
+    Top = 427
+    Width = 652
+    Panels = <>
+  end
+end

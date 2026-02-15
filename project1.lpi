@@ -12,6 +12,10 @@
         <DpiAware Value="True"/>
       </XPManifest>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <StringTable FileDescription="Age of Trains Main Executable" InternalName="trains" LegalCopyright="Tomáš &quot;Tommander&quot; Rajnoha" OriginalFilename="aot" ProductName="Age of Trains" ProductVersion="0.0.0"/>
+    </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
       <Item Name="Debug">
@@ -96,9 +100,6 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="bgracontrols"/>
-      </Item>
-      <Item>
         <PackageName Value="LCL"/>
       </Item>
     </RequiredPackages>
@@ -108,20 +109,98 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="unit1.pas"/>
+        <Filename Value="umain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit1"/>
       </Unit>
       <Unit>
-        <Filename Value="unit3.pas"/>
+        <Filename Value="uengine.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Unit3"/>
       </Unit>
       <Unit>
-        <Filename Value="anysort.pas"/>
+        <Filename Value="utrackfinish.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fTrackFinish"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="umainmenu.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fMainMenu"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="usplashscreen.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fSplash"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="udashboard.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fDashboard"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="ucommon.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utrains.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fTrains"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="udebug.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fDebug"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="uabout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fAbout"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="uhelp.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fHelp"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="ututorial.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fTutorial"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utracks.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fTracks"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="usettings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fSettings"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="uversionhelper.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

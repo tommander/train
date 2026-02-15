@@ -22,6 +22,8 @@ type
   //end;
   //TTimeSheet = array of TTimeSheetItem;
 
+  TEventCanBoard = procedure() of object;
+
   TDoorStatus = (doorClosed = 0, doorOpening = 1, doorOpen = 2, doorAlarm = 3, doorClosing = 4);
   TTrainLights = (tlOff,tlHeadDim,tlHead,tlHeadHigh,tlRearDim,tlRear);
   TInteriorLights = (ilOff, ilDim, ilNormal, ilEmergency);
@@ -157,6 +159,10 @@ type
     public destructor Destroy(); override;
     public procedure Tick2();
     public function Export(): string;
+
+    // Events
+
+    public var ECanBoard: TEventCanBoard;
   end;
 
 function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
@@ -189,6 +195,8 @@ end;
 
 constructor TSimulation.Create();
 begin
+  ECanBoard := nil;
+
   slLog := TStringList.Create;
   slLog.Add('[');
 
@@ -442,9 +450,15 @@ begin
   if (intDoor >= High(TDoorStatus)) or (intDoor < Low(TDoorStatus)) then
   begin
     intDoor := Low(TDoorStatus);
-    Exit;
+  end
+  else
+  begin
+    intDoor := Succ(intDoor);
   end;
-  intDoor := Succ(intDoor);
+  if (intDoor = doorOpen) and Assigned(ECanBoard) then
+  begin
+    ECanBoard();
+  end;
 end;
 
 procedure TSimulation.SwitchTrainlights();

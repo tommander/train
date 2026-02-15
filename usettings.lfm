@@ -1,0 +1,9 @@
+object fSettings: TfSettings
+  Left = 4133
+  Height = 240
+  Top = 506
+  Width = 320
+  Caption = 'fSettings'
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+end

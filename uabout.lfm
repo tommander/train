@@ -1,0 +1,11 @@
+object fAbout: TfAbout
+  Left = 3237
+  Height = 240
+  Top = 16
+  Width = 320
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'About'
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
+end
