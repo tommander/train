@@ -40,7 +40,7 @@ begin
     ProgressBar1.Max := 10;
     ProgressBar1.Position := 0;
     Label1.Caption := StepMessage();
-    Timer1.Interval := 543;
+    Timer1.Interval := 123;
     Timer1.Enabled := true;
   end;
 end;

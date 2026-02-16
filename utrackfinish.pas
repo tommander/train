@@ -13,21 +13,20 @@ type
   { TfTrackFinish }
 
   TfTrackFinish = class(TForm)
-    Button2: TButton;
+    btnClose: TButton;
     Label1: TLabel;
-    Label10: TLabel;
-    Label2: TLabel;
+    lblRating: TLabel;
+    lblHeading: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
-    Label9: TLabel;
-    ListView1: TListView;
-    Panel2: TPanel;
-    Panel3: TPanel;
-    Panel4: TPanel;
+    lvFinances: TListView;
+    pnlRating0: TPanel;
+    pnlRating2: TPanel;
+    pnlRating1: TPanel;
     Panel5: TPanel;
   private
 

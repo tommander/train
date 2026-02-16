@@ -5,210 +5,177 @@ unit uengine;
 interface
 
 uses
-  Classes, SysUtils, Controls, Buttons, StdCtrls, ComCtrls, ExtCtrls, Graphics,
-  DateUtils;
+  Classes, SysUtils, Controls, Buttons, ComCtrls, ExtCtrls, Graphics,
+  DateUtils, ucommon;
 
 type
-  //TStation = record
-  //  strName: string;
-  //  intPosition: qword;
-  //  intAvgIn: word;
-  //  intAvgOut: word;
-  //end;
-  //TTimeSheetItem = record
-  //  sta: TStation;
-  //  timeArrival: TTime;
-  //  timeDeparture: TTime;
-  //end;
-  //TTimeSheet = array of TTimeSheetItem;
-
-  TEventCanBoard = procedure() of object;
   TEventBlockDoor = procedure() of object;
   TEventUnblockDoor = procedure() of object;
-
-  TDoorStatus = (doorClosed = 0, doorOpening = 1, doorOpen = 2, doorAlarm = 3, doorClosing = 4);
-  TTrainLights = (tlOff,tlHeadDim,tlHead,tlHeadHigh,tlRearDim,tlRear);
-  TInteriorLights = (ilOff, ilDim, ilNormal, ilEmergency);
-  TTunnel = (tnNone,tnSingle,tnDouble);
-
-  TTrainRangeControl = record
-    intValue: shortint;
-    intMax: shortint;
-  end;
-  TTrainRangeControlType = (rctPower,rctBrakeDynamic,rctBrakeElmag,rctBrakeAir);
-//  TTrainToggleControlValue = (tcvDec=-1,tcvZero=0,tcvInc=1);
-
-  TTrainDirection = (dirForward = 1, dirNeutral = 0, dirReverse = -1);
+  TEventValueChangedDouble = procedure(AName: string; AValue, AOldValue: double) of object;
+  TEventValueChangedString = procedure(AName: string; AValue, AOldValue: string) of object;
+  TEventValueChangedInteger = procedure(AName: string; AValue, AOldValue: int64) of object;
+  TEventValueChangedBoolean = procedure(AName: string; AValue, AOldValue: boolean) of object;
+  TEventValueChangedDateTime = procedure(AName: string; AValue, AOldValue: TDateTime) of object;
+  TEventValueChangedTunnel = procedure(AName: string; AValue, AOldValue: TTunnel) of object;
+  TEventValueChangedInteriorLights = procedure(AName: string; AValue, AOldValue: TInteriorLights) of object;
+  TEventValueChangedTrainLights = procedure(AName: string; AValue, AOldValue: TTrainLights) of object;
+  TEventValueChangedDoorStatus = procedure(AName: string; AValue, AOldValue: TDoorStatus) of object;
+  TEventValueChangedTrainRangeControl = procedure(AName: string; AValue, AOldValue: TTrainRangeControl) of object;
+  TEventValueChangedTrainDirection = procedure(AName: string; AValue, AOldValue: TTrainDirection) of object;
 
   TSimulation = class
-    private var slLog: TStringList;
+    private
+      var dblPowerControl: double; //<0;1>
+      var dblBrakeDynaControl: double; //<0;1>
+      var dblBrakeElmagControl: double; //<0;1>
+      var dblBrakeAirControl: double; //<0;1>
+      var intDoor: TDoorStatus;
+      var intTrainlights: TTrainLights;
+      var intDriverlights: TInteriorLights;
+      var intPassengerlights: TInteriorLights;
+      var boolSander: boolean; // ...
+      var boolEmergency: boolean; // ...
+      var boolMainSwitch: boolean; // ...
+      var boolLock: boolean; // ...
+      var boolWakeUp: boolean; // ...
+      var dblMaxV: double; // [m/s]
+      var dblLastV: double; // [m/s]
+      var dblLastX: double; // [m]
+      var dblLastA: double; // [m/s^-2]
+      var dblLastEk: double; // [J]
+      var dblLastP: double; // [W]
+      var dblForce: double; // [N]
+      var dblForceNet: double; // [N]
+      var dblTotalPullForce: double; // [N]
+      var dblBrakeResistance: double; // [N]
+      var dblGravityResistance: double; // [N]
+      var boolTrainResistanceUseABC: boolean;
+      var dblTrainResistance: double; // [N]
+      var dblTrainResistanceA: double; // [-]
+      var dblTrainResistanceB: double; // [-] A + B*V + C*V^2 (V in km/h)
+      var dblTrainResistanceC: double; // [-]
+      var dblTrainResistanceRoll: double; // [N]
+      var dblTrainResistanceAero: double; // [N]
+      var dblTrainResistanceAccel: double; // [N]
+      var dblTrackResistance: double; // [N]
+      var dblTrackResistanceArc: double; // [N]
+      var dblTrackResistanceTunnel: double; // [N]
+      var dirDirection: TTrainDirection; //
+      var dblTrackArc: double; //radius [m]
+      var tnlTrackTunnel: TTunnel;
+      var dblTrackSlope: double; // slope [per mile, ‰]
+      var boolTrackMain: boolean; // main track? for arc res computation
+      var dblMass: double; // [kg]
+      var dblMaxBrake: double; // [N]
+      var dblMaxPower: double; // [W]
+      var dblMaxForce: double; // [N]
+      var dblAlsoMaxForce: double; // [N]
+      var dtLastT: TDateTime; // [s]
+      var boolBlockedDoor: boolean; // ...
 
-    private var dblPowerControl: double; //<0;1>
-    private var dblBrakeDynaControl: double; //<0;1>
-    private var dblBrakeElmagControl: double; //<0;1>
-    private var dblBrakeAirControl: double; //<0;1>
-    public function PowerControl(): double;
-    public function BrakeDynaControl(): double;
-    public function BrakeElmagControl(): double;
-    public function BrakeAirControl(): double;
-    public procedure SetPowerControl(AValue: double);
-    public procedure SetBrakeDynaControl(AValue: double);
-    public procedure SetBrakeElmagControl(AValue: double);
-    public procedure SetBrakeAirControl(AValue: double);
+    public
+      constructor Create();
 
-    private var intDoor: TDoorStatus;
-    private var intTrainlights: TTrainLights;
-    private var intDriverlights: TInteriorLights;
-    private var intPassengerlights: TInteriorLights;
-    public function Door(): TDoorStatus;
-    public function Trainlights(): TTrainLights;
-    public function Passengerlights(): TInteriorLights;
-    public function Driverlights(): TInteriorLights;
-    public procedure SwitchDoorCallback(Sender: TObject);
-    public procedure SwitchDoor();
-    public procedure SwitchTrainlights();
-    public procedure SwitchPassengerlights();
-    public procedure SwitchDriverlights();
+      procedure Tick2();
+      function Export(): string;
+      procedure Refresh();
 
-    private var boolSander: boolean; // ...
-    private var boolEmergency: boolean; // ...
-    private var boolMainSwitch: boolean; // ...
-    private var boolLock: boolean; // ...
-    private var boolWakeUp: boolean; // ...
-    public function Sander(): boolean;
-    public function Emergency(): boolean;
-    public function MainSwitch(): boolean;
-    public function Lock(): boolean;
-    public function WakeUp(): boolean;
-    public procedure ToggleSander();
-    public procedure ToggleEmergency();
-    public procedure ToggleMainSwitch();
-    public procedure ToggleLock();
-    public procedure ToggleWakeup();
+      function PowerControl(): double;
+      function BrakeDynaControl(): double;
+      function BrakeElmagControl(): double;
+      function BrakeAirControl(): double;
+      function Door(): TDoorStatus;
+      function Trainlights(): TTrainLights;
+      function Passengerlights(): TInteriorLights;
+      function Driverlights(): TInteriorLights;
+      function Sander(): boolean;
+      function Emergency(): boolean;
+      function MainSwitch(): boolean;
+      function Lock(): boolean;
+      function WakeUp(): boolean;
+      function Velocity(boolKmph: boolean = false): double;
+      function Position(): double;
+      function Acceleration(): double;
+      function KineticEnergy(): double;
+      function Power(): double;
+      function Force(): double;
+      function MaxVelocity(boolKmph: boolean = false): double;
+      function TrainResistanceUseABC(): boolean;
+      function Direction(): TTrainDirection;
+      function TrackArc(): double;
+      function TrackTunnel(): TTunnel;
+      function TrackSlope(): double;
+      function TrackMain(): boolean;
+      function BrakeResistance(): double;
+      function GravityResistance(): double;
+      function TrainResistance(): double;
+      function TrackResistance(): double;
+      function Mass(): double;
+      function MaxPower(): double;
+      function MaxBrake(): double;
+      function MaxForce(): double;
+      function BlockedDoor(): boolean;
+      function SimTime(): TDateTime;
 
-    private var dblMaxV: double; // [m/s]
-    private var dblLastV: double; // [m/s]
-    private var dblLastX: double; // [m]
-    private var dblLastA: double; // [m/s^-2]
-    private var dblLastEk: double; // [J]
-    private var dblLastP: double; // [W]
-    private var dblForce: double; // [N]
-    private var dblForceNet: double; // [N]
-    private var dblTotalPullForce: double; // [N]
-    private var dblBrakeResistance: double; // [N]
-    private var dblGravityResistance: double; // [N]
-    private var boolTrainResistanceUseABC: boolean;
-    private var dblTrainResistance: double; // [N]
-    private var dblTrainResistanceA: double; // [-]
-    private var dblTrainResistanceB: double; // [-] A + B*V + C*V^2 (V in km/h)
-    private var dblTrainResistanceC: double; // [-]
-    private var dblTrainResistanceRoll: double; // [N]
-    private var dblTrainResistanceAero: double; // [N]
-    private var dblTrainResistanceAccel: double; // [N]
-    private var dblTrackResistance: double; // [N]
-    private var dblTrackResistanceArc: double; // [N]
-    private var dblTrackResistanceTunnel: double; // [N]
-//    private var dblTrackResistanceSlope: double; // [N]
-    private var dirDirection: TTrainDirection; //
-    public function Velocity(boolKmph: boolean = false): double;
-    public function Position(): double;
-    public function Acceleration(): double;
-    public function KineticEnergy(): double;
-    public function Power(): double;
-    public function Force(): double;
-    public function MaxVelocity(boolKmph: boolean = false): double;
-    public procedure SetMaxVelocity(AValue: double; boolKmph: boolean = false);
-    public function TrainResistanceUseABC(): boolean;
-    public procedure SetTrainResistanceUseABC(AValue: boolean);
-    public function Direction(): TTrainDirection;
-    public procedure SetDirection(AValue: TTrainDirection);
+      procedure SetPowerControl(AValue: double);
+      procedure SetBrakeDynaControl(AValue: double);
+      procedure SetBrakeElmagControl(AValue: double);
+      procedure SetBrakeAirControl(AValue: double);
+      procedure SwitchDoor(var ATimer: TTimer);
+      procedure SwitchTrainlights();
+      procedure SwitchPassengerlights();
+      procedure SwitchDriverlights();
+      procedure ToggleSander();
+      procedure ToggleEmergency();
+      procedure ToggleMainSwitch();
+      procedure ToggleLock();
+      procedure ToggleWakeup();
+      procedure SetMaxVelocity(AValue: double; boolKmph: boolean = false);
+      procedure SetTrainResistanceUseABC(AValue: boolean);
+      procedure SetDirection(AValue: TTrainDirection);
+      procedure SetTrackArc(AValue: double);
+      procedure SetTrackTunnel(AValue: TTunnel);
+      procedure SetTrackSlope(AValue: double);
+      procedure SetTrackMain(AValue: boolean);
+      procedure SetMass(AValue: double);
+      procedure SetMaxPower(AValue: double);
+      procedure SetMaxBrake(AValue: double);
+      procedure SetMaxForce(AValue: double);
+      procedure BlockDoor();
+      procedure UnblockDoor();
 
-    private var dblTrackArc: double; //radius [m]
-    private var tnlTrackTunnel: TTunnel;
-    private var dblTrackSlope: double; // slope [per mile, ‰]
-    private var boolTrackMain: boolean; // main track? for arc res computation
-    public function TrackArc(): double;
-    public function TrackTunnel(): TTunnel;
-    public function TrackSlope(): double;
-    public function TrackMain(): boolean;
-    public procedure SetTrackArc(AValue: double);
-    public procedure SetTrackTunnel(AValue: TTunnel);
-    public procedure SetTrackSlope(AValue: double);
-    public procedure SetTrackMain(AValue: boolean);
-
-    public function BrakeResistance(): double;
-    public function GravityResistance(): double;
-    public function TrainResistance(): double;
-    public function TrackResistance(): double;
-
-    private var dblMass: double; // [kg]
-    private var dblMaxBrake: double; // [N]
-    private var dblMaxPower: double; // [W]
-    private var dblMaxForce: double; // [N]
-    private var dblAlsoMaxForce: double; // [N]
-    public function Mass(): double;
-    public function MaxPower(): double;
-    public function MaxBrake(): double;
-    public function MaxForce(): double;
-    public procedure SetMass(AValue: double);
-    public procedure SetMaxPower(AValue: double);
-    public procedure SetMaxBrake(AValue: double);
-    public procedure SetMaxForce(AValue: double);
-
-    private dtLastT: TDateTime; // [s]
-    public function SimTime(): TDateTime;
-
-    private var boolBlockedDoor: boolean; // ...
-    public function BlockedDoor(): boolean;
-    public procedure BlockDoor();
-    public procedure UnblockDoor();
-
-    public constructor Create();
-    public destructor Destroy(); override;
-    public procedure Tick2();
-    public function Export(): string;
-
-    // Events
-
-    public var ECanBoard: TEventCanBoard;
-    public var EBlockDoor: TEventBlockDoor;
-    public var EUnblockDoor: TEventUnblockDoor;
+      var EBlockDoor: TEventBlockDoor;
+      var EUnblockDoor: TEventUnblockDoor;
+      var EValueChangedDouble: TEventValueChangedDouble;
+      var EValueChangedString: TEventValueChangedString;
+      var EValueChangedInteger: TEventValueChangedInteger;
+      var EValueChangedBoolean: TEventValueChangedBoolean;
+      var EValueChangedDateTime: TEventValueChangedDateTime;
+      var EValueChangedTunnel: TEventValueChangedTunnel;
+      var EValueChangedInteriorLights: TEventValueChangedInteriorLights;
+      var EValueChangedTrainLights: TEventValueChangedTrainLights;
+      var EValueChangedDoorStatus: TEventValueChangedDoorStatus;
+      var EValueChangedTrainRangeControl: TEventValueChangedTrainRangeControl;
+      var EValueChangedTrainDirection: TEventValueChangedTrainDirection;
   end;
-
-function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
-function VirtualizeTime(ATime: TDateTime): TDateTime;
-function VirtualNow(): TDateTime;
 
 implementation
 
-function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
-begin
-  result := EncodeDateTime(1996,01,01,AHour, AMinute, ASecond, AMillsecond);
-end;
-
-function VirtualizeTime(ATime: TDateTime): TDateTime;
-begin
-  result := VirtualTime(HourOf(ATime), MinuteOf(ATime), SecondOf(ATime), MilliSecondOf(ATime));
-end;
-
-function VirtualNow(): TDateTime;
-begin
-  result := VirtualizeTime(Now());
-end;
-
-destructor TSimulation.Destroy();
-begin
-  slLog.SaveToFile('/home/tommander/Desktop/fujuh/log.txt');
-  FreeAndNil(slLog);
-  inherited;
-end;
-
 constructor TSimulation.Create();
 begin
-  ECanBoard := nil;
-
-  slLog := TStringList.Create;
-  slLog.Add('[');
+  EBlockDoor := nil;
+  EUnblockDoor := nil;
+  EValueChangedDouble := nil;
+  EValueChangedString := nil;
+  EValueChangedInteger := nil;
+  EValueChangedBoolean := nil;
+  EValueChangedDateTime := nil;
+  EValueChangedTunnel := nil;
+  EValueChangedInteriorLights := nil;
+  EValueChangedTrainLights := nil;
+  EValueChangedDoorStatus := nil;
+  EValueChangedTrainRangeControl := nil;
+  EValueChangedTrainDirection := nil;
 
   dblPowerControl := 0; //  [0;1]
   dblBrakeDynaControl := 0; // [0;1]
@@ -254,26 +221,11 @@ begin
   dblTrainResistanceAccel := 0;
   dblTrackResistanceArc := 0;
   dblTrackResistanceTunnel := 0;
-//  dblTrackResistanceSlope := 0;
   dblTrackArc := 0;
   tnlTrackTunnel := tnNone;
   dblTrackSlope := 0;
   boolTrackMain := false;
   dirDirection := dirForward;
-
-  //slLog.Add('{');
-  //slLog.Add('"title": "Initial status",');
-  //slLog.Add(Export());
-  //slLog.Add('}');
-end;
-
-function sign(AValue: double): double;
-begin
-  result := 1;
-  if AValue < 0 then
-  begin
-    result := -1;
-  end;
 end;
 
 procedure TSimulation.Tick2();
@@ -304,11 +256,11 @@ begin
   dblTrackResistanceArc := 0;
   dblTrackResistanceTunnel := 0;
   dblTrainResistance := (dblTrainResistanceA + dblTrainResistanceB * (dblLastV * 3.6) + dblTrainResistanceC * (dblLastV * 3.6) * (dblLastV * 3.6));
-  if (dblTrackArc > 0) and boolTrackMain then
+  if (dblTrackArc > 55) and boolTrackMain then
   begin
     dblTrackResistanceArc := 650 / (dblTrackArc - 55);
   end
-  else if (dblTrackArc > 0) and (not boolTrackMain) then
+  else if (dblTrackArc > 30) and (not boolTrackMain) then
   begin
     dblTrackResistanceArc := 500 / (dblTrackArc - 30);
   end;
@@ -319,7 +271,7 @@ begin
   dblTrackResistance := dblTrackResistanceArc + dblTrackResistanceTunnel;
   lRealMaxForce := dblMaxForce;
   dblAlsoMaxForce := 0;
-  if (abs(dblLastV) > 0.1) then
+  if (abs(dblLastV) >= 0.1) then
   begin
     dblAlsoMaxForce := dblMaxPower / dblLastV;
     if (dblAlsoMaxForce < lRealMaxForce) then
@@ -328,25 +280,32 @@ begin
     end;
   end;
   dblForce := lRealMaxForce * dblPowerControl;
+  if dirDirection = dirNeutral then
+  begin
+    dblForce := 0;
+  end;
   dblTotalPullForce := dblForce - dblTrainResistance - dblTrackResistance;
-  if (abs(dblLastV) < 0.01) and (abs(dblTotalPullForce) <= dblBrakeResistance) then
+  if (abs(dblLastV) < 0.1) and (abs(dblTotalPullForce) <= dblBrakeResistance) then
   begin
     dblForceNet := 0;
-  end
-  else if abs(dblLastV) < 0.01 then
-  begin
-    dblForceNet := dblTotalPullForce - sign(dblTotalPullForce) * dblBrakeResistance;
+    dblLastV := 0;
+    dblLastA := 0;
   end
   else
   begin
-    dblForceNet := dblTotalPullForce - sign(dblLastV) * dblBrakeResistance;
+    if abs(dblLastV) < 0.1 then
+    begin
+      dblForceNet := dblTotalPullForce - sign(dblTotalPullForce) * dblBrakeResistance;
+    end
+    else
+    begin
+      dblForceNet := dblTotalPullForce - sign(dblLastV) * dblBrakeResistance;
+    end;
+    dblForceNet := dblForceNet - dblGravityResistance;
+    dblLastA := dblForceNet / dblMass;
+    dblLastV := dblLastV + (dblLastA * dt);
   end;
-  dblForceNet := dblForceNet - dblGravityResistance;
-  dblLastA := dblForceNet / dblMass;
-  dblLastV := dblLastV + dblLastA * dt;
 
-  if abs(dblLastV) < 0.001 then
-    dblLastV := 0;
   if dirDirection = dirForward then
   begin
     dblLastX := dblLastX + (dblLastV * dt);
@@ -357,428 +316,6 @@ begin
   end;
   dblLastP := dblForce * dblLastV;
   dblLastEk := (dblMass/2)*dblLastV*dblLastV;
-
-  //slLog.Add('Tick');
-  //slLog.Add(Export());
-  //slLog.Add('End of tick');
-end;
-
-function TSimulation.PowerControl(): double;
-begin
-  result := dblPowerControl;
-end;
-
-function TSimulation.BrakeDynaControl(): double;
-begin
-  result := dblBrakeDynaControl;
-end;
-
-function TSimulation.BrakeElmagControl(): double;
-begin
-  result := dblBrakeElmagControl;
-end;
-
-function TSimulation.BrakeAirControl(): double;
-begin
-  result := dblBrakeAirControl;
-end;
-
-procedure TSimulation.SetPowerControl(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    AValue := 0;
-  end;
-  if (AValue > 1) then
-  begin
-    AValue := 1;
-  end;
-  dblPowerControl := AValue;
-end;
-
-procedure TSimulation.SetBrakeDynaControl(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    AValue := 0;
-  end;
-  if (AValue > 1) then
-  begin
-    AValue := 1;
-  end;
-  dblBrakeDynaControl := AValue;
-end;
-
-procedure TSimulation.SetBrakeElmagControl(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    AValue := 0;
-  end;
-  if (AValue > 1) then
-  begin
-    AValue := 1;
-  end;
-  dblBrakeElmagControl := AValue;
-end;
-
-procedure TSimulation.SetBrakeAirControl(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    AValue := 0;
-  end;
-  if (AValue > 1) then
-  begin
-    AValue := 1;
-  end;
-  dblBrakeAirControl := AValue;
-end;
-
-function TSimulation.Door(): TDoorStatus;
-begin
-  result := intDoor;
-end;
-
-function TSimulation.Trainlights(): TTrainLights;
-begin
-  result := intTrainlights;
-end;
-
-function TSimulation.Passengerlights(): TInteriorLights;
-begin
-  result := intPassengerlights;
-end;
-
-function TSimulation.Driverlights(): TInteriorLights;
-begin
-  result := intDriverlights;
-end;
-
-procedure TSimulation.SwitchDoorCallback(Sender: TObject);
-begin
-  SwitchDoor();
-  if (Sender is TTimer) then
-  begin
-    (Sender as TTimer).Enabled := false;
-    FreeAndNil(Sender);
-  end;
-end;
-
-procedure TSimulation.SwitchDoor();
-var lTimer: TTimer;
-begin
-  if (intDoor >= High(TDoorStatus)) or (intDoor < Low(TDoorStatus)) then
-  begin
-    intDoor := Low(TDoorStatus);
-  end
-  else
-  begin
-    intDoor := Succ(intDoor);
-  end;
-  if (intDoor = doorOpening) or (intDoor = doorClosing) then
-  begin
-    lTimer := TTimer.Create(nil);
-    lTimer.Interval := 4321;
-    lTimer.OnTimer := @SwitchDoorCallback;
-    lTimer.Enabled := true;
-  end;
-  if (intDoor = doorOpen) and Assigned(ECanBoard) then
-  begin
-    ECanBoard();
-  end;
-end;
-
-procedure TSimulation.SwitchTrainlights();
-begin
-  if (intTrainlights >= High(TTrainLights)) or (intTrainlights < Low(TTrainLights)) then
-  begin
-    intTrainlights := Low(TTrainLights);
-    Exit;
-  end;
-  intTrainlights := Succ(intTrainlights);
-end;
-
-procedure TSimulation.SwitchPassengerlights();
-begin
-  if (intPassengerlights >= High(TInteriorLights)) or (intPassengerlights < Low(TInteriorLights)) then
-  begin
-    intPassengerlights := Low(TInteriorLights);
-    Exit;
-  end;
-  intPassengerlights := Succ(intPassengerlights);
-end;
-
-procedure TSimulation.SwitchDriverlights();
-begin
-  if (intDriverlights >= High(TInteriorLights)) or (intDriverlights < Low(TInteriorLights)) then
-  begin
-    intDriverlights := Low(TInteriorLights);
-    Exit;
-  end;
-  intDriverlights := Succ(intDriverlights);
-end;
-
-function TSimulation.Sander(): boolean;
-begin
-  result := boolSander;
-end;
-
-function TSimulation.Emergency(): boolean;
-begin
-  result := boolEmergency;
-end;
-
-function TSimulation.MainSwitch(): boolean;
-begin
-  result := boolMainSwitch;
-end;
-
-function TSimulation.Lock(): boolean;
-begin
-  result := boolLock;
-end;
-
-function TSimulation.WakeUp(): boolean;
-begin
-  result := boolWakeUp;
-end;
-
-procedure TSimulation.ToggleSander();
-begin
-  boolSander := not boolSander;
-end;
-procedure TSimulation.ToggleEmergency();
-begin
-  boolEmergency := not boolEmergency;
-end;
-
-procedure TSimulation.ToggleMainSwitch();
-begin
-  boolMainSwitch := not boolMainSwitch;
-end;
-
-procedure TSimulation.ToggleLock();
-begin
-  boolLock := not boolLock;
-end;
-
-procedure TSimulation.ToggleWakeup();
-begin
-  boolWakeUp := not boolWakeUp;
-end;
-
-function TSimulation.Velocity(boolKmph: boolean = false): double;
-begin
-  result := dblLastV;
-  if boolKmph then
-  begin
-    result := dblLastV * 3.6;
-  end;
-end;
-
-function TSimulation.Position(): double;
-begin
-  result := dblLastX;
-end;
-
-function TSimulation.Acceleration(): double;
-begin
-  result := dblLastA;
-end;
-
-function TSimulation.KineticEnergy(): double;
-begin
-  result := dblLastEk;
-end;
-
-function TSimulation.Power(): double;
-begin
-  result := dblLastP;
-end;
-
-function TSimulation.Force(): double;
-begin
-  result := dblForce;
-end;
-
-function TSimulation.MaxVelocity(boolKmph: boolean = false): double;
-begin
-  result := dblMaxV;
-  if boolKmph then
-  begin
-    result := dblMaxV * 3.6;
-  end;
-end;
-
-procedure TSimulation.SetMaxVelocity(AValue: double; boolKmph: boolean = false);
-begin
-  if boolKmph then
-  begin
-    dblMaxV := AValue / 3.6;
-    Exit;
-  end;
-  dblMaxV := AValue;
-end;
-
-function TSimulation.TrainResistanceUseABC(): boolean;
-begin
-  result := boolTrainResistanceUseABC;
-end;
-
-procedure TSimulation.SetTrainResistanceUseABC(AValue: boolean);
-begin
-  boolTrainResistanceUseABC := AValue;
-end;
-
-function TSimulation.Direction(): TTrainDirection;
-begin
-  result := dirDirection;
-end;
-
-procedure TSimulation.SetDirection(AValue: TTrainDirection);
-begin
-  dirDirection := AValue;
-end;
-
-function TSimulation.TrackArc(): double;
-begin
-  result := dblTrackArc;
-end;
-
-function TSimulation.TrackTunnel(): TTunnel;
-begin
-  result := tnlTrackTunnel;
-end;
-
-function TSimulation.TrackSlope(): double;
-begin
-  result := dblTrackSlope;
-end;
-
-function TSimulation.TrackMain(): boolean;
-begin
-  result := boolTrackMain;
-end;
-
-procedure TSimulation.SetTrackArc(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    AValue := 0;
-  end;
-  dblTrackArc := AValue;
-end;
-
-procedure TSimulation.SetTrackTunnel(AValue: TTunnel);
-begin
-  tnlTrackTunnel := AValue;
-end;
-
-procedure TSimulation.SetTrackSlope(AValue: double);
-begin
-  dblTrackSlope := AValue;
-end;
-
-procedure TSimulation.SetTrackMain(AValue: boolean);
-begin
-  boolTrackMain := AValue;
-end;
-
-function TSimulation.BrakeResistance(): double;
-begin
-  result := dblBrakeResistance;
-end;
-
-function TSimulation.GravityResistance(): double;
-begin
-  result := dblGravityResistance;
-end;
-
-function TSimulation.TrainResistance(): double;
-begin
-  result := dblTrainResistance;
-end;
-
-function TSimulation.TrackResistance(): double;
-begin
-  result := dblTrackResistance;
-end;
-
-function TSimulation.Mass(): double;
-begin
-  result := dblMass;
-end;
-
-function TSimulation.MaxPower(): double;
-begin
-  result := dblMaxPower;
-end;
-
-function TSimulation.MaxBrake(): double;
-begin
-  result := dblMaxBrake;
-end;
-
-function TSimulation.MaxForce(): double;
-begin
-  result := dblMaxForce;
-end;
-
-procedure TSimulation.SetMass(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    Exit;
-  end;
-  dblMass := AValue;
-end;
-
-procedure TSimulation.SetMaxPower(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    Exit;
-  end;
-  dblMaxPower := AValue;
-end;
-
-procedure TSimulation.SetMaxBrake(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    Exit;
-  end;
-  dblMaxBrake := AValue;
-end;
-
-procedure TSimulation.SetMaxForce(AValue: double);
-begin
-  if (AValue < 0) then
-  begin
-    Exit;
-  end;
-  dblMaxForce := AValue;
-end;
-
-function TSimulation.SimTime(): TDateTime;
-begin
-  result := dtLastT;
-end;
-
-function TSimulation.BlockedDoor(): boolean;
-begin
-  result := boolBlockedDoor;
-end;
-
-procedure TSimulation.BlockDoor();
-begin
-  boolBlockedDoor := true;
-end;
-
-procedure TSimulation.UnblockDoor();
-begin
-  boolBlockedDoor := false;
 end;
 
 function TSimulation.Export(): string;
@@ -835,6 +372,622 @@ begin
   Format('"Rtt": "%s",'#10, [strTunnel]) +
   Format('"M": "%.1f kg",'#10, [dblMass]) +
   Format('"T": "%s",'#10, [FormatDateTime('dd.mm.yyyy hh.mm.ss.zzz', dtLastT)]);
+end;
+
+procedure TSimulation.Refresh();
+begin
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('BrakeAirControl', dblBrakeAirControl, dblBrakeAirControl);
+    EValueChangedDouble('BrakeElmagControl', dblBrakeElmagControl, dblBrakeElmagControl);
+    EValueChangedDouble('BrakeDynaControl', dblBrakeDynaControl, dblBrakeDynaControl);
+    EValueChangedDouble('PowerControl', dblPowerControl, dblPowerControl);
+    EValueChangedDouble('MaxVelocity', dblMaxV, dblMaxV);
+    EValueChangedDouble('MaxForce', dblMaxForce, dblMaxForce);
+    EValueChangedDouble('MaxBrake', dblMaxBrake, dblMaxBrake);
+    EValueChangedDouble('MaxPower', dblMaxPower, dblMaxPower);
+    EValueChangedDouble('Mass', dblMass, dblMass);
+    EValueChangedDouble('TrackSlope', dblTrackSlope, dblTrackSlope);
+    EValueChangedDouble('TrackArc', dblTrackArc, dblTrackArc);
+  end;
+
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('Sander', boolSander, boolSander);
+    EValueChangedBoolean('Emergency', boolEmergency, boolEmergency);
+    EValueChangedBoolean('MainSwitch', boolMainSwitch, boolMainSwitch);
+    EValueChangedBoolean('Lock', boolLock, boolLock);
+    EValueChangedBoolean('Wakeup', boolWakeUp, boolWakeUp);
+    EValueChangedBoolean('TrainResistanceUseABC', boolTrainResistanceUseABC, boolTrainResistanceUseABC);
+    EValueChangedBoolean('BlockedDoor', boolBlockedDoor, boolBlockedDoor);
+    EValueChangedBoolean('TrackMain', boolTrackMain, boolTrackMain);
+  end;
+
+  if Assigned(EValueChangedInteriorLights) then
+  begin
+    EValueChangedInteriorLights('DriverLights', intDriverlights, intDriverlights);
+    EValueChangedInteriorLights('PassengerLights', intPassengerlights, intPassengerlights);
+  end;
+
+  if Assigned(EValueChangedDoorStatus) then
+  begin
+    EValueChangedDoorStatus('Door', intDoor, intDoor);
+  end;
+  if Assigned(EValueChangedTrainLights) then
+  begin
+    EValueChangedTrainLights('TrainLights', intTrainlights, intTrainlights);
+  end;
+  if Assigned(EValueChangedTrainDirection) then
+  begin
+    EValueChangedTrainDirection('Direction', dirDirection, dirDirection);
+  end;
+  if Assigned(EValueChangedTunnel) then
+  begin
+    EValueChangedTunnel('TrackTunnel', tnlTrackTunnel, tnlTrackTunnel);
+  end;
+end;
+
+function TSimulation.PowerControl(): double;
+begin
+  result := dblPowerControl;
+end;
+
+function TSimulation.BrakeDynaControl(): double;
+begin
+  result := dblBrakeDynaControl;
+end;
+
+function TSimulation.BrakeElmagControl(): double;
+begin
+  result := dblBrakeElmagControl;
+end;
+
+function TSimulation.BrakeAirControl(): double;
+begin
+  result := dblBrakeAirControl;
+end;
+
+function TSimulation.Door(): TDoorStatus;
+begin
+  result := intDoor;
+end;
+
+function TSimulation.Trainlights(): TTrainLights;
+begin
+  result := intTrainlights;
+end;
+
+function TSimulation.Passengerlights(): TInteriorLights;
+begin
+  result := intPassengerlights;
+end;
+
+function TSimulation.Driverlights(): TInteriorLights;
+begin
+  result := intDriverlights;
+end;
+
+function TSimulation.Sander(): boolean;
+begin
+  result := boolSander;
+end;
+
+function TSimulation.Emergency(): boolean;
+begin
+  result := boolEmergency;
+end;
+
+function TSimulation.MainSwitch(): boolean;
+begin
+  result := boolMainSwitch;
+end;
+
+function TSimulation.Lock(): boolean;
+begin
+  result := boolLock;
+end;
+
+function TSimulation.WakeUp(): boolean;
+begin
+  result := boolWakeUp;
+end;
+
+function TSimulation.Velocity(boolKmph: boolean = false): double;
+begin
+  result := dblLastV;
+  if boolKmph then
+  begin
+    result := dblLastV * 3.6;
+  end;
+end;
+
+function TSimulation.Position(): double;
+begin
+  result := dblLastX;
+end;
+
+function TSimulation.Acceleration(): double;
+begin
+  result := dblLastA;
+end;
+
+function TSimulation.KineticEnergy(): double;
+begin
+  result := dblLastEk;
+end;
+
+function TSimulation.Power(): double;
+begin
+  result := dblLastP;
+end;
+
+function TSimulation.Force(): double;
+begin
+  result := dblForce;
+end;
+
+function TSimulation.MaxVelocity(boolKmph: boolean = false): double;
+begin
+  result := dblMaxV;
+  if boolKmph then
+  begin
+    result := dblMaxV * 3.6;
+  end;
+end;
+
+function TSimulation.TrainResistanceUseABC(): boolean;
+begin
+  result := boolTrainResistanceUseABC;
+end;
+
+function TSimulation.Direction(): TTrainDirection;
+begin
+  result := dirDirection;
+end;
+
+function TSimulation.TrackArc(): double;
+begin
+  result := dblTrackArc;
+end;
+
+function TSimulation.TrackTunnel(): TTunnel;
+begin
+  result := tnlTrackTunnel;
+end;
+
+function TSimulation.TrackSlope(): double;
+begin
+  result := dblTrackSlope;
+end;
+
+function TSimulation.TrackMain(): boolean;
+begin
+  result := boolTrackMain;
+end;
+
+function TSimulation.BrakeResistance(): double;
+begin
+  result := dblBrakeResistance;
+end;
+
+function TSimulation.GravityResistance(): double;
+begin
+  result := dblGravityResistance;
+end;
+
+function TSimulation.TrainResistance(): double;
+begin
+  result := dblTrainResistance;
+end;
+
+function TSimulation.TrackResistance(): double;
+begin
+  result := dblTrackResistance;
+end;
+
+function TSimulation.Mass(): double;
+begin
+  result := dblMass;
+end;
+
+function TSimulation.MaxPower(): double;
+begin
+  result := dblMaxPower;
+end;
+
+function TSimulation.MaxBrake(): double;
+begin
+  result := dblMaxBrake;
+end;
+
+function TSimulation.MaxForce(): double;
+begin
+  result := dblMaxForce;
+end;
+
+function TSimulation.SimTime(): TDateTime;
+begin
+  result := dtLastT;
+end;
+
+function TSimulation.BlockedDoor(): boolean;
+begin
+  result := boolBlockedDoor;
+end;
+
+/////////////////////////////////////////////////////////////////
+
+procedure TSimulation.SetPowerControl(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    AValue := 0;
+  end;
+  if (AValue > 1) then
+  begin
+    AValue := 1;
+  end;
+  dblOld := dblPowerControl;
+  dblPowerControl := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('PowerControl', dblOld, dblPowerControl);
+  end;
+end;
+
+procedure TSimulation.SetBrakeDynaControl(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    AValue := 0;
+  end;
+  if (AValue > 1) then
+  begin
+    AValue := 1;
+  end;
+  dblOld := dblBrakeDynaControl;
+  dblBrakeDynaControl := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('BrakeDynaControl', dblOld, dblBrakeDynaControl);
+  end;
+end;
+
+procedure TSimulation.SetBrakeElmagControl(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    AValue := 0;
+  end;
+  if (AValue > 1) then
+  begin
+    AValue := 1;
+  end;
+  dblOld := dblBrakeElmagControl;
+  dblBrakeElmagControl := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('BrakeElmagControl', dblOld, dblBrakeElmagControl);
+  end;
+end;
+
+procedure TSimulation.SetBrakeAirControl(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    AValue := 0;
+  end;
+  if (AValue > 1) then
+  begin
+    AValue := 1;
+  end;
+  dblOld := dblBrakeAirControl;
+  dblBrakeAirControl := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('BrakeAirControl', dblOld, dblBrakeAirControl);
+  end;
+end;
+
+procedure TSimulation.SwitchDoor(var ATimer: TTimer);
+var doorOld: TDoorStatus;
+begin
+  if (dblLastV >= 0.1) or (abs(dblLastA) >= 0.1) or (dblPowerControl <> 0) then
+  begin
+    Exit;
+  end;
+  doorOld := intDoor;
+  if (intDoor >= High(TDoorStatus)) or (intDoor < Low(TDoorStatus)) then
+  begin
+    intDoor := Low(TDoorStatus);
+  end
+  else
+  begin
+    intDoor := Succ(intDoor);
+  end;
+  if (intDoor = doorOpening) or (intDoor = doorClosing) then
+  begin
+    ATimer.Enabled := true;
+  end;
+  if Assigned(EValueChangedDoorStatus) then
+  begin
+    EValueChangedDoorStatus('Door', doorOld, intDoor);
+  end;
+end;
+
+procedure TSimulation.SwitchTrainlights();
+var tlOld: TTrainLights;
+begin
+  if (intTrainlights >= High(TTrainLights)) or (intTrainlights < Low(TTrainLights)) then
+  begin
+    intTrainlights := Low(TTrainLights);
+    Exit;
+  end;
+  tlOld := intTrainlights;
+  intTrainlights := Succ(intTrainlights);
+  if Assigned(EValueChangedTrainLights) then
+  begin
+    EValueChangedTrainLights('TrainLights', tlOld, intTrainlights);
+  end;
+end;
+
+procedure TSimulation.SwitchPassengerlights();
+var ilOld: TInteriorLights;
+begin
+  if (intPassengerlights >= High(TInteriorLights)) or (intPassengerlights < Low(TInteriorLights)) then
+  begin
+    intPassengerlights := Low(TInteriorLights);
+    Exit;
+  end;
+  ilOld := intPassengerlights;
+  intPassengerlights := Succ(intPassengerlights);
+  if Assigned(EValueChangedInteriorLights) then
+  begin
+    EValueChangedInteriorLights('PassengerLights', ilOld, intPassengerlights);
+  end;
+end;
+
+procedure TSimulation.SwitchDriverlights();
+var ilOld: TInteriorLights;
+begin
+  if (intDriverlights >= High(TInteriorLights)) or (intDriverlights < Low(TInteriorLights)) then
+  begin
+    intDriverlights := Low(TInteriorLights);
+    Exit;
+  end;
+  ilOld := intDriverlights;
+  intDriverlights := Succ(intDriverlights);
+  if Assigned(EValueChangedInteriorLights) then
+  begin
+    EValueChangedInteriorLights('DriverLights', ilOld, intDriverlights);
+  end;
+end;
+
+procedure TSimulation.ToggleSander();
+var boolOld: boolean;
+begin
+  boolOld := boolSander;
+  boolSander := not boolSander;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('Sander', boolOld, boolSander);
+  end;
+end;
+
+procedure TSimulation.ToggleEmergency();
+var boolOld: boolean;
+begin
+  boolOld := boolEmergency;
+  boolEmergency := not boolEmergency;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('Emergency', boolOld, boolEmergency);
+  end;
+end;
+
+procedure TSimulation.ToggleMainSwitch();
+var boolOld: boolean;
+begin
+  boolOld := boolMainSwitch;
+  boolMainSwitch := not boolMainSwitch;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('MainSwitch', boolOld, boolMainSwitch);
+  end;
+end;
+
+procedure TSimulation.ToggleLock();
+var boolOld: boolean;
+begin
+  boolOld := boolLock;
+  boolLock := not boolLock;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('Lock', boolOld, boolLock);
+  end;
+end;
+
+procedure TSimulation.ToggleWakeup();
+var boolOld: boolean;
+begin
+  boolOld := boolWakeup;
+  boolWakeUp := not boolWakeUp;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('Wakeup', boolOld, boolWakeUp);
+  end;
+end;
+
+procedure TSimulation.SetMaxVelocity(AValue: double; boolKmph: boolean = false);
+var dblOld: double;
+begin
+  if boolKmph then
+  begin
+    dblMaxV := AValue / 3.6;
+    Exit;
+  end;
+  dblOld := dblMaxV;
+  dblMaxV := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('MaxVelocity', dblOld, dblMaxV);
+  end;
+end;
+
+procedure TSimulation.SetTrainResistanceUseABC(AValue: boolean);
+var boolOld: boolean;
+begin
+  boolOld := boolTrainResistanceUseABC;
+  boolTrainResistanceUseABC := AValue;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('TrainResistanceUseABC', boolOld, boolTrainResistanceUseABC);
+  end;
+end;
+
+procedure TSimulation.SetDirection(AValue: TTrainDirection);
+var dirOld: TTrainDirection;
+begin
+  dirOld := dirDirection;
+  dirDirection := AValue;
+  if Assigned(EValueChangedTrainDirection) then
+  begin
+    EValueChangedTrainDirection('Direction', dirOld, dirDirection);
+  end;
+end;
+
+procedure TSimulation.SetTrackArc(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    AValue := 0;
+  end;
+  dblOld := dblTrackArc;
+  dblTrackArc := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('TrackArc', dblOld, dblTrackArc);
+  end;
+end;
+
+procedure TSimulation.SetTrackTunnel(AValue: TTunnel);
+var tnlOld: TTunnel;
+begin
+  tnlOld := tnlTrackTunnel;
+  tnlTrackTunnel := AValue;
+  if Assigned(EValueChangedTunnel) then
+  begin
+    EValueChangedTunnel('TrackTunnel', tnlOld, tnlTrackTunnel);
+  end;
+end;
+
+procedure TSimulation.SetTrackSlope(AValue: double);
+var dblOld: double;
+begin
+  dblOld := dblTrackSlope;
+  dblTrackSlope := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('TrackSlope', dblOld, dblTrackSlope);
+  end;
+end;
+
+procedure TSimulation.SetTrackMain(AValue: boolean);
+var boolOld: boolean;
+begin
+  boolOld := boolTrackMain;
+  boolTrackMain := AValue;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('TrackMain', boolOld, boolTrackMain);
+  end;
+end;
+
+procedure TSimulation.SetMass(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    Exit;
+  end;
+  dblOld := dblMass;
+  dblMass := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('Mass', dblOld, dblMass);
+  end;
+end;
+
+procedure TSimulation.SetMaxPower(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    Exit;
+  end;
+  dblOld := dblMaxPower;
+  dblMaxPower := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('MaxPower', dblOld, dblMaxPower);
+  end;
+end;
+
+procedure TSimulation.SetMaxBrake(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    Exit;
+  end;
+  dblOld := dblMaxBrake;
+  dblMaxBrake := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('MaxBrake', dblOld, dblMaxBrake);
+  end;
+end;
+
+procedure TSimulation.SetMaxForce(AValue: double);
+var dblOld: double;
+begin
+  if (AValue < 0) then
+  begin
+    Exit;
+  end;
+  dblOld := dblMaxForce;
+  dblMaxForce := AValue;
+  if Assigned(EValueChangedDouble) then
+  begin
+    EValueChangedDouble('MaxForce', dblOld, dblMaxForce);
+  end;
+end;
+
+procedure TSimulation.BlockDoor();
+var boolOld: boolean;
+begin
+  boolOld := boolBlockedDoor;
+  boolBlockedDoor := true;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('BlockedDoor', boolOld, boolBlockedDoor);
+  end;
+end;
+
+procedure TSimulation.UnblockDoor();
+var boolOld: boolean;
+begin
+  boolOld := boolBlockedDoor;
+  boolBlockedDoor := false;
+  if Assigned(EValueChangedBoolean) then
+  begin
+    EValueChangedBoolean('BlockedDoor', boolOld, boolBlockedDoor);
+  end;
 end;
 
 end.

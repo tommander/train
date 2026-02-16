@@ -1,12 +1,13 @@
 object fTrackFinish: TfTrackFinish
-  Left = 2864
-  Height = 743
-  Top = 284
+  Left = 2881
+  Height = 753
+  Top = 243
   Width = 575
+  AutoSize = True
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'fTrackFinish'
-  ClientHeight = 743
+  ClientHeight = 753
   ClientWidth = 575
   Position = poScreenCenter
   LCLVersion = '4.4.0.0'
@@ -22,23 +23,24 @@ object fTrackFinish: TfTrackFinish
     Font.Height = -85
     ParentFont = False
   end
-  object Label2: TLabel
+  object lblHeading: TLabel
     Left = 0
-    Height = 20
-    Top = 419
+    Height = 26
+    Top = 128
     Width = 575
     Align = alTop
     Alignment = taCenter
     BorderSpacing.Top = 12
     BorderSpacing.Bottom = 12
-    Caption = 'Congratulations, driver, you finished the track.'
-    Font.Height = -16
+    Caption = 'Track finished!'
+    Font.Height = -21
+    Font.Style = [fsBold]
     ParentFont = False
   end
-  object Panel2: TPanel
+  object pnlRating0: TPanel
     Left = 12
     Height = 85
-    Top = 128
+    Top = 204
     Width = 551
     Align = alTop
     AutoSize = True
@@ -58,7 +60,7 @@ object fTrackFinish: TfTrackFinish
       Align = alTop
       Alignment = taCenter
       BorderSpacing.Bottom = 6
-      Caption = 'You can do it!'
+      Caption = 'Oopsie'
       Font.Height = -19
       Font.Name = 'Quicksand Medium'
       Layout = tlCenter
@@ -80,10 +82,10 @@ object fTrackFinish: TfTrackFinish
       ParentFont = False
     end
   end
-  object Panel3: TPanel
+  object pnlRating2: TPanel
     Left = 12
     Height = 85
-    Top = 322
+    Top = 398
     Width = 551
     Align = alTop
     AutoSize = True
@@ -125,10 +127,10 @@ object fTrackFinish: TfTrackFinish
       ParentFont = False
     end
   end
-  object Panel4: TPanel
+  object pnlRating1: TPanel
     Left = 12
     Height = 85
-    Top = 225
+    Top = 301
     Width = 551
     Align = alTop
     AutoSize = True
@@ -173,7 +175,7 @@ object fTrackFinish: TfTrackFinish
   object Panel5: TPanel
     Left = 12
     Height = 39
-    Top = 692
+    Top = 700
     Width = 551
     Align = alTop
     AutoSize = True
@@ -185,42 +187,21 @@ object fTrackFinish: TfTrackFinish
     ParentBackground = False
     ParentColor = False
     TabOrder = 3
-    object Button2: TButton
-      Left = 423
+    object btnClose: TButton
+      Left = 2
       Height = 35
       Top = 2
-      Width = 126
-      Align = alRight
-      AutoSize = True
-      Caption = 'Go to Main Menu'
+      Width = 547
+      Align = alClient
+      Caption = 'Close'
+      Default = True
       TabOrder = 0
     end
-    object Label9: TLabel
-      Left = 2
-      Height = 19
-      Top = 2
-      Width = 44
-      Caption = 'Label9'
-    end
   end
-  object Label10: TLabel
-    Left = 0
-    Height = 20
-    Top = 451
-    Width = 575
-    Align = alTop
-    Alignment = taCenter
-    BorderSpacing.Top = 12
-    BorderSpacing.Bottom = 12
-    Caption = 'Jabluňkovice, hlavní nádraží -> Kyselá prdel, křižovatka'
-    Font.Height = -16
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object ListView1: TListView
+  object lvFinances: TListView
     Left = 24
-    Height = 197
-    Top = 483
+    Height = 193
+    Top = 495
     Width = 527
     Align = alTop
     BorderSpacing.Left = 12
@@ -258,5 +239,18 @@ object fTrackFinish: TfTrackFinish
     }
     TabOrder = 4
     ViewStyle = vsReport
+  end
+  object lblRating: TLabel
+    Left = 0
+    Height = 26
+    Top = 166
+    Width = 575
+    Align = alTop
+    Alignment = taCenter
+    BorderSpacing.Top = 12
+    BorderSpacing.Bottom = 12
+    Caption = 'Your rating:'
+    Font.Height = -21
+    ParentFont = False
   end
 end

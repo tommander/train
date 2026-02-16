@@ -52,7 +52,17 @@ begin
   sim.SetMaxForce(28000);
   sim.SetMaxVelocity(80, true);
   sim.SetBrakeElmagControl(1);
-  sim.ECanBoard := @fMain.TrainCanBoard;
+  sim.EValueChangedDouble := @fMain.SimOnValueChangedDouble;
+  sim.EValueChangedString := @fMain.SimOnValueChangedString;
+  sim.EValueChangedInteger := @fMain.SimOnValueChangedInteger;
+  sim.EValueChangedBoolean := @fMain.SimOnValueChangedBoolean;
+  sim.EValueChangedDateTime := @fMain.SimOnValueChangedDateTime;
+  sim.EValueChangedTunnel := @fMain.SimOnValueChangedTunnel;
+  sim.EValueChangedInteriorLights := @fMain.SimOnValueChangedInteriorLights;
+  sim.EValueChangedTrainLights := @fMain.SimOnValueChangedTrainLights;
+  sim.EValueChangedDoorStatus := @fMain.SimOnValueChangedDoorStatus;
+  sim.EValueChangedTrainRangeControl := @fMain.SimOnValueChangedTrainRangeControl;
+  sim.EValueChangedTrainDirection := @fMain.SimOnValueChangedTrainDirection;
 
   try
     LNow := VirtualNow();

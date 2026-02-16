@@ -6,27 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  StdCtrls, Buttons, DateUtils, Math{, anysort}, uengine, ucommon, utrackfinish,
-  udebug, LCLType;
+  StdCtrls, Buttons, DateUtils, uengine, ucommon, utrackfinish, udebug, LCLType;
 
 type
-  TStationID = longword;
-  TStation = packed record
-    strName: shortstring;
-    dtArrival: TDateTime;
-    dtDeparture: TDateTime;
-    dblPosition: double;
-    dtRealArrival: TDateTime;
-    dtRealDeparture: TDateTime;
-    dblRealPosition: double;
-    dblMaxPassengers: double;
-    dblStretchRushHours: double;
-    intPassengersOut: word;
-    intPassengersIn: word;
-    boolVisited: boolean;
-  end;
-  TStationList = array of TStation;
-
   TUISection = set of (uisDebug, uisCanvas, uisStations,
                        uisProgressBars, uisTrackbars, uisMap,
                        uisSwitchesToggles, uisAdmin, uisProfile);
@@ -34,101 +16,111 @@ type
   { TfMain }
 
   TfMain = class(TForm)
-      BitBtn1: TBitBtn;
-      BitBtn2: TBitBtn;
-      BitBtn3: TBitBtn;
-      Button1: TButton;
-      Button2: TButton;
-      lblPassengersWaitOut: TLabel;
-      lblPassengersWaitIn: TLabel;
-      Label6: TLabel;
-      lblStationNowDistance: TLabel;
-      lblStationNextDistance: TLabel;
-      lblStationNowDistanceLabel: TLabel;
-      lblStationNextDistanceLabel: TLabel;
-      lblStationLastName: TLabel;
-      Label2: TLabel;
-      lblStationNowName: TLabel;
-      lblStationNextName: TLabel;
-      lblStationNowPlan: TLabel;
-      lblStationNextPlan: TLabel;
-      lblStationLastPlanArrival: TLabel;
-      lblStationNowPlanArrival: TLabel;
-      lblStationNextPlanArrival: TLabel;
-      lblStationLastPlanDeparture: TLabel;
-      lblStationLastPlan: TLabel;
-      lblStationNowPlanDeparture: TLabel;
-      lblStationNextPlanDeparture: TLabel;
-      lblStationNowEtaLabel: TLabel;
-      lblStationLastRealArrival: TLabel;
-      lblStationNowEta: TLabel;
-      lblStationLastRealDeparture: TLabel;
-      lblStationLastReal: TLabel;
-      lblStationLastPassengersIn: TLabel;
-      lblStationLastPassengersOut: TLabel;
-      lblStationLastPassengers: TLabel;
-      lblStationLastDistance: TLabel;
-      Label3: TLabel;
-      lblStationLastDistanceLabel: TLabel;
-      Label4: TLabel;
-      lblAirBrake1: TLabel;
-      lblAirBrake2: TLabel;
-      lblAirBrake1Max: TLabel;
-      lblAirBrake2Max: TLabel;
-      lblVelocity: TLabel;
-      lblForce: TLabel;
-      lblAccel: TLabel;
-      lblAccelMax: TLabel;
-      lblForceMax: TLabel;
-      lblPowerMax: TLabel;
-      lblVelocityMax: TLabel;
-      lblPower: TLabel;
-      Panel10: TPanel;
-      Panel12: TPanel;
-      Panel13: TPanel;
-      Panel14: TPanel;
-      Panel17: TPanel;
-      Panel2: TPanel;
-      pnlPassengersWait: TPanel;
-      pnlRight: TPanel;
-      Panel24: TPanel;
-      pnlStationLast: TPanel;
-      pnlStationNow: TPanel;
-      pnlStationNext: TPanel;
-      pnlStationNowDistance: TPanel;
-      pnlStationNextDistance: TPanel;
-      pnlStationLastPlan: TPanel;
-      pnlStationNowPlan: TPanel;
-      pnlStationNextPlan: TPanel;
-      pnlStationLastReal: TPanel;
-      pnlStationLastPassengers: TPanel;
-      pnlStationLastDistance: TPanel;
-      Panel5: TPanel;
-      Panel6: TPanel;
-      btnMinusDynBrake: TBitBtn;
-      btnMinusPower: TBitBtn;
-      btnMinuxAirBrake: TBitBtn;
-      btnMinuxElmagBrake: TBitBtn;
-      btnPlusAirBrake: TBitBtn;
-      btnPlusDynBrake: TBitBtn;
-      btnPlusElmagBrake: TBitBtn;
-      btnPlusPower: TBitBtn;
-      lblControlAirBrake: TLabel;
-      lblControlDynBrake: TLabel;
-      lblControlElmagBrake: TLabel;
-      lblControlPower: TLabel;
-      Panel3: TPanel;
-      Panel4: TPanel;
-      pbAirBrake1: TProgressBar;
-      pbAirBrake2: TProgressBar;
-      pbForce: TProgressBar;
-      pbAccel: TProgressBar;
-      pbVelocity: TProgressBar;
-      pbPower: TProgressBar;
-      pnlControlAirBrake: TPanel;
-      pnlControlDynBrake: TPanel;
-      pnlControlElmagBrake: TPanel;
-      pnlControlXYZ: TPanel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    Button1: TButton;
+    Button2: TButton;
+    Label1: TLabel;
+    lblTrackTunnel: TLabel;
+    Label11: TLabel;
+    lblTrackSlope: TLabel;
+    Label13: TLabel;
+    lblTrackMain: TLabel;
+    lblTrackArc: TLabel;
+    lblTrackSlopeLabel: TLabel;
+    lblTrackSpeed: TLabel;
+    Label9: TLabel;
+    lblPassengersWaitOut: TLabel;
+    lblPassengersWaitIn: TLabel;
+    Label6: TLabel;
+    lblStationNowDistance: TLabel;
+    lblStationNowDistanceLabel: TLabel;
+    lblStationLastName: TLabel;
+    Label2: TLabel;
+    lblStationNowName: TLabel;
+    lblStationNextName: TLabel;
+    lblStationNowPlan: TLabel;
+    lblStationNextPlan: TLabel;
+    lblStationLastPlanArrival: TLabel;
+    lblStationNowPlanArrival: TLabel;
+    lblStationNextPlanArrival: TLabel;
+    lblStationLastPlanDeparture: TLabel;
+    lblStationLastPlan: TLabel;
+    lblStationNowPlanDeparture: TLabel;
+    lblStationNextPlanDeparture: TLabel;
+    lblStationNowEtaLabel: TLabel;
+    lblStationLastRealArrival: TLabel;
+    lblStationNowEta: TLabel;
+    lblStationLastRealDeparture: TLabel;
+    lblStationLastReal: TLabel;
+    lblStationLastPassengersIn: TLabel;
+    lblStationLastPassengersOut: TLabel;
+    lblStationLastPassengers: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    lblAirBrake1: TLabel;
+    lblAirBrake2: TLabel;
+    lblAirBrake1Max: TLabel;
+    lblAirBrake2Max: TLabel;
+    lblStationNowPlanDeparture1: TLabel;
+    lblStationNowPlanDeparture2: TLabel;
+    lblVelocity: TLabel;
+    lblForce: TLabel;
+    lblAccel: TLabel;
+    lblAccelMax: TLabel;
+    lblForceMax: TLabel;
+    lblPowerMax: TLabel;
+    lblVelocityMax: TLabel;
+    lblPower: TLabel;
+    Panel10: TPanel;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    Panel14: TPanel;
+    Panel17: TPanel;
+    Panel2: TPanel;
+    Panel8: TPanel;
+    Panel9: TPanel;
+    pnlPassengersWait: TPanel;
+    pnlRight: TPanel;
+    Panel24: TPanel;
+    pnlStationLast: TPanel;
+    pnlStationNow: TPanel;
+    pnlStationNext: TPanel;
+    pnlStationNowDistance: TPanel;
+    pnlStationNextDistance: TPanel;
+    pnlStationLastPlan: TPanel;
+    pnlStationNowPlan: TPanel;
+    pnlStationNextPlan: TPanel;
+    pnlStationLastReal: TPanel;
+    pnlStationLastPassengers: TPanel;
+    pnlStationLastDistance: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    btnMinusDynBrake: TBitBtn;
+    btnMinusPower: TBitBtn;
+    btnMinuxAirBrake: TBitBtn;
+    btnMinuxElmagBrake: TBitBtn;
+    btnPlusAirBrake: TBitBtn;
+    btnPlusDynBrake: TBitBtn;
+    btnPlusElmagBrake: TBitBtn;
+    btnPlusPower: TBitBtn;
+    lblControlAirBrake: TLabel;
+    lblControlDynBrake: TLabel;
+    lblControlElmagBrake: TLabel;
+    lblControlPower: TLabel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    pbAirBrake1: TProgressBar;
+    pbAirBrake2: TProgressBar;
+    pbForce: TProgressBar;
+    pbAccel: TProgressBar;
+    pbVelocity: TProgressBar;
+    pbPower: TProgressBar;
+    pnlControlAirBrake: TPanel;
+    pnlControlDynBrake: TPanel;
+    pnlControlElmagBrake: TPanel;
+    pnlControlXYZ: TPanel;
     btnDoor: TBitBtn;
     btnLock: TBitBtn;
     btnWakeUp: TBitBtn;
@@ -171,6 +163,7 @@ type
     tbControlElmagBrake: TTrackBar;
     tbControlPower: TTrackBar;
     Timer1: TTimer;
+    tmrDoor: TTimer;
     tmrPassengersWait: TTimer;
     tmrPassengers: TTimer;
     tbDirection: TTrackBar;
@@ -197,11 +190,12 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure IdleTimer1Timer(Sender: TObject);
-    // ---
-    function DirectionChangeBlocked(): boolean;
-    procedure RefreshUI();
+    procedure tmrDoorTimer(Sender: TObject);
     procedure tmrPassengersTimer(Sender: TObject);
     procedure tmrPassengersWaitTimer(Sender: TObject);
+    // ---
+    public procedure InitProps();
+    procedure RefreshUI();
     private
       var intPowerControl: shortint;
       var intBrakeDynaControl: shortint;
@@ -218,6 +212,7 @@ type
     private arrStations: array of TStation;
     private boolBlockSort: boolean;
     // Stations - methods
+    function DirectionChangeBlocked(): boolean;
     public procedure BlockSort();
     public procedure UnblockSort();
     public function BlockedSort(): boolean;
@@ -231,7 +226,6 @@ type
     public procedure UpdateStation(AID: TStationID; AStation: TStation);
     public procedure DeleteStation(AID: TStationID);
     public function ListStations(): TStationList;
-    public procedure TrainCanBoard();
     // Passengers
     private var wrdPassengers: word;
     private var wrdCapacity: word;
@@ -239,130 +233,34 @@ type
     private var stLoadingStation: TStation;
     private var dtLoadingEnd: TDateTime;
     // Misc
-    public procedure InitProps();
-
+    // Events from simulation
+        public
+    procedure SimOnValueChangedDouble(AName: string; AValue, AOldValue: double);
+    procedure SimOnValueChangedString(AName: string; AValue, AOldValue: string);
+    procedure SimOnValueChangedInteger(AName: string; AValue, AOldValue: int64);
+    procedure SimOnValueChangedBoolean(AName: string; AValue, AOldValue: boolean);
+    procedure SimOnValueChangedDateTime(AName: string; AValue, AOldValue: TDateTime);
+    procedure SimOnValueChangedTunnel(AName: string; AValue, AOldValue: TTunnel);
+    procedure SimOnValueChangedInteriorLights(AName: string; AValue, AOldValue: TInteriorLights);
+    procedure SimOnValueChangedTrainLights(AName: string; AValue, AOldValue: TTrainLights);
+    procedure SimOnValueChangedDoorStatus(AName: string; AValue, AOldValue: TDoorStatus);
+    procedure SimOnValueChangedTrainRangeControl(AName: string; AValue, AOldValue: TTrainRangeControl);
+    procedure SimOnValueChangedTrainDirection(AName: string; AValue, AOldValue: TTrainDirection);
+    // Our events
+    private var lwdCurrentSection: longword;
+    private var trcTrack: TTrackDefinition;
+    procedure OnTrackSectionChange();
+    procedure OnStationChange();
   end;
-  TLEDColor = (ledOff, ledWhite, ledSilver, ledGray, ledBlack, ledRed, ledYellow, ledGreen, ledAqua, ledBlue, ledViolet);
-  TLEDPower = (ledLight, ledNormal, ledDark);
-  TLED = record
-    ledColor: TLEDColor;
-    ledPower: TLEDPower;
-    ledText: shortstring;
-  end;
-  TTrainSwitchControl = record
-    arrMap: array of TLED;
-  end;
 
-function BoolToStr(ABool: boolean; const ATrue, AFalse: string): string;
-function HrMin(ADate: TDateTime; const AFormat: string = '%.2d:%.2d'): string;
-function NiceNumber(ANum: double; const AUnit: shortstring; ADigits: byte = 1): string;
-procedure LED(APanel: TPanel; AStatus: TLED);
-function LEDStatus(AColor: TLEDColor; APower: TLEDPower = ledNormal; AText: shortstring = ''): TLED;
 
-// STATIONS - GLOBAL
-function SameStation(AStation1, AStation2: TStation): boolean;
-function IsNullStation(AStation: TStation): boolean;
-function NullStation(): TStation;
-function Station(AName: shortstring = ''; AArrival: TDateTime = 0; ADeparture: TDateTime = 0; APosition: double = 0; AMaxPassengers: double = 1; AStretchRushHours: double = 2): TStation;
-function CompareStations(const s1,s2): integer;
-function timeint(ATime: TDateTime): double;
-function gauss(ATime,AMaxPassengers,AStretchRushHours: double): double;
 var
   fMain: TfMain;
-
+  sim: TSimulation;
 
 implementation
 
 {$R *.lfm}
-
-{ Global }
-
-function BoolToStr(ABool: boolean; const ATrue, AFalse: string): string;
-begin
-  result := AFalse;
-  if ABool then
-  begin
-    result := ATrue;
-  end;
-end;
-
-function HrMin(ADate: TDateTime; const AFormat: string = '%.2d:%.2d'): string;
-begin
-  result := Format(AFormat, [HourOf(ADate), MinuteOf(ADate)]);
-end;
-
-function NiceNumber(ANum: double; const AUnit: shortstring; ADigits: byte = 1): string;
-var dblValue: double;
-    strPrefix: string;
-begin
-  strPrefix := '';
-  dblValue := 0;
-  if (ANum > -1000) and (ANum < 1000) then
-  begin
-    dblValue := ANum;
-  end
-  else if (ANum > -1000*1000) and (ANum < 1000*1000) then
-  begin
-    dblValue := ANum / 1000;
-    strPrefix := 'k';
-  end
-  else if (ANum > -1000*1000*1000) and (ANum < 1000*1000*1000) then
-  begin
-    dblValue := ANum / (1000*1000);
-    strPrefix := 'M';
-  end
-  else if (ANum > -1000*1000*1000*1000) and (ANum < 1000*1000*1000*1000) then
-  begin
-    dblValue := ANum / (1000*1000*1000);
-    strPrefix := 'G';
-  end
-  else
-  begin
-    dblValue := ANum / (1000*1000*1000*1000);
-    strPrefix := 'T';
-  end;
-  result := Format('%.*f %s%s', [ADigits, dblValue, strPrefix, AUnit]);
-end;
-
-function LEDStatus(AColor: TLEDColor; APower: TLEDPower = ledNormal; AText: shortstring = ''): TLED;
-begin
-  result.ledColor := AColor;
-  result.ledPower := APower;
-  result.ledText := AText;
-end;
-
-procedure LED(APanel: TPanel; AStatus: TLED);
-var intOff,intOn: integer;
-begin
-  APanel.Caption := AStatus.ledText;
-  APanel.Color := clDefault;
-
-  intOff := 0;
-  if AStatus.ledPower = ledLight then
-  begin
-    intOff := 128;
-  end;
-  intOn := 255;
-  if AStatus.ledPower = ledDark then
-  begin
-    intOn := 128;
-  end;
-
-  case AStatus.ledColor of
-    ledWhite: APanel.Color :=  clWhite;
-    ledSilver: APanel.Color := clSilver;
-    ledGray: APanel.Color :=   clGray;
-    ledBlack: APanel.Color :=  clBlack;
-    ledRed: APanel.Color :=    RGBToColor(intOn, intOff, intOff);
-    ledYellow: APanel.Color := RGBToColor(intOn, intOn, intOff);
-    ledGreen: APanel.Color :=  RGBToColor(intOff, intOn, intOff);
-    ledAqua: APanel.Color :=   RGBToColor(intOff, intOn, intOn);
-    ledBlue: APanel.Color :=   RGBToColor(intOff, intOff, intOn);
-    ledViolet: APanel.Color := RGBToColor(intOn, intOff, intOn);
-  end;
-end;
-
-{ TfMain }
 
 procedure TfMain.InitProps();
 begin
@@ -379,21 +277,39 @@ begin
  intBrakeDynaControlMax := 7;
  wrdPassengers := 0;
  wrdCapacity := 512;
-end;
 
-procedure TfMain.TrainCanBoard();
-begin
-  BoardCurrentStation(VirtualNow(), sim.Position());
+ pbVelocity.Min := 0;
+ pbVelocity.Max := 160;
+ pbPower.Min := 0;
+ pbForce.Min := 0;
+ pbAccel.Min := 0;
+ pbAccel.Max := 30;
+ pbAirBrake1.Min := 0;
+ pbAirBrake1.Max := 1;
+ pbAirBrake1.Position := 0;
+ lblAirBrake1.Caption := IntToStr(pbAirBrake1.Position);
+ lblAirBrake1Max.Caption := IntToStr(pbAirBrake1.Max);
+ pbAirBrake2.Min := 0;
+ pbAirBrake2.Max := 1;
+ pbAirBrake2.Position := 1;
+ lblAirBrake2.Caption := IntToStr(pbAirBrake2.Position);
+ lblAirBrake2Max.Caption := IntToStr(pbAirBrake2.Max);
+
 end;
 
 procedure TfMain.RefreshUI();
 var intVelocity: int64;
     lAccel: double;
-    stLast,stNow,stNext: TStation;
+    lNow: TDateTime;
 begin
-  pbVelocity.Min := 0;
-  pbVelocity.Max := 160;
-  intVelocity := Round(sim.Velocity(true));
+ lNow := VirtualNow();
+ Label2.Caption := Format('%.2d:%.2d:%.2d', [HourOf(lNow), MinuteOf(lNow), SecondOf(lNow)]);
+ Label3.Caption := Format('%.2d.%.2d.%.4d', [DayOf(lNow), MonthOf(lNow), YearOf(lNow)]);
+ Label4.Caption := NiceNumber(sim.Position(), 'm', 1);
+
+ lblStationNowDistance.Caption := '🛤️' + NiceNumber(arrStations[intCurrentStation].dblPosition - sim.Position(), 'm', 2);
+
+ intVelocity := Round(sim.Velocity(true));
   if intVelocity > 160 then
   begin
     intVelocity := 160
@@ -409,23 +325,12 @@ begin
 
   pbVelocity.Position := intVelocity;
   lblVelocity.Caption := IntToStr(pbVelocity.Position);
-  lblVelocityMax.Caption := IntToStr(pbVelocity.Max);
 
-
-  pbPower.Min := 0;
-  pbPower.Max := Round(sim.MaxPower()/1000);
   pbPower.Position := Round(sim.Power()/1000);
   lblPower.Caption := IntToStr(pbPower.Position);
-  lblPowerMax.Caption := IntToStr(pbPower.Max);
 
-  pbForce.Min := 0;
-  pbForce.Max := Round(sim.MaxForce()/1000);
   pbForce.Position := Round(sim.Force()/1000);
   lblForce.Caption := IntToStr(pbForce.Position);
-  lblForceMax.Caption := IntToStr(pbForce.Max);
-
-  pbAccel.Min := 0;
-  pbAccel.Max := 30;
 
   lAccel := abs(sim.Acceleration());
   if lAccel > 3 then
@@ -433,8 +338,7 @@ begin
     lAccel := 3;
   end;
   pbAccel.Position := Round(lAccel*10);
-  lblAccel.Caption := IntToStr(pbAccel.Position);
-  lblAccelMax.Caption := IntToStr(pbAccel.Max);
+  lblAccel.Caption := Format('%.1f', [pbAccel.Position/10]);
   lblAccel.Font.Color := clBlue;
   if lAccel <= 0.05 then
   begin
@@ -453,155 +357,16 @@ begin
     lblAccel.Font.Color := clMaroon;
   end;
 
-  pbAirBrake1.Min := 0;
-  pbAirBrake1.Max := 1;
-  pbAirBrake1.Position := 0;
-  lblAirBrake1.Caption := IntToStr(pbAirBrake1.Position);
-  lblAirBrake1Max.Caption := IntToStr(pbAirBrake1.Max);
-
-  pbAirBrake2.Min := 0;
-  pbAirBrake2.Max := 1;
-  pbAirBrake2.Position := 1;
-  lblAirBrake2.Caption := IntToStr(pbAirBrake2.Position);
-  lblAirBrake2Max.Caption := IntToStr(pbAirBrake2.Max);
-
-  tbDirection.Min := -1;
-  tbDirection.Max := 1;
-  tbDirection.Position := Integer(sim.Direction());
-
-  tbControlPower.Min := 0;
-  tbControlPower.Max := intPowerControlMax;
-  tbControlPower.Position := Round(sim.PowerControl() * intPowerControlMax);
-  tbControlDynBrake.Min := 0;
-  tbControlDynBrake.Max := intBrakeDynaControlMax;
-  tbControlDynBrake.Position := Round(sim.BrakeDynaControl() * intBrakeDynaControlMax);
-  tbControlElmagBrake.Min := 0;
-  tbControlElmagBrake.Max := intBrakeElmagControlMax;
-  tbControlElmagBrake.Position := Round(sim.BrakeElmagControl() * intBrakeElmagControlMax);
-  tbControlAirBrake.Min := 0;
-  tbControlAirBrake.Max := intBrakeAirControlMax;
-  tbControlAirBrake.Position := Round(sim.BrakeAirControl() * intBrakeAirControlMax);
-
-  LED(Panel7, LEDStatus(ledOff));
-  case sim.Door() of
-    doorClosed: LED(Panel7, LEDStatus(ledGreen, ledNormal, '||'));
-    doorOpening: LED(Panel7, LEDStatus(ledYellow, ledNormal, '< >'));
-    doorOpen: LED(Panel7, LEDStatus(ledRed, ledNormal, '| |'));
-    doorAlarm: LED(Panel7, LEDStatus(ledRed, ledLight, '*'));
-    doorClosing: LED(Panel7, LEDStatus(ledYellow, ledLight, '> <'));
-  end;
-
-  LED(pnlHeadlightsLight, LEDStatus(ledOff));
-  case sim.Trainlights() of
-    tlOff: LED(pnlHeadlightsLight, LEDStatus(ledOff, ledNormal, 'x x'));
-    tlHeadDim: LED(pnlHeadlightsLight, LEDStatus(ledYellow, ledNormal, 'O x'));
-    tlHead: LED(pnlHeadlightsLight, LEDStatus(ledYellow, ledNormal, 'O O'));
-    tlHeadHigh: LED(pnlHeadlightsLight, LEDStatus(ledWhite, ledNormal, 'H H'));
-    tlRearDim: LED(pnlHeadlightsLight, LEDStatus(ledRed, ledNormal, 'O x'));
-    tlRear: LED(pnlHeadlightsLight, LEDStatus(ledRed, ledNormal, 'O O'));
-  end;
-
-  LED(pnlCabinlightsLight, LEDStatus(ledOff));
-  case sim.Passengerlights() of
-    ilOff: LED(pnlCabinlightsLight, LEDStatus(ledOff));
-    ilDim: LED(pnlCabinlightsLight, LEDStatus(ledYellow));
-    ilNormal: LED(pnlCabinlightsLight, LEDStatus(ledGreen));
-    ilEmergency: LED(pnlCabinlightsLight, LEDStatus(ledRed));
-  end;
-
-  LED(pnlPilotlightsLight, LEDStatus(ledOff));
-  case sim.Driverlights() of
-    ilOff: LED(pnlPilotlightsLight, LEDStatus(ledOff));
-    ilDim: LED(pnlPilotlightsLight, LEDStatus(ledYellow));
-    ilNormal: LED(pnlPilotlightsLight, LEDStatus(ledGreen));
-    ilEmergency: LED(pnlPilotlightsLight, LEDStatus(ledRed));
-  end;
-
-  LED(pnlSanderLight, LEDStatus(ledOff));
-  case sim.Sander() of
-    true: LED(pnlSanderLight, LEDStatus(ledRed));
-    false: LED(pnlSanderLight, LEDStatus(ledOff));
-  end;
-
-  LED(pnlEmergencyLight, LEDStatus(ledOff));
-  case sim.Emergency() of
-    true: LED(pnlEmergencyLight, LEDStatus(ledRed));
-    false: LED(pnlEmergencyLight, LEDStatus(ledGreen));
-  end;
-
-  LED(pnlMainSwitchLight, LEDStatus(ledOff));
-  case sim.MainSwitch() of
-    true: LED(pnlMainSwitchLight, LEDStatus(ledGreen));
-    false: LED(pnlMainSwitchLight, LEDStatus(ledRed));
-  end;
-
-  LED(pnlLockLight, LEDStatus(ledOff));
-  case sim.Lock() of
-    true: LED(pnlLockLight, LEDStatus(ledRed));
-    false: LED(pnlLockLight, LEDStatus(ledGreen));
-  end;
-
-  LED(pnlWakeupLight, LEDStatus(ledOff));
-  case sim.WakeUp() of
-    true: LED(pnlWakeupLight, LEDStatus(ledRed, ledNormal, '!!!'));
-    false: LED(pnlWakeupLight, LEDStatus(ledGreen));
-  end;
-
-  Label2.Caption := TimeToStr(VirtualNow());
-  Label3.Caption := DateToStr(VirtualNow());
-  Label4.Caption := NiceNumber(sim.Position(), 'm', 1);
-
   if Assigned(fDebug) and fDebug.Showing then
   begin
     fDebug.Memo1.Lines.Text := sim.Export();
   end;
+end;
 
-  lblStationLastName.Caption := '';
-  lblStationLastPlanArrival.Caption := '';
-  lblStationLastPlanDeparture.Caption := '';
-  lblStationLastRealArrival.Caption := '';
-  lblStationLastRealDeparture.Caption := '';
-  lblStationLastPassengersIn.Caption := '';
-  lblStationLastPassengersOut.Caption := '';
-  lblStationLastDistance.Caption := '';
-  lblStationNowName.Caption := '';
-  lblStationNowPlanArrival.Caption := '';
-  lblStationNowPlanDeparture.Caption := '';
-  lblStationNowEta.Caption := '';
-  lblStationNowDistance.Caption := '';
-  lblStationNextName.Caption := '';
-  lblStationNextPlanArrival.Caption := '';
-  lblStationNextPlanDeparture.Caption := '';
-  lblStationNextDistance.Caption := '';
-
-  if intCurrentStation > Low(arrStations) then
-  begin
-    stLast := arrStations[intCurrentStation-1];
-    lblStationLastName.Caption := '🚉  ' + stLast.strName;
-    lblStationLastPlanArrival.Caption := '⬇️ ' + HrMin(stLast.dtArrival);
-    lblStationLastPlanDeparture.Caption := '⬆️ ' + HrMin(stLast.dtDeparture);
-    lblStationLastRealArrival.Caption := '⬇️ ' + HrMin(stLast.dtRealArrival);
-    lblStationLastRealDeparture.Caption := '⬆️ ' + HrMin(stLast.dtRealDeparture);
-    lblStationLastPassengersIn.Caption := '➕ ' + IntToStr(stLast.intPassengersIn);
-    lblStationLastPassengersOut.Caption := '➖ ' + IntToStr(stLast.intPassengersOut);
-    lblStationLastDistance.Caption := NiceNumber(stLast.dblPosition - sim.Position(), 'm', 2);
-  end;
-
-  stNow := arrStations[intCurrentStation];
-  lblStationNowName.Caption := '🚉  ' + stNow.strName;
-  lblStationNowPlanArrival.Caption := '⬇️ ' + HrMin(stNow.dtArrival);
-  lblStationNowPlanDeparture.Caption := '⬆️ ' + HrMin(stNow.dtDeparture);
-  lblStationNowEta.Caption := '⌚ ' + HrMin(stNow.dtRealArrival);
-  lblStationNowDistance.Caption := NiceNumber(stNow.dblPosition - sim.Position(), 'm', 2);
-
-  if intCurrentStation < High(arrStations) then
-  begin
-    stNext := arrStations[intCurrentStation+1];
-    lblStationNextName.Caption := '🚉  ' + stNext.strName;
-    lblStationNextPlanArrival.Caption := '⬇️ ' + HrMin(stNext.dtArrival);
-    lblStationNextPlanDeparture.Caption := '⬆️ ' + HrMin(stNext.dtDeparture);
-    lblStationNextDistance.Caption := NiceNumber(stNext.dblPosition - sim.Position(), 'm', 2);
-  end;
+procedure TfMain.tmrDoorTimer(Sender: TObject);
+begin
+  sim.SwitchDoor(tmrDoor);
+  tmrDoor.Enabled := false;
 end;
 
 procedure TfMain.tmrPassengersTimer(Sender: TObject);
@@ -619,6 +384,7 @@ begin
     Exit;
   end;
   AdvanceStation(1);
+  ShowMessage('Free to go');
 end;
 
 procedure TfMain.tmrPassengersWaitTimer(Sender: TObject);
@@ -637,7 +403,7 @@ begin
     showmessage('Cannot open door more than 10 m from station point.');
     Exit;
   end;
-  sim.SwitchDoor();
+  sim.SwitchDoor(tmrDoor);
 end;
 
 procedure TfMain.btnCabinlightsClick(Sender: TObject);
@@ -652,7 +418,7 @@ end;
 
 function TfMain.DirectionChangeBlocked(): boolean;
 begin
-  result := (abs(sim.Velocity()) > 0.01);
+  result := (abs(sim.Velocity()) >= 0.1);
 end;
 
 procedure TfMain.BitBtn1Click(Sender: TObject);
@@ -747,6 +513,21 @@ end;
 
 procedure TfMain.btnMinuxElmagBrakeClick(Sender: TObject);
 begin
+  if sim.Lock() then
+  begin
+    showmessage('Locked');
+    Exit;
+  end;
+  if not sim.MainSwitch() then
+  begin
+    showmessage('Main switch off');
+    Exit;
+  end;
+  if (sim.Door() <> doorClosed) then
+  begin
+    showmessage('Door is not closed');
+    Exit;
+  end;
   if intPowerControl > 0 then
   begin
     intPowerControl := 0;
@@ -772,6 +553,21 @@ end;
 
 procedure TfMain.btnPlusElmagBrakeClick(Sender: TObject);
 begin
+  if sim.Lock() then
+  begin
+    showmessage('Locked');
+    Exit;
+  end;
+  if not sim.MainSwitch() then
+  begin
+    showmessage('Main switch off');
+    Exit;
+  end;
+  if (sim.Door() <> doorClosed) then
+  begin
+    showmessage('Door is not closed');
+    Exit;
+  end;
   if intPowerControl > 0 then
   begin
     intPowerControl := 0;
@@ -906,6 +702,9 @@ end;
 procedure TfMain.FormShow(Sender: TObject);
 begin
   Timer1.Enabled := true;
+  sim.Refresh();
+  OnStationChange();
+  OnTrackSectionChange();
 end;
 
 procedure TfMain.IdleTimer1Timer(Sender: TObject);
@@ -1102,82 +901,289 @@ begin
   result := arrStations;
 end;
 
-// STATIONS - GLOBAL
-
-function SameStation(AStation1, AStation2: TStation): boolean;
+procedure TfMain.SimOnValueChangedDouble(AName: string; AValue, AOldValue: double);
 begin
-  result :=
-  (AStation1.strName = AStation2.strName) and
-  (AStation1.dtArrival = AStation2.dtArrival) and
-  (AStation1.dtDeparture = AStation2.dtDeparture) and
-  (AStation1.dblPosition = AStation2.dblPosition) and
-  (AStation1.dtRealArrival = AStation2.dtRealArrival) and
-  (AStation1.dtRealDeparture = AStation2.dtRealDeparture) and
-  (AStation1.dblRealPosition = AStation2.dblRealPosition) and
-  (AStation1.dblMaxPassengers = AStation2.dblMaxPassengers) and
-  (AStation1.dblStretchRushHours = AStation2.dblStretchRushHours) and
-  (AStation1.intPassengersOut = AStation2.intPassengersOut) and
-  (AStation1.intPassengersIn = AStation2.intPassengersIn) and
-  (AStation1.boolVisited = AStation2.boolVisited);
+  case AName of
+    'BrakeAirControl':
+    begin
+      tbControlAirBrake.Min := 0;
+      tbControlAirBrake.Max := intBrakeAirControlMax;
+      tbControlAirBrake.Position := Round(sim.BrakeAirControl() * intBrakeAirControlMax);
+    end;
+    'BrakeElmagControl':
+    begin
+      tbControlElmagBrake.Min := 0;
+      tbControlElmagBrake.Max := intBrakeElmagControlMax;
+      tbControlElmagBrake.Position := Round(sim.BrakeElmagControl() * intBrakeElmagControlMax);
+    end;
+    'BrakeDynaControl':
+    begin
+      tbControlDynBrake.Min := 0;
+      tbControlDynBrake.Max := intBrakeDynaControlMax;
+      tbControlDynBrake.Position := Round(sim.BrakeDynaControl() * intBrakeDynaControlMax);
+    end;
+    'PowerControl':
+    begin
+      tbControlPower.Min := 0;
+      tbControlPower.Max := intPowerControlMax;
+      tbControlPower.Position := Round(sim.PowerControl() * intPowerControlMax);
+    end;
+    'MaxVelocity':
+    begin
+      pbVelocity.Max := Round(sim.MaxVelocity()*3.6);
+    end;
+    'MaxForce':
+    begin
+      pbForce.Max := Round(sim.MaxForce()/1000);
+    end;
+    'MaxBrake':
+    begin
+
+    end;
+    'MaxPower':
+    begin
+      pbPower.Max := Round(sim.MaxPower()/1000);
+    end;
+    'Mass':
+    begin
+
+    end;
+    'TrackSlope':
+    begin
+
+    end;
+    'TrackArc':
+    begin
+
+    end;
+  end;
 end;
 
-function IsNullStation(AStation: TStation): boolean;
+procedure TfMain.SimOnValueChangedString(AName: string; AValue, AOldValue: string);
 begin
-  result := SameStation(AStation, NullStation);
+
 end;
 
-function NullStation(): TStation;
+procedure TfMain.SimOnValueChangedInteger(AName: string; AValue, AOldValue: int64);
 begin
-  result.strName := '';
-  result.dtArrival := 0;
-  result.dtDeparture := 0;
-  result.dblPosition := 0;
-  result.dtRealArrival := 0;
-  result.dtRealDeparture := 0;
-  result.dblRealPosition := 0;
-  result.dblMaxPassengers := 1;
-  result.dblStretchRushHours := 2;
-  result.intPassengersOut := 0;
-  result.intPassengersIn := 0;
-  result.boolVisited := false;
+
 end;
 
-function Station(AName: shortstring = ''; AArrival: TDateTime = 0; ADeparture: TDateTime = 0; APosition: double = 0; AMaxPassengers: double = 1; AStretchRushHours: double = 2): TStation;
+procedure TfMain.SimOnValueChangedBoolean(AName: string; AValue, AOldValue: boolean);
 begin
-  result := NullStation();
-  result.strName := AName;
-  result.dtArrival := AArrival;
-  result.dtDeparture := ADeparture;
-  result.dblPosition := APosition;
-  result.dblMaxPassengers := AMaxPassengers;
-  result.dblStretchRushHours := AStretchRushHours;
+ case AName of
+   'Sander':
+   begin
+     LED(pnlSanderLight, LEDStatus(ledOff));
+     case sim.Sander() of
+       true: LED(pnlSanderLight, LEDStatus(ledRed));
+       false: LED(pnlSanderLight, LEDStatus(ledOff));
+     end;
+   end;
+   'Emergency':
+   begin
+     LED(pnlEmergencyLight, LEDStatus(ledOff));
+     case sim.Emergency() of
+       true: LED(pnlEmergencyLight, LEDStatus(ledRed));
+       false: LED(pnlEmergencyLight, LEDStatus(ledGreen));
+     end;
+   end;
+   'MainSwitch':
+   begin
+     LED(pnlMainSwitchLight, LEDStatus(ledOff));
+     case sim.MainSwitch() of
+       true: LED(pnlMainSwitchLight, LEDStatus(ledGreen));
+       false: LED(pnlMainSwitchLight, LEDStatus(ledRed));
+     end;
+   end;
+   'Lock':
+   begin
+     LED(pnlLockLight, LEDStatus(ledOff));
+     case sim.Lock() of
+       true: begin LED(pnlLockLight, LEDStatus(ledRed)); btnLock.Caption := '🔓'; end;
+       false: begin LED(pnlLockLight, LEDStatus(ledGreen)); btnLock.Caption := '🔒'; end;
+     end;
+   end;
+   'Wakeup':
+   begin
+     LED(pnlWakeupLight, LEDStatus(ledOff));
+     case sim.WakeUp() of
+       true: LED(pnlWakeupLight, LEDStatus(ledRed, ledNormal, '!!!'));
+       false: LED(pnlWakeupLight, LEDStatus(ledGreen));
+     end;
+   end;
+   'TrainResistanceUseABC':
+   begin
+
+   end;
+   'BlockedDoor':
+   begin
+
+   end;
+   'TrackMain':
+   begin
+
+   end;
+ end;
 end;
 
-function CompareStations(const s1,s2): integer;
-var
-  i1 : TStation absolute s1;
-  i2 : TStation absolute s2;
+procedure TfMain.SimOnValueChangedDateTime(AName: string; AValue, AOldValue: TDateTime);
 begin
-  if i1.dblPosition=i2.dblPosition then Result:=0
-  else if i1.dblPosition<i2.dblPosition then Result:=-1
-  else Result:=1;
+
 end;
 
-function timeint(ATime: TDateTime): double;
+procedure TfMain.SimOnValueChangedTunnel(AName: string; AValue, AOldValue: TTunnel);
 begin
-  result := HourOf(ATime) + (MinuteOf(ATime) / 60);
+
 end;
 
-{
-ATime ... Real number interval <0;24)
-AMaxPassengers ... Real positive number
-AStretchRushHours ... Real number, default is 2, 4 = medium, 8 = busy place
-}
-function gauss(ATime,AMaxPassengers,AStretchRushHours: double): double;
-const e: double = 2.71828;
-      u: double = 12;
+procedure TfMain.SimOnValueChangedInteriorLights(AName: string; AValue, AOldValue: TInteriorLights);
 begin
-  result := Math.Power(AMaxPassengers * e, Power(ATime - u, 2)/(2*Power(AStretchRushHours, 2)));
+  case AName of
+    'PassengerLights':
+    begin
+      LED(pnlCabinlightsLight, LEDStatus(ledOff));
+      case sim.Passengerlights() of
+        ilOff: LED(pnlCabinlightsLight, LEDStatus(ledOff));
+        ilDim: LED(pnlCabinlightsLight, LEDStatus(ledYellow));
+        ilNormal: LED(pnlCabinlightsLight, LEDStatus(ledGreen));
+        ilEmergency: LED(pnlCabinlightsLight, LEDStatus(ledRed));
+      end;
+    end;
+    'DriverLights':
+    begin
+      LED(pnlPilotlightsLight, LEDStatus(ledOff));
+      case sim.Driverlights() of
+        ilOff: LED(pnlPilotlightsLight, LEDStatus(ledOff));
+        ilDim: LED(pnlPilotlightsLight, LEDStatus(ledYellow));
+        ilNormal: LED(pnlPilotlightsLight, LEDStatus(ledGreen));
+        ilEmergency: LED(pnlPilotlightsLight, LEDStatus(ledRed));
+      end;
+    end;
+  end;
+end;
+
+procedure TfMain.SimOnValueChangedTrainLights(AName: string; AValue, AOldValue: TTrainLights);
+begin
+ LED(pnlHeadlightsLight, LEDStatus(ledOff));
+ case sim.Trainlights() of
+   tlOff: LED(pnlHeadlightsLight, LEDStatus(ledOff, ledNormal, 'x x'));
+   tlHeadDim: LED(pnlHeadlightsLight, LEDStatus(ledYellow, ledNormal, 'O x'));
+   tlHead: LED(pnlHeadlightsLight, LEDStatus(ledYellow, ledNormal, 'O O'));
+   tlHeadHigh: LED(pnlHeadlightsLight, LEDStatus(ledWhite, ledNormal, 'H H'));
+   tlRearDim: LED(pnlHeadlightsLight, LEDStatus(ledRed, ledNormal, 'O x'));
+   tlRear: LED(pnlHeadlightsLight, LEDStatus(ledRed, ledNormal, 'O O'));
+ end;
+end;
+
+procedure TfMain.SimOnValueChangedDoorStatus(AName: string; AValue, AOldValue: TDoorStatus);
+begin
+ LED(Panel7, LEDStatus(ledOff));
+  case sim.Door() of
+    doorClosed: LED(Panel7, LEDStatus(ledGreen, ledNormal, '||'));
+    doorOpening: LED(Panel7, LEDStatus(ledYellow, ledNormal, '< >'));
+    doorOpen:
+    begin
+      LED(Panel7, LEDStatus(ledRed, ledNormal, '| |'));
+      BoardCurrentStation(VirtualNow(), sim.Position());
+      OnStationChange();
+    end;
+    doorAlarm: LED(Panel7, LEDStatus(ledRed, ledLight, '*'));
+    doorClosing: LED(Panel7, LEDStatus(ledYellow, ledLight, '> <'));
+  end;
+end;
+
+procedure TfMain.SimOnValueChangedTrainRangeControl(AName: string; AValue, AOldValue: TTrainRangeControl);
+begin
+
+end;
+
+procedure TfMain.SimOnValueChangedTrainDirection(AName: string; AValue, AOldValue: TTrainDirection);
+begin
+ tbDirection.Min := -1;
+ tbDirection.Max := 1;
+ tbDirection.Position := Integer(sim.Direction());
+end;
+
+procedure TfMain.OnTrackSectionChange();
+var lSec: TTrackSection;
+begin
+ lblTrackSpeed.Caption := '';
+ lblTrackSlope.Caption := '';
+ lblTrackArc.Caption := '';
+ lblTrackTunnel.Caption := '';
+ lblTrackMain.Caption := '';
+
+ if (lwdCurrentSection < Low(trcTrack)) or (lwdCurrentSection > High(trcTrack)) then
+ begin
+   Exit;
+ end;
+ lSec := trcTrack[lwdCurrentSection];
+
+ lblTrackSpeed.Caption := Format('%.0f km/h', [lSec.dblSpeed*3.6]);
+ lblTrackSlope.Caption := Format('%.0f ‰', [lSec.dblSlope]);
+ lblTrackArc.Caption := Format('%.0f m', [lSec.dblArc]);
+ lblTrackTunnel.Caption := 'none';
+ if lSec.tnlTunnel = tnSingle then
+ begin
+   lblTrackTunnel.Caption := 'single';
+ end;
+ if lSec.tnlTunnel = tnDouble then
+ begin
+   lblTrackTunnel.Caption := 'double';
+ end;
+ lblTrackMain.Caption := 'side';
+ if lSec.boolMain then
+ begin
+   lblTrackMain.Caption := 'main';
+ end;
+end;
+
+procedure TfMain.OnStationChange();
+var stLast,stNow,stNext: TStation;
+begin
+ lblStationLastName.Caption := '';
+ lblStationLastPlanArrival.Caption := '';
+ lblStationLastPlanDeparture.Caption := '';
+ lblStationLastRealArrival.Caption := '';
+ lblStationLastRealDeparture.Caption := '';
+ lblStationLastPassengersIn.Caption := '';
+ lblStationLastPassengersOut.Caption := '';
+ lblStationNowName.Caption := '';
+ lblStationNowPlanArrival.Caption := '';
+ lblStationNowPlanDeparture.Caption := '';
+ lblStationNowEta.Caption := '';
+ lblStationNowDistance.Caption := '';
+ lblStationNextName.Caption := '';
+ lblStationNextPlanArrival.Caption := '';
+ lblStationNextPlanDeparture.Caption := '';
+
+ if intCurrentStation > Low(arrStations) then
+ begin
+   stLast := arrStations[intCurrentStation-1];
+   lblStationLastName.Caption := '🚉  ' + stLast.strName;
+   lblStationLastPlanArrival.Caption := '⬇️ ' + HrMin(stLast.dtArrival);
+   lblStationLastPlanDeparture.Caption := '⬆️ ' + HrMin(stLast.dtDeparture);
+   lblStationLastRealArrival.Caption := '⬇️ ' + HrMin(stLast.dtRealArrival);
+   lblStationLastRealDeparture.Caption := '⬆️ ' + HrMin(stLast.dtRealDeparture);
+   lblStationLastPassengersIn.Caption := '➕ ' + IntToStr(stLast.intPassengersIn);
+   lblStationLastPassengersOut.Caption := '➖ ' + IntToStr(stLast.intPassengersOut);
+ end;
+
+ stNow := arrStations[intCurrentStation];
+ lblStationNowName.Caption := '🚉  ' + stNow.strName;
+ lblStationNowPlanArrival.Caption := '⬇️ ' + HrMin(stNow.dtArrival);
+ lblStationNowPlanDeparture.Caption := '⬆️ ' + HrMin(stNow.dtDeparture);
+ lblStationNowEta.Caption := '⌚ ' + HrMin(stNow.dtRealArrival);
+ lblStationNowDistance.Caption := NiceNumber(stNow.dblPosition - sim.Position(), 'm', 2);
+
+ if intCurrentStation < High(arrStations) then
+ begin
+   stNext := arrStations[intCurrentStation+1];
+   lblStationNextName.Caption := '🚉  ' + stNext.strName;
+   lblStationNextPlanArrival.Caption := '⬇️ ' + HrMin(stNext.dtArrival);
+   lblStationNextPlanDeparture.Caption := '⬆️ ' + HrMin(stNext.dtDeparture);
+ end;
 end;
 
 end.
