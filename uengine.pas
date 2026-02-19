@@ -249,7 +249,7 @@ begin
     Exit;
   end;
 
-  dblGravityResistance := dblMass * 9.81 * dblTrackSlope;
+  dblGravityResistance := (dblMass/1000) * 9.81 * dblTrackSlope;
   dblBrakeResistance := dblMaxBrake * dblBrakeElmagControl;
   dblTrainResistance := 0;
   dblTrackResistance := 0;
@@ -258,15 +258,15 @@ begin
   dblTrainResistance := (dblTrainResistanceA + dblTrainResistanceB * (dblLastV * 3.6) + dblTrainResistanceC * (dblLastV * 3.6) * (dblLastV * 3.6));
   if (dblTrackArc > 55) and boolTrackMain then
   begin
-    dblTrackResistanceArc := 650 / (dblTrackArc - 55);
+    dblTrackResistanceArc := (dblMass/1000) * 9.81 * (650 / (dblTrackArc - 55));
   end
   else if (dblTrackArc > 30) and (not boolTrackMain) then
   begin
-    dblTrackResistanceArc := 500 / (dblTrackArc - 30);
+    dblTrackResistanceArc := (dblMass/1000) * 9.81 * (500 / (dblTrackArc - 30));
   end;
   case tnlTrackTunnel of
-    tnSingle: dblTrackResistanceTunnel := dblMass * 9.81 * 2;
-    tnDouble: dblTrackResistanceTunnel := dblMass * 9.81;
+    tnSingle: dblTrackResistanceTunnel := (dblMass/1000) * 9.81 * 2;
+    tnDouble: dblTrackResistanceTunnel := (dblMass/1000) * 9.81;
   end;
   dblTrackResistance := dblTrackResistanceArc + dblTrackResistanceTunnel;
   lRealMaxForce := dblMaxForce;

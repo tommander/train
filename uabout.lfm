@@ -1,11 +1,349 @@
 object fAbout: TfAbout
-  Left = 3237
-  Height = 240
-  Top = 16
-  Width = 320
+  Left = 3263
+  Height = 236
+  Top = 131
+  Width = 552
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'About'
+  ClientHeight = 236
+  ClientWidth = 552
   Position = poScreenCenter
   LCLVersion = '4.4.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 58
+    Top = 0
+    Width = 552
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 58
+    ClientWidth = 552
+    Color = clWhite
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 0
+    object Image1: TImage
+      Left = 6
+      Height = 46
+      Top = 6
+      Width = 42
+      Align = alLeft
+      BorderSpacing.Around = 6
+    end
+    object Panel2: TPanel
+      Left = 54
+      Height = 46
+      Top = 6
+      Width = 492
+      Align = alClient
+      BorderSpacing.Around = 6
+      BevelOuter = bvNone
+      ClientHeight = 46
+      ClientWidth = 492
+      ParentBackground = False
+      TabOrder = 0
+      object Label1: TLabel
+        Left = 0
+        Height = 24
+        Top = 2
+        Width = 492
+        Align = alTop
+        BorderSpacing.Top = 2
+        Caption = 'Age of Trains 0.0.0'
+        Font.Height = -19
+        ParentFont = False
+      end
+      object Label2: TLabel
+        Left = 0
+        Height = 16
+        Top = 28
+        Width = 492
+        Align = alBottom
+        BorderSpacing.Bottom = 2
+        Caption = 'Yet Another Trains Simulator :o)'
+        Font.Height = -13
+        ParentFont = False
+      end
+    end
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 6
+    Top = 58
+    Width = 552
+    Align = alTop
+    Shape = bsTopLine
+  end
+  object Panel5: TPanel
+    Left = 6
+    Height = 23
+    Top = 70
+    Width = 540
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 540
+    TabOrder = 1
+    object Label9: TLabel
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 24
+      Align = alLeft
+      Caption = '🧙‍♂️'
+      Font.Height = -19
+      Layout = tlCenter
+      ParentFont = False
+    end
+    object Label10: TLabel
+      Left = 124
+      Height = 23
+      Top = 0
+      Width = 80
+      Align = alLeft
+      BorderSpacing.Right = 6
+      Caption = 'Tommander'
+      Layout = tlCenter
+    end
+    object Label11: TLabel
+      Left = 28
+      Height = 23
+      Top = 0
+      Width = 92
+      Align = alLeft
+      AutoSize = False
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      Caption = 'Author'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentFont = False
+    end
+    object Label21: TLabel
+      Cursor = crHandPoint
+      Left = 210
+      Height = 23
+      Top = 0
+      Width = 318
+      Align = alClient
+      BorderSpacing.Right = 12
+      Caption = 'https://tommander.cz'
+      Font.Color = clNavy
+      Font.Style = [fsUnderline]
+      Layout = tlCenter
+      ParentFont = False
+      OnClick = Label21Click
+    end
+  end
+  object Panel6: TPanel
+    Left = 6
+    Height = 23
+    Top = 157
+    Width = 540
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 540
+    TabOrder = 2
+    object Label12: TLabel
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 24
+      Align = alLeft
+      Caption = '📚'
+      Font.Height = -19
+      Layout = tlCenter
+      ParentFont = False
+    end
+    object Label13: TLabel
+      Left = 124
+      Height = 23
+      Top = 0
+      Width = 49
+      Align = alLeft
+      BorderSpacing.Right = 6
+      Caption = 'CC0 1.0'
+      Layout = tlCenter
+    end
+    object Label14: TLabel
+      Left = 28
+      Height = 23
+      Top = 0
+      Width = 92
+      Align = alLeft
+      AutoSize = False
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      Caption = 'License'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentFont = False
+    end
+    object Label22: TLabel
+      Cursor = crHandPoint
+      Left = 179
+      Height = 23
+      Top = 0
+      Width = 361
+      Align = alClient
+      Caption = 'https://creativecommons.org/publicdomain/zero/1.0/'
+      Font.Color = clNavy
+      Font.Style = [fsUnderline]
+      Layout = tlCenter
+      ParentFont = False
+      OnClick = Label21Click
+    end
+  end
+  object Panel7: TPanel
+    Left = 6
+    Height = 23
+    Top = 99
+    Width = 540
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 540
+    TabOrder = 3
+    object Label15: TLabel
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 24
+      Align = alLeft
+      Caption = '🌏'
+      Font.Height = -19
+      Layout = tlCenter
+      ParentFont = False
+    end
+    object Label16: TLabel
+      Cursor = crHandPoint
+      Left = 124
+      Height = 23
+      Top = 0
+      Width = 404
+      Align = alClient
+      BorderSpacing.Right = 12
+      Caption = 'https://trains.tommander.cz'
+      Font.Color = clNavy
+      Font.Style = [fsUnderline]
+      Layout = tlCenter
+      ParentFont = False
+      OnClick = Label21Click
+    end
+    object Label17: TLabel
+      Left = 28
+      Height = 23
+      Top = 0
+      Width = 92
+      Align = alLeft
+      AutoSize = False
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      Caption = 'Website'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentFont = False
+    end
+  end
+  object Panel10: TPanel
+    Left = 6
+    Height = 23
+    Top = 128
+    Width = 540
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 540
+    TabOrder = 4
+    object Label18: TLabel
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 24
+      Align = alLeft
+      Caption = '☁️'
+      Font.Height = -19
+      Layout = tlCenter
+      ParentFont = False
+    end
+    object Label19: TLabel
+      Cursor = crHandPoint
+      Left = 124
+      Height = 23
+      Top = 0
+      Width = 404
+      Align = alClient
+      BorderSpacing.Right = 12
+      Caption = 'https://github.com/tommander/trains'
+      Font.Color = clNavy
+      Font.Style = [fsUnderline]
+      Layout = tlCenter
+      ParentFont = False
+      OnClick = Label21Click
+    end
+    object Label20: TLabel
+      Left = 28
+      Height = 23
+      Top = 0
+      Width = 92
+      Align = alLeft
+      AutoSize = False
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      Caption = 'GitHub repo'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentFont = False
+    end
+  end
+  object Panel9: TPanel
+    Left = 0
+    Height = 45
+    Top = 191
+    Width = 552
+    Align = alBottom
+    AutoSize = True
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 45
+    ClientWidth = 552
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 5
+    object Button1: TButton
+      Left = 474
+      Height = 35
+      Top = 5
+      Width = 73
+      Align = alRight
+      AutoSize = True
+      BorderSpacing.Around = 3
+      Caption = '✅ Close'
+      Default = True
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object Label7: TLabel
+      Left = 8
+      Height = 41
+      Top = 2
+      Width = 460
+      Align = alClient
+      BorderSpacing.Left = 6
+      BorderSpacing.Right = 6
+      Caption = 'v0.0.0 build 00000 (2026-04-01)'
+      Enabled = False
+      Layout = tlCenter
+    end
+  end
 end

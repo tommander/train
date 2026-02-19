@@ -46,6 +46,7 @@ type
   TTrainRangeControlType = (rctPower,rctBrakeDynamic,rctBrakeElmag,rctBrakeAir);
   TTrainDirection = (dirReverse = -1, dirNeutral = 0, dirForward = 1);
   TTrackSection = record
+    boolValid: boolean;
     dblStartPosition: double;
     dblSpeed: double;
     dblSlope: double;
@@ -58,6 +59,10 @@ type
 function BoolToStr(ABool: boolean; const ATrue, AFalse: string): string;
 function HrMin(ADate: TDateTime; const AFormat: string = '%.2d:%.2d'): string;
 function NiceNumber(ANum: double; const AUnit: shortstring; ADigits: byte = 1): string;
+function SameSection(ASection1, ASection2: TTrackSection): boolean;
+function IsNullSection(ASection: TTrackSection): boolean;
+function NullSection(): TTrackSection;
+function Section(AValid: boolean = false; AStartPosition: double = 0; ASpeed: double = 0; ASlope: double = 0; AArc: double = 0; ATunnel: TTunnel = tnNone; AMain: boolean = false): TTrackSection;
 function SameStation(AStation1, AStation2: TStation): boolean;
 function IsNullStation(AStation: TStation): boolean;
 function NullStation(): TStation;
@@ -119,6 +124,39 @@ begin
     strPrefix := 'T';
   end;
   result := Format('%.*f %s%s', [ADigits, dblValue, strPrefix, AUnit]);
+end;
+
+function SameSection(ASection1, ASection2: TTrackSection): boolean;
+begin
+  result :=
+  (ASection1.boolValid = ASection2.boolValid) and
+  (ASection1.dblStartPosition = ASection2.dblStartPosition) and
+  (ASection1.dblSpeed = ASection2.dblSpeed) and
+  (ASection1.dblSlope = ASection2.dblSlope) and
+  (ASection1.dblArc = ASection2.dblArc) and
+  (ASection1.tnlTunnel = ASection2.tnlTunnel) and
+  (ASection1.boolMain = ASection2.boolMain);
+end;
+
+function IsNullSection(ASection: TTrackSection): boolean;
+begin
+  result := SameSection(ASection, NullSection);
+end;
+
+function NullSection(): TTrackSection;
+begin
+  result := Section();
+end;
+
+function Section(AValid: boolean = false; AStartPosition: double = 0; ASpeed: double = 0; ASlope: double = 0; AArc: double = 0; ATunnel: TTunnel = tnNone; AMain: boolean = false): TTrackSection;
+begin
+  result.boolValid := AValid;
+  result.dblStartPosition := AStartPosition;
+  result.dblSpeed := ASpeed;
+  result.dblSlope := ASlope;
+  result.dblArc := AArc;
+  result.tnlTunnel := ATunnel;
+  result.boolMain := AMain;
 end;
 
 function SameStation(AStation1, AStation2: TStation): boolean;

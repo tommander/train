@@ -1,7 +1,7 @@
 object fTracks: TfTracks
-  Left = 2574
+  Left = 2570
   Height = 240
-  Top = 14
+  Top = 12
   Width = 320
   Caption = 'fTracks'
   Position = poScreenCenter

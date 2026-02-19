@@ -26,30 +26,18 @@ object fMain: TfMain
     DoubleBuffered = True
     ParentDoubleBuffered = False
     TabOrder = 0
-    object Panel1: TPanel
-      Left = 264
-      Height = 86
-      Top = 0
-      Width = 1
-      Align = alLeft
-      AutoSize = True
-      BorderSpacing.Left = 12
-      BevelOuter = bvNone
-      TabOrder = 0
-    end
     object pnlControlXYZ: TPanel
-      Left = 283
+      Left = 74
       Height = 74
       Top = 6
       Width = 151
       Align = alLeft
-      BorderSpacing.Left = 12
       BorderSpacing.Around = 6
       BevelInner = bvRaised
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 1
+      TabOrder = 0
       object btnMinusPower: TBitBtn
         Left = 8
         Height = 35
@@ -100,7 +88,7 @@ object fMain: TfMain
       end
     end
     object pnlControlDynBrake: TPanel
-      Left = 597
+      Left = 388
       Height = 74
       Top = 6
       Width = 151
@@ -110,7 +98,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 2
+      TabOrder = 1
       object btnMinusDynBrake: TBitBtn
         Left = 8
         Height = 35
@@ -163,7 +151,7 @@ object fMain: TfMain
       end
     end
     object pnlControlElmagBrake: TPanel
-      Left = 440
+      Left = 231
       Height = 74
       Top = 6
       Width = 151
@@ -173,7 +161,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 3
+      TabOrder = 2
       object btnMinuxElmagBrake: TBitBtn
         Left = 8
         Height = 35
@@ -224,7 +212,7 @@ object fMain: TfMain
       end
     end
     object pnlControlAirBrake: TPanel
-      Left = 754
+      Left = 545
       Height = 74
       Top = 6
       Width = 151
@@ -234,7 +222,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 151
-      TabOrder = 4
+      TabOrder = 3
       object btnMinuxAirBrake: TBitBtn
         Left = 8
         Height = 35
@@ -286,7 +274,7 @@ object fMain: TfMain
       end
     end
     object Panel3: TPanel
-      Left = 911
+      Left = 6
       Height = 74
       Top = 6
       Width = 62
@@ -297,7 +285,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 62
-      TabOrder = 5
+      TabOrder = 4
       object Panel4: TPanel
         Left = 32
         Height = 69
@@ -366,7 +354,7 @@ object fMain: TfMain
       end
     end
     object Panel5: TPanel
-      Left = 0
+      Left = 702
       Height = 86
       Top = 0
       Width = 44
@@ -375,7 +363,7 @@ object fMain: TfMain
       BevelOuter = bvNone
       ClientHeight = 86
       ClientWidth = 44
-      TabOrder = 6
+      TabOrder = 5
       object pbVelocity: TProgressBar
         Left = 6
         Height = 48
@@ -411,7 +399,7 @@ object fMain: TfMain
       end
     end
     object Panel6: TPanel
-      Left = 44
+      Left = 746
       Height = 86
       Top = 0
       Width = 44
@@ -420,7 +408,7 @@ object fMain: TfMain
       BevelOuter = bvNone
       ClientHeight = 86
       ClientWidth = 44
-      TabOrder = 7
+      TabOrder = 6
       object pbPower: TProgressBar
         Left = 6
         Height = 48
@@ -456,7 +444,7 @@ object fMain: TfMain
       end
     end
     object Panel12: TPanel
-      Left = 88
+      Left = 790
       Height = 86
       Top = 0
       Width = 44
@@ -465,7 +453,7 @@ object fMain: TfMain
       BevelOuter = bvNone
       ClientHeight = 86
       ClientWidth = 44
-      TabOrder = 8
+      TabOrder = 7
       object pbForce: TProgressBar
         Left = 6
         Height = 48
@@ -501,7 +489,7 @@ object fMain: TfMain
       end
     end
     object Panel13: TPanel
-      Left = 132
+      Left = 834
       Height = 86
       Top = 0
       Width = 44
@@ -510,7 +498,7 @@ object fMain: TfMain
       BevelOuter = bvNone
       ClientHeight = 86
       ClientWidth = 44
-      TabOrder = 9
+      TabOrder = 8
       object pbAccel: TProgressBar
         Left = 6
         Height = 48
@@ -546,7 +534,7 @@ object fMain: TfMain
       end
     end
     object Panel14: TPanel
-      Left = 176
+      Left = 878
       Height = 86
       Top = 0
       Width = 38
@@ -555,7 +543,7 @@ object fMain: TfMain
       BevelOuter = bvNone
       ClientHeight = 86
       ClientWidth = 38
-      TabOrder = 10
+      TabOrder = 9
       object pbAirBrake1: TProgressBar
         Left = 6
         Height = 48
@@ -590,23 +578,23 @@ object fMain: TfMain
       end
     end
     object Panel24: TPanel
-      Left = 214
+      Left = 916
       Height = 86
       Top = 0
-      Width = 38
+      Width = 32
       Align = alLeft
       AutoSize = True
+      BorderSpacing.Right = 6
       BevelOuter = bvNone
       ClientHeight = 86
-      ClientWidth = 38
-      TabOrder = 11
+      ClientWidth = 32
+      TabOrder = 10
       object pbAirBrake2: TProgressBar
         Left = 0
         Height = 48
         Top = 19
         Width = 32
         Align = alClient
-        BorderSpacing.Right = 6
         Constraints.MaxWidth = 32
         Max = 10
         Orientation = pbVertical
@@ -618,7 +606,7 @@ object fMain: TfMain
         Left = 0
         Height = 19
         Top = 67
-        Width = 38
+        Width = 32
         Align = alBottom
         Alignment = taCenter
         Caption = '100'
@@ -627,14 +615,14 @@ object fMain: TfMain
         Left = 0
         Height = 19
         Top = 0
-        Width = 38
+        Width = 32
         Align = alTop
         Alignment = taCenter
         Caption = '100'
       end
     end
     object pnlPassengersWait: TPanel
-      Left = 979
+      Left = 954
       Height = 74
       Top = 6
       Width = 206
@@ -645,7 +633,7 @@ object fMain: TfMain
       BevelOuter = bvLowered
       ClientHeight = 74
       ClientWidth = 206
-      TabOrder = 12
+      TabOrder = 11
       Visible = False
       object pbPassengersWait: TProgressBar
         Left = 8
@@ -693,24 +681,139 @@ object fMain: TfMain
         Layout = tlCenter
       end
     end
+    object pnlPenalty: TPanel
+      Left = 1166
+      Height = 74
+      Top = 6
+      Width = 192
+      Align = alLeft
+      AutoSize = True
+      BorderSpacing.Around = 6
+      BevelInner = bvRaised
+      BevelOuter = bvLowered
+      ClientHeight = 74
+      ClientWidth = 192
+      Color = 14540287
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 12
+      Visible = False
+      object Label7: TLabel
+        Left = 8
+        Height = 70
+        Top = 2
+        Width = 40
+        Align = alLeft
+        BorderSpacing.Left = 6
+        BorderSpacing.Right = 6
+        Caption = '🚫'
+        Font.Height = -32
+        Layout = tlCenter
+        ParentFont = False
+      end
+      object Panel16: TPanel
+        Left = 54
+        Height = 70
+        Top = 2
+        Width = 124
+        Align = alClient
+        AutoSize = True
+        BorderSpacing.Right = 12
+        BevelOuter = bvNone
+        ClientHeight = 70
+        ClientWidth = 124
+        ParentBackground = False
+        TabOrder = 0
+        object Label8: TLabel
+          Left = 0
+          Height = 24
+          Top = 8
+          Width = 124
+          Align = alTop
+          BorderSpacing.Top = 8
+          Caption = 'Speeding'
+          Font.Color = clMaroon
+          Font.Height = -19
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label15: TLabel
+          Left = 0
+          Height = 19
+          Top = 39
+          Width = 124
+          Align = alBottom
+          BorderSpacing.Bottom = 12
+          Caption = 'Lower your speed.'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+      end
+    end
+    object Panel15: TPanel
+      Left = 1364
+      Height = 74
+      Top = 6
+      Width = 40
+      Align = alLeft
+      BorderSpacing.Around = 6
+      BevelInner = bvRaised
+      BevelOuter = bvLowered
+      ClientHeight = 74
+      ClientWidth = 40
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 13
+      object Panel18: TPanel
+        Left = 8
+        Height = 24
+        Top = 13
+        Width = 24
+        Align = alTop
+        BorderSpacing.Left = 6
+        BorderSpacing.Top = 11
+        BorderSpacing.Right = 6
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Color = clLime
+        ParentBackground = False
+        ParentColor = False
+        TabOrder = 0
+      end
+      object Panel20: TPanel
+        Left = 8
+        Height = 24
+        Top = 37
+        Width = 24
+        Align = alTop
+        BorderSpacing.Left = 6
+        BorderSpacing.Right = 6
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Color = clBlack
+        ParentBackground = False
+        ParentColor = False
+        TabOrder = 1
+      end
+    end
   end
   object pnlMiddle: TPanel
-    Left = 0
+    Left = 192
     Height = 528
     Top = 0
-    Width = 1347
+    Width = 1155
     Align = alClient
     BevelInner = bvRaised
     BevelOuter = bvLowered
     Caption = 'pnlMiddle'
     ClientHeight = 528
-    ClientWidth = 1347
+    ClientWidth = 1155
     TabOrder = 1
     object Image1: TImage
       Left = 7
       Height = 524
       Top = 2
-      Width = 1338
+      Width = 1146
       Align = alClient
       Center = True
       Picture.Data = {
@@ -2914,6 +3017,118 @@ object fMain: TfMain
           Caption = 'lblTrackMain'
         end
       end
+      object Panel11: TPanel
+        Left = 2
+        Height = 19
+        Top = 21
+        Width = 765
+        Align = alTop
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 19
+        ClientWidth = 765
+        TabOrder = 1
+        object Label5: TLabel
+          Left = 0
+          Height = 19
+          Top = 0
+          Width = 77
+          Align = alLeft
+          Caption = 'Speed limit:'
+        end
+        object lblTrackArcNext: TLabel
+          Left = 350
+          Height = 19
+          Top = 0
+          Width = 74
+          Align = alLeft
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 9
+          Caption = 'lblTrackArc'
+        end
+        object lblTrackSlopeLabel1: TLabel
+          Left = 181
+          Height = 19
+          Top = 0
+          Width = 40
+          Align = alLeft
+          Caption = 'Slope:'
+        end
+        object lblTrackSpeedNext: TLabel
+          Left = 80
+          Height = 19
+          Top = 0
+          Width = 92
+          Align = alLeft
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 9
+          Caption = 'lblTrackSpeed'
+        end
+        object Label10: TLabel
+          Left = 433
+          Height = 19
+          Top = 0
+          Width = 48
+          Align = alLeft
+          Caption = 'Tunnel:'
+        end
+        object lblTrackTunnelNext: TLabel
+          Left = 484
+          Height = 19
+          Top = 0
+          Width = 96
+          Align = alLeft
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 9
+          Caption = 'lblTrackTunnel'
+        end
+        object Label12: TLabel
+          Left = 321
+          Height = 19
+          Top = 0
+          Width = 26
+          Align = alLeft
+          Caption = 'Arc:'
+        end
+        object lblTrackSlopeNext: TLabel
+          Left = 224
+          Height = 19
+          Top = 0
+          Width = 88
+          Align = alLeft
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 9
+          Caption = 'lblTrackSlope'
+        end
+        object Label14: TLabel
+          Left = 589
+          Height = 19
+          Top = 0
+          Width = 37
+          Align = alLeft
+          Caption = 'Main:'
+        end
+        object lblTrackMainNext: TLabel
+          Left = 629
+          Height = 19
+          Top = 0
+          Width = 85
+          Align = alLeft
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 9
+          Caption = 'lblTrackMain'
+        end
+        object lblTrackDistNext: TLabel
+          Left = 723
+          Height = 19
+          Top = 0
+          Width = 33
+          Align = alClient
+          BorderSpacing.Left = 3
+          BorderSpacing.Right = 9
+          Caption = 'lblTrackMain'
+        end
+      end
     end
   end
   object pnlRight: TPanel
@@ -3407,6 +3622,25 @@ object fMain: TfMain
         BevelOuter = bvNone
         TabOrder = 1
       end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 528
+    Top = 0
+    Width = 192
+    Align = alLeft
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 528
+    ClientWidth = 192
+    TabOrder = 4
+    object Image2: TImage
+      Left = 2
+      Height = 524
+      Top = 2
+      Width = 188
+      Align = alClient
     end
   end
   object Timer1: TTimer

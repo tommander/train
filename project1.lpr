@@ -10,7 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, umain, uengine, //Unit2,
+  Forms, FrameViewer09, umain, uengine, //Unit2,
   DateUtils, utrackfinish, umainmenu, usplashscreen,
 udashboard, ucommon, utrains,
   udebug, uabout, uhelp, ututorial, utracks, usettings, uversionhelper;
@@ -72,6 +72,12 @@ begin
     fMain.AddStation(Station('Stanice C 500-01-1', IncMinute(LNow, 30), IncMinute(LNow, 35), 500,  1, 1));
     fMain.AddStation(Station('Stanice D 765-50-8', IncMinute(LNow, 50), IncMinute(LNow, 55), 765, 50, 8));
     fMain.UnblockSort();
+
+    fMain.AddSection(Section(true, 0, 30/3.6, 0, 0, tnNone, false));
+    fMain.AddSection(Section(true, 100, 50/3.6, 0.1, 321, tnNone, false));
+    fMain.AddSection(Section(true, 200, 40/3.6, -0.1, 234, tnNone, false));
+    fMain.AddSection(Section(true, 300, 40/3.6, 0, 0, tnSingle, false));
+    fMain.AddSection(Section(true, 400, 30/3.6, 0, 0, tnNone, false));
 
     fMain.RefreshUI();
     Application.Run;

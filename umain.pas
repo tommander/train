@@ -21,7 +21,21 @@ type
     BitBtn3: TBitBtn;
     Button1: TButton;
     Button2: TButton;
+    Image2: TImage;
     Label1: TLabel;
+    Label10: TLabel;
+    Label12: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label5: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    lblTrackArcNext: TLabel;
+    lblTrackMainNext: TLabel;
+    lblTrackDistNext: TLabel;
+    lblTrackSlopeNext: TLabel;
+    lblTrackSlopeLabel1: TLabel;
+    lblTrackSpeedNext: TLabel;
     lblTrackTunnel: TLabel;
     Label11: TLabel;
     lblTrackSlope: TLabel;
@@ -65,6 +79,7 @@ type
     lblAirBrake2Max: TLabel;
     lblStationNowPlanDeparture1: TLabel;
     lblStationNowPlanDeparture2: TLabel;
+    lblTrackTunnelNext: TLabel;
     lblVelocity: TLabel;
     lblForce: TLabel;
     lblAccel: TLabel;
@@ -73,10 +88,17 @@ type
     lblPowerMax: TLabel;
     lblVelocityMax: TLabel;
     lblPower: TLabel;
+    Panel1: TPanel;
     Panel10: TPanel;
+    Panel11: TPanel;
     Panel12: TPanel;
     Panel13: TPanel;
     Panel14: TPanel;
+    Panel15: TPanel;
+    Panel18: TPanel;
+    Panel20: TPanel;
+    pnlPenalty: TPanel;
+    Panel16: TPanel;
     Panel17: TPanel;
     Panel2: TPanel;
     Panel8: TPanel;
@@ -133,7 +155,6 @@ type
     il32: TImageList;
     il64: TImageList;
     Image1: TImage;
-    Panel1: TPanel;
     pnlSanderLight: TPanel;
     pnlEmergencyLight: TPanel;
     pnlMainSwitchLight: TPanel;
@@ -195,7 +216,6 @@ type
     procedure tmrPassengersWaitTimer(Sender: TObject);
     // ---
     public procedure InitProps();
-    procedure RefreshUI();
     private
       var intPowerControl: shortint;
       var intBrakeDynaControl: shortint;
@@ -232,9 +252,18 @@ type
     private var intLoadingStationID: TStationID;
     private var stLoadingStation: TStation;
     private var dtLoadingEnd: TDateTime;
-    // Misc
+    //
+    private var lwdCurrentSection: longword;
+    private var trcTrack: TTrackDefinition;
+    public procedure UpdateCurrentSection();
+    public function CurrentSectionId(): longword;
+    public function CurrentSection(): TTrackSection;
+    public function AddSection(ASection: TTrackSection): longword;
+    public procedure UpdateSection(AID: longword; ASection: TTrackSection);
+    public procedure DeleteSection(AID: longword);
+    public function GetSection(AID: longword): TTrackSection;
     // Events from simulation
-        public
+    public
     procedure SimOnValueChangedDouble(AName: string; AValue, AOldValue: double);
     procedure SimOnValueChangedString(AName: string; AValue, AOldValue: string);
     procedure SimOnValueChangedInteger(AName: string; AValue, AOldValue: int64);
@@ -247,10 +276,11 @@ type
     procedure SimOnValueChangedTrainRangeControl(AName: string; AValue, AOldValue: TTrainRangeControl);
     procedure SimOnValueChangedTrainDirection(AName: string; AValue, AOldValue: TTrainDirection);
     // Our events
-    private var lwdCurrentSection: longword;
-    private var trcTrack: TTrackDefinition;
     procedure OnTrackSectionChange();
     procedure OnStationChange();
+    // REFRESH UI
+    procedure RefreshUI();
+
   end;
 
 
@@ -277,6 +307,7 @@ begin
  intBrakeDynaControlMax := 7;
  wrdPassengers := 0;
  wrdCapacity := 512;
+ lwdCurrentSection := 0;
 
  pbVelocity.Min := 0;
  pbVelocity.Max := 160;
@@ -301,13 +332,23 @@ procedure TfMain.RefreshUI();
 var intVelocity: int64;
     lAccel: double;
     lNow: TDateTime;
+    lPosition: double;
+    //lSectionChanged: boolean;
+    lSection,lNextSection: TTrackSection;
+    lPenaltyValid: boolean;
 begin
  lNow := VirtualNow();
+ lPosition := sim.Position();
+
  Label2.Caption := Format('%.2d:%.2d:%.2d', [HourOf(lNow), MinuteOf(lNow), SecondOf(lNow)]);
  Label3.Caption := Format('%.2d.%.2d.%.4d', [DayOf(lNow), MonthOf(lNow), YearOf(lNow)]);
- Label4.Caption := NiceNumber(sim.Position(), 'm', 1);
+ Label4.Caption := NiceNumber(lPosition, 'm', 3);
 
- lblStationNowDistance.Caption := '🛤️' + NiceNumber(arrStations[intCurrentStation].dblPosition - sim.Position(), 'm', 2);
+ lblStationNowDistance.Caption := '🛤️' + NiceNumber(arrStations[intCurrentStation].dblPosition - lPosition, 'm', 3);
+
+ lSection := GetSection(CurrentSectionId());
+ lNextSection := GetSection(CurrentSectionId()+1);
+ lblTrackDistNext.Caption := NiceNumber(lNextSection.dblStartPosition - lPosition, 'm', 3);
 
  intVelocity := Round(sim.Velocity(true));
   if intVelocity > 160 then
@@ -322,6 +363,20 @@ begin
   begin
     intVelocity := -1 * intVelocity;
   end;
+
+  // Check penalties
+
+  lPenaltyValid := (intVelocity > (lSection.dblSpeed * 3.6));
+  if lPenaltyValid and (not pnlPenalty.Showing) then
+  begin
+    pnlPenalty.Show;
+  end;
+  if (not lPenaltyValid) and pnlPenalty.Showing then
+  begin
+    pnlPenalty.Hide;
+  end;
+
+  // Update progress bar section
 
   pbVelocity.Position := intVelocity;
   lblVelocity.Caption := IntToStr(pbVelocity.Position);
@@ -765,9 +820,9 @@ end;
 
 function TfMain.CurrentStation(): TStation;
 begin
+  result := NullStation();
   if (intCurrentStation > High(arrStations)) then
   begin
-    result := NullStation();
     Exit;
   end;
 
@@ -899,6 +954,88 @@ end;
 function TfMain.ListStations(): TStationList;
 begin
   result := arrStations;
+end;
+
+procedure TfMain.UpdateCurrentSection();
+var lSectionChanged: boolean;
+    lPosition: double;
+begin
+ if (Length(trcTrack) = 0) and (lwdCurrentSection > 0) then
+ begin
+   lwdCurrentSection := 0;
+   OnTrackSectionChange();
+   Exit;
+ end;
+
+ lSectionChanged := false;
+ lPosition := sim.Position();
+ while ((lwdCurrentSection+1) <= High(trcTrack)) and (trcTrack[lwdCurrentSection+1].dblStartPosition <= lPosition) do
+ begin
+   Inc(lwdCurrentSection);
+   lSectionChanged := true;
+ end;
+  if lwdCurrentSection > High(trcTrack) then
+  begin
+    lwdCurrentSection := High(trcTrack);
+    lSectionChanged := true;
+  end;
+ if lSectionChanged then
+ begin
+   sim.SetTrackArc(trcTrack[lwdCurrentSection].dblArc);
+   sim.SetTrackSlope(trcTrack[lwdCurrentSection].dblSlope);
+   sim.SetTrackTunnel(trcTrack[lwdCurrentSection].tnlTunnel);
+   sim.SetTrackMain(trcTrack[lwdCurrentSection].boolMain);
+   OnTrackSectionChange();
+ end;
+end;
+
+function TfMain.CurrentSectionId(): longword;
+begin
+  UpdateCurrentSection();
+  result := lwdCurrentSection;
+end;
+
+function TfMain.CurrentSection(): TTrackSection;
+begin
+  if Length(trcTrack) = 0 then
+  begin
+    Exit;
+  end;
+  UpdateCurrentSection();
+  result := trcTrack[lwdCurrentSection];
+end;
+
+function TfMain.AddSection(ASection: TTrackSection): longword;
+begin
+  result := 0;
+  SetLength(trcTrack, Length(trcTrack) + 1);
+  result := High(trcTrack);
+  trcTrack[result] := ASection;
+end;
+
+procedure TfMain.UpdateSection(AID: longword; ASection: TTrackSection);
+begin
+  if (AID <= High(trcTrack)) then
+  begin
+    trcTrack[AID] := ASection;
+  end;
+end;
+
+procedure TfMain.DeleteSection(AID: longword);
+begin
+  if (AID <= High(trcTrack)) then
+  begin
+    trcTrack[AID] := NullSection();
+  end;
+end;
+
+function TfMain.GetSection(AID: longword): TTrackSection;
+begin
+  result := NullSection();
+  if (AID <= High(trcTrack)) then
+  begin
+    result := trcTrack[AID];
+  end;
 end;
 
 procedure TfMain.SimOnValueChangedDouble(AName: string; AValue, AOldValue: double);
@@ -1106,15 +1243,20 @@ begin
 end;
 
 procedure TfMain.OnTrackSectionChange();
-var lSec: TTrackSection;
+var lSec,lNext: TTrackSection;
 begin
  lblTrackSpeed.Caption := '';
  lblTrackSlope.Caption := '';
  lblTrackArc.Caption := '';
  lblTrackTunnel.Caption := '';
  lblTrackMain.Caption := '';
+ lblTrackSpeedNext.Caption := '';
+ lblTrackSlopeNext.Caption := '';
+ lblTrackArcNext.Caption := '';
+ lblTrackTunnelNext.Caption := '';
+ lblTrackMainNext.Caption := '';
 
- if (lwdCurrentSection < Low(trcTrack)) or (lwdCurrentSection > High(trcTrack)) then
+ if lwdCurrentSection > High(trcTrack) then
  begin
    Exit;
  end;
@@ -1136,6 +1278,29 @@ begin
  if lSec.boolMain then
  begin
    lblTrackMain.Caption := 'main';
+ end;
+
+ if ((lwdCurrentSection+1) < Low(trcTrack)) or ((lwdCurrentSection+1) > High(trcTrack)) then
+ begin
+   Exit;
+ end;
+ lNext := trcTrack[lwdCurrentSection+1];
+ lblTrackSpeedNext.Caption := Format('%.0f km/h', [lNext.dblSpeed*3.6]);
+ lblTrackSlopeNext.Caption := Format('%.0f ‰', [lNext.dblSlope]);
+ lblTrackArcNext.Caption := Format('%.0f m', [lNext.dblArc]);
+ lblTrackTunnelNext.Caption := 'none';
+ if lNext.tnlTunnel = tnSingle then
+ begin
+   lblTrackTunnelNext.Caption := 'single';
+ end;
+ if lNext.tnlTunnel = tnDouble then
+ begin
+   lblTrackTunnelNext.Caption := 'double';
+ end;
+ lblTrackMainNext.Caption := 'side';
+ if lNext.boolMain then
+ begin
+   lblTrackMainNext.Caption := 'main';
  end;
 end;
 

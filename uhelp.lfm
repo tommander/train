@@ -1,9 +1,53 @@
 object fHelp: TfHelp
   Left = 2907
-  Height = 240
+  Height = 437
   Top = 17
-  Width = 320
+  Width = 591
   Caption = 'Help'
+  ClientHeight = 437
+  ClientWidth = 591
   Position = poScreenCenter
   LCLVersion = '4.4.0.0'
+  object TreeView1: TTreeView
+    Left = 0
+    Height = 416
+    Top = 0
+    Width = 208
+    Align = alLeft
+    TabOrder = 0
+    Items.Data = {
+      F9FFFFFF020002000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF020000000000
+      0000010A000000F09F939620546F706963FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+      FF0000000000000000000D000000F09F938420537562746F706963FFFFFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFF0000000000000000000D000000F09F938420537562
+      746F706963FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000A00
+      0000F09F939520546F706963
+    }
+  end
+  object Splitter1: TSplitter
+    Left = 208
+    Height = 416
+    Top = 0
+    Width = 5
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 21
+    Top = 416
+    Width = 591
+    Panels = <>
+  end
+  object RichMemo1: TRichMemo
+    Left = 213
+    Height = 416
+    Top = 0
+    Width = 378
+    Align = alClient
+    HideSelection = False
+    Lines.Strings = (
+      'RichMemo1'
+    )
+    TabOrder = 3
+    ZoomFactor = 1
+  end
 end
