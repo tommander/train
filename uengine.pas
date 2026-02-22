@@ -327,51 +327,51 @@ begin
     tnDouble: strTunnel := 'double';
   end;
   result :=
-  Format('"PwrCtrl": "%.3f",'#10, [dblPowerControl]) +
-  Format('"BrkDyna": "%.3f",'#10, [dblBrakeDynaControl]) +
-  Format('"BrkElmag": "%.3f",'#10, [dblBrakeElmagControl]) +
-  Format('"BrkAir": "%.3f",'#10, [dblBrakeAirControl]) +
-  Format('"Door": "%d",'#10, [intDoor]) +
-  Format('"LgtTrain": "%d",'#10, [intTrainlights]) +
-  Format('"LgtDrivr": "%d",'#10, [intDriverlights]) +
-  Format('"LgtPasng": "%d",'#10, [intPassengerlights]) +
-  Format('"Sander": "%d",'#10, [Integer(boolSander)]) +
-  Format('"Emergncy": "%d",'#10, [Integer(boolEmergency)]) +
-  Format('"MainSwtc": "%d",'#10, [Integer(boolMainSwitch)]) +
-  Format('"Lock": "%d",'#10, [Integer(boolLock)]) +
-  Format('"WakeUp": "%d",'#10, [Integer(boolWakeUp)]) +
-  Format('"Vmax": "%.1f m/s": "%.1f km/h",'#10, [dblMaxV, dblMaxV*3.6]) +
-  Format('"V": "%.1f m/s": "%.1f km/h",'#10, [dblLastV, dblLastV*3.6]) +
-  Format('"X": "%.1f m",'#10, [dblLastX]) +
-  Format('"A": "%.1f m/s2",'#10, [dblLastA]) +
-  Format('"Ek": "%.1f J",'#10, [dblLastEk]) +
-  Format('"Pmax": "%.1f w",'#10, [dblMaxPower]) +
-  Format('"P": "%.1f W",'#10, [dblLastP]) +
-  Format('"Fmax": "%.1f N",'#10, [dblMaxForce]) +
-  Format('"Famx": "%.1f N",'#10, [dblAlsoMaxForce]) +
-  Format('"F": "%.1f N",'#10, [dblForce]) +
-  Format('"Ftpf": "%.1f N",'#10, [dblTotalPullForce]) +
-  Format('"Fn": "%.1f N",'#10, [dblForceNet]) +
-  Format('"Rbmx": "%.1f N",'#10, [dblMaxBrake]) +
-  Format('"Rb": "%.1f N",'#10, [dblBrakeResistance]) +
-  Format('"Rg": "%.1f N",'#10, [dblGravityResistance]) +
-  Format('"Rabc": "%.1d N",'#10, [Integer(boolTrainResistanceUseABC)]) +
-  Format('"Rva": "%.1f N",'#10, [dblTrainResistanceA]) +
-  Format('"Rvb": "%.1f N",'#10, [dblTrainResistanceB]) +
-  Format('"Rvc": "%.1f N",'#10, [dblTrainResistanceC]) +
-  Format('"Rvd": "%.1f N",'#10, [dblTrainResistanceAccel]) +
-  Format('"Rve": "%.1f N",'#10, [dblTrainResistanceAero]) +
-  Format('"Rvf": "%.1f N",'#10, [dblTrainResistanceRoll]) +
-  Format('"Rv": "%.1f N",'#10, [dblTrainResistance]) +
-  Format('"Rt": "%.1f N",'#10, [dblTrackResistance]) +
-  Format('"Rtra": "%.1f N",'#10, [dblTrackResistanceArc]) +
-  Format('"Rtrt": "%.1f N",'#10, [dblTrackResistanceTunnel]) +
-  Format('"Rta": "%.1f m",'#10, [dblTrackArc]) +
-  Format('"Rts": "%.1f ‰",'#10, [dblTrackSlope]) +
-  Format('"Rabc": "%.1d",'#10, [Integer(boolTrackMain)]) +
-  Format('"Rtt": "%s",'#10, [strTunnel]) +
-  Format('"M": "%.1f kg",'#10, [dblMass]) +
-  Format('"T": "%s",'#10, [FormatDateTime('dd.mm.yyyy hh.mm.ss.zzz', dtLastT)]);
+  Format('"PwrCtrl": "%.3f",' + LineEnding, [dblPowerControl]) +
+  Format('"BrkDyna": "%.3f",' + LineEnding, [dblBrakeDynaControl]) +
+  Format('"BrkElmag": "%.3f",' + LineEnding, [dblBrakeElmagControl]) +
+  Format('"BrkAir": "%.3f",' + LineEnding, [dblBrakeAirControl]) +
+  Format('"Door": "%d",' + LineEnding, [intDoor]) +
+  Format('"LgtTrain": "%d",' + LineEnding, [intTrainlights]) +
+  Format('"LgtDrivr": "%d",' + LineEnding, [intDriverlights]) +
+  Format('"LgtPasng": "%d",' + LineEnding, [intPassengerlights]) +
+  Format('"Sander": "%d",' + LineEnding, [Integer(boolSander)]) +
+  Format('"Emergncy": "%d",' + LineEnding, [Integer(boolEmergency)]) +
+  Format('"MainSwtc": "%d",' + LineEnding, [Integer(boolMainSwitch)]) +
+  Format('"Lock": "%d",' + LineEnding, [Integer(boolLock)]) +
+  Format('"WakeUp": "%d",' + LineEnding, [Integer(boolWakeUp)]) +
+  Format('"Vmax": "%.1f m/s": "%.1f km/h",' + LineEnding, [dblMaxV, dblMaxV*3.6]) +
+  Format('"V": "%.1f m/s": "%.1f km/h",' + LineEnding, [dblLastV, dblLastV*3.6]) +
+  Format('"X": "%.1f m",' + LineEnding, [dblLastX]) +
+  Format('"A": "%.1f m/s2",' + LineEnding, [dblLastA]) +
+  Format('"Ek": "%.1f J",' + LineEnding, [dblLastEk]) +
+  Format('"Pmax": "%.1f w",' + LineEnding, [dblMaxPower]) +
+  Format('"P": "%.1f W",' + LineEnding, [dblLastP]) +
+  Format('"Fmax": "%.1f N",' + LineEnding, [dblMaxForce]) +
+  Format('"Famx": "%.1f N",' + LineEnding, [dblAlsoMaxForce]) +
+  Format('"F": "%.1f N",' + LineEnding, [dblForce]) +
+  Format('"Ftpf": "%.1f N",' + LineEnding, [dblTotalPullForce]) +
+  Format('"Fn": "%.1f N",' + LineEnding, [dblForceNet]) +
+  Format('"Rbmx": "%.1f N",' + LineEnding, [dblMaxBrake]) +
+  Format('"Rb": "%.1f N",' + LineEnding, [dblBrakeResistance]) +
+  Format('"Rg": "%.1f N",' + LineEnding, [dblGravityResistance]) +
+  Format('"Rabc": "%.1d N",' + LineEnding, [Integer(boolTrainResistanceUseABC)]) +
+  Format('"Rva": "%.1f N",' + LineEnding, [dblTrainResistanceA]) +
+  Format('"Rvb": "%.1f N",' + LineEnding, [dblTrainResistanceB]) +
+  Format('"Rvc": "%.1f N",' + LineEnding, [dblTrainResistanceC]) +
+  Format('"Rvd": "%.1f N",' + LineEnding, [dblTrainResistanceAccel]) +
+  Format('"Rve": "%.1f N",' + LineEnding, [dblTrainResistanceAero]) +
+  Format('"Rvf": "%.1f N",' + LineEnding, [dblTrainResistanceRoll]) +
+  Format('"Rv": "%.1f N",' + LineEnding, [dblTrainResistance]) +
+  Format('"Rt": "%.1f N",' + LineEnding, [dblTrackResistance]) +
+  Format('"Rtra": "%.1f N",' + LineEnding, [dblTrackResistanceArc]) +
+  Format('"Rtrt": "%.1f N",' + LineEnding, [dblTrackResistanceTunnel]) +
+  Format('"Rta": "%.1f m",' + LineEnding, [dblTrackArc]) +
+  Format('"Rts": "%.1f ‰",' + LineEnding, [dblTrackSlope]) +
+  Format('"Rabc": "%.1d",' + LineEnding, [Integer(boolTrackMain)]) +
+  Format('"Rtt": "%s",' + LineEnding, [strTunnel]) +
+  Format('"M": "%.1f kg",' + LineEnding, [dblMass]) +
+  Format('"T": "%s",' + LineEnding, [FormatDateTime('dd.mm.yyyy hh.mm.ss.zzz', dtLastT)]);
 end;
 
 procedure TSimulation.Refresh();

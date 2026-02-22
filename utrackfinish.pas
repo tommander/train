@@ -28,10 +28,13 @@ type
     pnlRating2: TPanel;
     pnlRating1: TPanel;
     Panel5: TPanel;
-  private
-
   public
-
+    procedure SetRating(ARating: byte);
+    //procedure SetStations(AStations: word; AStationRate: double);
+    //procedure SetDuration(ADuration: word; ADurationRate: double);
+    //procedure SetPassengers(APassengers: word; APassengerRate: double);
+    //procedure SetFines(AFines: double);
+    //procedure SetBonuses(ABonuses: double);
   end;
 
 var
@@ -40,6 +43,13 @@ var
 implementation
 
 {$R *.lfm}
+
+procedure TfTrackFinish.SetRating(ARating: byte);
+begin
+  pnlRating0.Visible := (ARating = 0);
+  pnlRating1.Visible := (ARating = 1);
+  pnlRating2.Visible := (ARating = 2);
+end;
 
 end.
 

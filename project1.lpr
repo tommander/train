@@ -10,10 +10,12 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
+  SysUtils,
   Forms, FrameViewer09, umain, uengine, //Unit2,
   DateUtils, utrackfinish, umainmenu, usplashscreen,
-udashboard, ucommon, utrains,
-  udebug, uabout, uhelp, ututorial, utracks, usettings, uversionhelper;
+udashboard, ucommon,
+  udebug, uabout, uhelp, ututorial, usettings, uversionhelper,
+uprofile;
 
 {$R *.res}
 var LNow: TDateTime;
@@ -30,16 +32,13 @@ begin
   Application.CreateForm(TfSplash, fSplash);
   Application.CreateForm(TfDashboard, fDashboard);
   Application.CreateForm(TfTrackFinish, fTrackFinish);
-  Application.CreateForm(TfTrains, fTrains);
   Application.CreateForm(TfDebug, fDebug);
   Application.CreateForm(TfAbout, fAbout);
   Application.CreateForm(TfHelp, fHelp);
-  Application.CreateForm(TfTutorial, fTutorial);
-  Application.CreateForm(TfTracks, fTracks);
+  Application.CreateForm(TfCertification, fCertification);
   Application.CreateForm(TfSettings, fSettings);
   Application.CreateForm(TfMain, fMain);
 
-  Application.Title := AppTitle();
   fMain.Caption := Application.Title;
   fMainMenu.Label1.Caption := GetExecVersion().strFileVersion;
 
@@ -64,6 +63,15 @@ begin
   sim.EValueChangedTrainRangeControl := @fMain.SimOnValueChangedTrainRangeControl;
   sim.EValueChangedTrainDirection := @fMain.SimOnValueChangedTrainDirection;
 
+  theProfile := TProfile.Create();
+  theProfile.LoadFromFile(AppDir('profile.dat'));
+  if IsEqualGUID(theProfile.GUID, GUID_NULL) then
+  begin
+    //show welcome message
+    theProfile.GenerateGUID();
+    theProfile.SetName('Anonym');
+  end;
+
   try
     LNow := VirtualNow();
     fMain.BlockSort();
@@ -73,11 +81,11 @@ begin
     fMain.AddStation(Station('Stanice D 765-50-8', IncMinute(LNow, 50), IncMinute(LNow, 55), 765, 50, 8));
     fMain.UnblockSort();
 
-    fMain.AddSection(Section(true, 0, 30/3.6, 0, 0, tnNone, false));
-    fMain.AddSection(Section(true, 100, 50/3.6, 0.1, 321, tnNone, false));
-    fMain.AddSection(Section(true, 200, 40/3.6, -0.1, 234, tnNone, false));
-    fMain.AddSection(Section(true, 300, 40/3.6, 0, 0, tnSingle, false));
-    fMain.AddSection(Section(true, 400, 30/3.6, 0, 0, tnNone, false));
+    fMain.AddSection(Section(true,   0, 30/3.6,    0,    0, tnNone,   false));
+    fMain.AddSection(Section(true, 100, 50/3.6,  0.1,  321, tnNone,   false));
+    fMain.AddSection(Section(true, 200, 40/3.6, -0.1,  234, tnNone,   false));
+    fMain.AddSection(Section(true, 300, 40/3.6,    0,    0, tnSingle, false));
+    fMain.AddSection(Section(true, 400, 30/3.6,    0,    0, tnNone,   false));
 
     fMain.RefreshUI();
     Application.Run;
@@ -87,8 +95,14 @@ begin
       begin
         sim.Free();
       end;
+      if Assigned(theProfile) then
+      begin
+        theProfile.SaveToFile(AppDir('profile.dat'));
+        theProfile.Free();
+      end;
     finally
-      sim := nil
+      sim := nil;
+      theProfile := nil;
     end;
   end;
 end.

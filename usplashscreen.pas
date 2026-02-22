@@ -13,7 +13,6 @@ type
   { TfSplash }
 
   TfSplash = class(TForm)
-    Image1: TImage;
     Label1: TLabel;
     ProgressBar1: TProgressBar;
     Timer1: TTimer;
@@ -55,24 +54,28 @@ begin
     Close();
   end;
   ProgressBar1.Position := ProgressBar1.Position + 1;
+  if ProgressBar1.Position = 10 then
+  begin
+    Timer1.Interval := 1234;
+  end;
   Label1.Caption := StepMessage();
 end;
 
 function TfSplash.StepMessage(): string;
 begin
-  result := '<No Message>';
+  result := '<nic>';
   case ProgressBar1.Position of
-    0: result := 'Bootloader running...';
-    1: result := 'Checking for updates...';
-    2: result := 'Verifying game data...';
-    3: result := 'Loading configuration...';
-    4: result := 'Caching sprites...';
-    5: result := 'Initializing game engine...';
-    6: result := 'Loading trains...';
-    7: result := 'Loading tracks...';
-    8: result := 'Loading profile...';
-    9: result := 'Preparing UI...';
-   10: result := '✅ The game is yours. Enjoy!';
+    0: result := 'Nacitam zaklad...';
+    1: result := 'Overuju aktualizace...';
+    2: result := 'Kontroluji herni data...';
+    3: result := 'Nacitam konfiguraci...';
+    4: result := 'Caching obrazku...';
+    5: result := 'Nacitam herni engine...';
+    6: result := 'Nacitam vlacky...';
+    7: result := 'Nacitam trate...';
+    8: result := 'Nacitam profil...';
+    9: result := 'Pripravuji GUI...';
+   10: result := '✅ Hra je vase!';
   end;
 end;
 

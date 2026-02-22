@@ -18,10 +18,12 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Panel1: TPanel;
+    Panel2: TPanel;
     SpinEdit1: TSpinEdit;
     SpinEdit2: TSpinEdit;
     procedure BitBtn1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
   private
 
   public
@@ -104,11 +106,51 @@ begin
   Image1.Canvas.EllipseC(Image1.Canvas.PenPos.X, Image1.Canvas.PenPos.Y, 4, 4);
   Image1.Canvas.Pen.Color := clBlack;
 
+  {
+       270
+      /  \
+  180|    | 0
+      \__/
+       90
+  }
+
+  // Second arc - right R=300m l=471.238m  o=1884.9m
+  lArc01Radius := SpinEdit1.Value;
+  lArc01AngleDeg := SpinEdit2.Value;
+  lArc01AngleRad := DegToRad(lArc01AngleDeg);
+  lBeta := DegToRad((180-lArc01AngleDeg)/2);
+  lDelta := DegToRad(90-((180-lArc01AngleDeg)/2));
+  lArc01ArcLength := lArc01Radius * lArc01AngleRad;
+  lArc01ChordLength := lArc01Radius * (sin(lArc01AngleRad)/sin(DegToRad((180-lArc01AngleDeg)/2)));
+  lDX := lArc01ChordLength * sin(lDelta);
+  lDY := -1 * lArc01ChordLength * sin(lBeta);
+  Image1.Canvas.Arc(
+    Round(Image1.Canvas.PenPos.X),
+    Round(Image1.Canvas.PenPos.Y - (lArc01Radius)),
+    Round(Image1.Canvas.PenPos.X + lArc01Radius*2),
+    Round(Image1.Canvas.PenPos.Y + (lArc01Radius)),
+    Round(16 * 180 - RadToDeg(lAngleRad)),
+    Round(-16 * lArc01AngleDeg - RadToDeg(lAngleRad))
+  );
+  Image1.Canvas.MoveTo(
+    Round(Image1.Canvas.PenPos.X + lDX),
+    Round(Image1.Canvas.PenPos.Y + lDY)
+  );
+  lAngleRad := lAngleRad + lArc01AngleRad;
+
+  Image1.Canvas.Pen.Color := clLime;
+  Image1.Canvas.EllipseC(Image1.Canvas.PenPos.X, Image1.Canvas.PenPos.Y, 4, 4);
+  Image1.Canvas.Pen.Color := clBlack;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
 begin
   Panel1.Color := clLime;
+end;
+
+procedure TForm1.Image1Click(Sender: TObject);
+begin
+
 end;
 
 end.

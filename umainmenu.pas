@@ -20,10 +20,19 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
-    Button7: TButton;
-    Button8: TButton;
-    Image1: TImage;
     Label1: TLabel;
+    Label2: TLabel;
+    Shape1: TShape;
+    Shape10: TShape;
+    Shape11: TShape;
+    Shape12: TShape;
+    Shape13: TShape;
+    Shape2: TShape;
+    Shape3: TShape;
+    Shape4: TShape;
+    Shape7: TShape;
+    Shape8: TShape;
+    Shape9: TShape;
     procedure Button10Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -75,7 +84,7 @@ end;
 
 procedure TfMainMenu.Button10Click(Sender: TObject);
 begin
-  fTutorial.ShowModal;
+  fCertification.ShowModal;
 end;
 
 procedure TfMainMenu.Button1Click(Sender: TObject);

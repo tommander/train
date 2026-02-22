@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, DateUtils, Math, ExtCtrls, Graphics;
 
 type
-  TProfessionalStatus = (psNone = 0, psNovice = 1, psJunior = 2, psCertified = 3, psAdvanced = 4, psExperienced = 5, psMentor = 6, psMaster = 7);
+  //                   //novacek       junior        certifikovan     pokrocily       zkuseny            mentor        vlakmistr
+  TProfessionalStatus = (psNovice = 1, psJunior = 2, psCertified = 3, psAdvanced = 4, psExperienced = 5, psMentor = 6, psMaster = 7);
   TStationID = longword;
   TStation = packed record
     strName: shortstring;
@@ -76,8 +77,81 @@ function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMil
 function VirtualizeTime(ATime: TDateTime): TDateTime;
 function VirtualNow(): TDateTime;
 function sign(AValue: double): double;
+function AppDir(const APath: string = ''): string;
+function ProfessionalStatusLabel(AStatus: TProfessionalStatus): string;
+function ProfessionalStatusToStr(AStatus: TProfessionalStatus): string;
+function StrToProfessionalStatus(AStatus: string): TProfessionalStatus;
+function CzechDate(ADT: TDateTime): string;
+function CzechTime(ADT: TDateTime): string;
+function CzechDateTime(ADT: TDateTime): string;
 
 implementation
+
+function CzechDate(ADT: TDateTime): string;
+begin
+  result := Format('%s.%s.%s', [DayOf(ADT), MonthOf(ADT), YearOf(ADT)]);
+end;
+
+function CzechTime(ADT: TDateTime): string;
+begin
+  result := Format('%s:%s:%s', [HourOf(ADT), MinuteOf(ADT), SecondOf(ADT)]);
+end;
+
+function CzechDateTime(ADT: TDateTime): string;
+begin
+  result := Format('%s.%s.%s %s:%s:%s', [DayOf(ADT), MonthOf(ADT), YearOf(ADT), HourOf(ADT), MinuteOf(ADT), SecondOf(ADT)]);
+end;
+
+function ProfessionalStatusLabel(AStatus: TProfessionalStatus): string;
+begin
+  result := '🕫 Chybička';
+  case AStatus of
+    psNovice: result := '👶 Nováček';
+    psJunior: result := '🧒 Junior';
+    psCertified: result := '🎓 Certifikovaný';
+    psAdvanced: result := '🦸 Pokročilý';
+    psExperienced: result := '🧙 Zkušený';
+    psMentor: result := '🌟 Mentor';
+    psMaster: result := '🎖️ Vlakmistr';
+  end;
+end;
+
+function ProfessionalStatusToStr(AStatus: TProfessionalStatus): string;
+begin
+  result := 'novice';
+  case AStatus of
+    psJunior: result := 'junior';
+    psCertified: result := 'certified';
+    psAdvanced: result := 'advanced';
+    psExperienced: result := 'experienced';
+    psMentor: result := 'mentor';
+    psMaster: result := 'master';
+  end;
+end;
+
+function StrToProfessionalStatus(AStatus: string): TProfessionalStatus;
+var lStatus: string;
+begin
+  result := psNovice;
+  lStatus := LowerCase(Trim(AStatus));
+  case lStatus of
+    'junior': result := psJunior;
+    'certified': result := psCertified;
+    'advanced': result := psAdvanced;
+    'experienced': result := psExperienced;
+    'mentor': result := psMentor;
+    'master': result := psMaster;
+  end;
+end;
+
+function AppDir(const APath: string = ''): string;
+begin
+  result := ExtractFilePath(ParamStr(0));
+  if APath <> '' then
+  begin
+    result := IncludeTrailingPathDelimiter(result) + ExcludeLeadingPathDelimiter(APath);
+  end;
+end;
 
 function BoolToStr(ABool: boolean; const ATrue, AFalse: string): string;
 begin

@@ -6,7 +6,11 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  StdCtrls, Buttons, DateUtils, uengine, ucommon, utrackfinish, udebug, LCLType;
+  StdCtrls, Buttons, DateUtils, uengine, ucommon, utrackfinish, udebug, LCLType,
+  uprofile;
+
+const
+  PASSENGER_BOARDING: single = 1.01;
 
 type
   TUISection = set of (uisDebug, uisCanvas, uisStations,
@@ -31,8 +35,8 @@ type
     Label7: TLabel;
     Label8: TLabel;
     lblTrackArcNext: TLabel;
-    lblTrackMainNext: TLabel;
     lblTrackDistNext: TLabel;
+    lblTrackMainNext: TLabel;
     lblTrackSlopeNext: TLabel;
     lblTrackSlopeLabel1: TLabel;
     lblTrackSpeedNext: TLabel;
@@ -247,6 +251,7 @@ type
     public procedure DeleteStation(AID: TStationID);
     public function ListStations(): TStationList;
     // Passengers
+    private var bytNoOfDoors: byte;
     private var wrdPassengers: word;
     private var wrdCapacity: word;
     private var intLoadingStationID: TStationID;
@@ -326,6 +331,7 @@ begin
  lblAirBrake2.Caption := IntToStr(pbAirBrake2.Position);
  lblAirBrake2Max.Caption := IntToStr(pbAirBrake2.Max);
 
+ bytNoOfDoors := 2;
 end;
 
 procedure TfMain.RefreshUI();
@@ -435,11 +441,12 @@ begin
   UpdateStation(intLoadingStationID, stLoadingStation);
   if intLoadingStationID = High(arrStations) then
   begin
+    fTrackFinish.SetRating(2);
     fTrackFinish.Show;
     Exit;
   end;
   AdvanceStation(1);
-  ShowMessage('Free to go');
+  ShowMessage('Můžete vyrazit.');
 end;
 
 procedure TfMain.tmrPassengersWaitTimer(Sender: TObject);
@@ -455,7 +462,7 @@ begin
   end;
   if (sim.Door() = doorClosed) and (Abs(CurrentStation().dblPosition - sim.Position()) > 10) then
   begin
-    showmessage('Cannot open door more than 10 m from station point.');
+    showmessage('Dveře lze otevřít nejvíce 10 metrů od staničního bodu.');
     Exit;
   end;
   sim.SwitchDoor(tmrDoor);
@@ -465,7 +472,7 @@ procedure TfMain.btnCabinlightsClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.SwitchPassengerlights();
@@ -480,7 +487,7 @@ procedure TfMain.BitBtn1Click(Sender: TObject);
 begin
   if DirectionChangeBlocked then
   begin
-    showmessage('Cannot change direction when moving.');
+    showmessage('Nelze přepínat směr jízdy za jízdy.');
     Exit;
   end;
   sim.SetDirection(dirForward);
@@ -490,7 +497,7 @@ procedure TfMain.BitBtn2Click(Sender: TObject);
 begin
   if DirectionChangeBlocked then
   begin
-    showmessage('Cannot change direction when moving.');
+    showmessage('Nelze přepínat směr jízdy za jízdy.');
     Exit;
   end;
   sim.SetDirection(dirNeutral);
@@ -500,7 +507,7 @@ procedure TfMain.BitBtn3Click(Sender: TObject);
 begin
   if DirectionChangeBlocked then
   begin
-    showmessage('Cannot change direction when moving.');
+    showmessage('Nelze přepínat směr jízdy za jízdy.');
     Exit;
   end;
   sim.SetDirection(dirReverse);
@@ -510,7 +517,7 @@ procedure TfMain.btnEmergencyClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.ToggleEmergency();
@@ -520,7 +527,7 @@ procedure TfMain.btnHeadlightsClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.SwitchTrainlights();
@@ -535,7 +542,7 @@ procedure TfMain.btnMainSwitchClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.ToggleMainSwitch();
@@ -545,7 +552,7 @@ procedure TfMain.btnMinusPowerClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   if not sim.MainSwitch() then
@@ -553,11 +560,11 @@ begin
     showmessage('Main switch off');
     Exit;
   end;
-  if (intBrakeAirControl > 0) or (intBrakeElmagControl > 0) or (intBrakeDynaControl > 0) then
-  begin
-    showmessage('Brake is on');
-    Exit;
-  end;
+  //if (intBrakeAirControl > 0) or (intBrakeElmagControl > 0) or (intBrakeDynaControl > 0) then
+  //begin
+  //  showmessage('Brake is on');
+  //  Exit;
+  //end;
   Dec(intPowerControl);
   if intPowerControl < 0 then
   begin
@@ -570,7 +577,7 @@ procedure TfMain.btnMinuxElmagBrakeClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   if not sim.MainSwitch() then
@@ -600,7 +607,7 @@ procedure TfMain.btnPilotlightsClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.SwitchDriverlights();
@@ -610,17 +617,17 @@ procedure TfMain.btnPlusElmagBrakeClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   if not sim.MainSwitch() then
   begin
-    showmessage('Main switch off');
+    showmessage('🚅 Zapněte hlavní jistič');
     Exit;
   end;
   if (sim.Door() <> doorClosed) then
   begin
-    showmessage('Door is not closed');
+    showmessage('🚪 Dveře nejsou zavřené');
     Exit;
   end;
   if intPowerControl > 0 then
@@ -640,22 +647,22 @@ procedure TfMain.btnPlusPowerClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   if not sim.MainSwitch() then
   begin
-    showmessage('Main switch off');
+    showmessage('🚅 Zapněte hlavní jistič');
     Exit;
   end;
-  if (intBrakeAirControl > 0) or (intBrakeElmagControl > 0) or (intBrakeDynaControl > 0) then
-  begin
-    showmessage('Brake is on');
-    Exit;
-  end;
+  //if (intBrakeAirControl > 0) or (intBrakeElmagControl > 0) or (intBrakeDynaControl > 0) then
+  //begin
+  //  showmessage('Brzdy nejsou ');
+  //  Exit;
+  //end;
   if (sim.Door() <> doorClosed) then
   begin
-    showmessage('Door is not closed');
+    showmessage('🚪 Dveře nejsou zavřené');
     Exit;
   end;
   Inc(intPowerControl);
@@ -670,7 +677,7 @@ procedure TfMain.btnSanderClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.ToggleSander();
@@ -680,7 +687,7 @@ procedure TfMain.btnWakeUpClick(Sender: TObject);
 begin
   if sim.Lock() then
   begin
-    showmessage('Locked');
+    showmessage('🔒 Zamčeno');
     Exit;
   end;
   sim.ToggleWakeup();
@@ -691,11 +698,11 @@ begin
   Timer1.Enabled := not Timer1.Enabled;
   if Timer1.Enabled then
   begin
-    Button1.Caption := '⏳ Timer is ON';
+    Button1.Caption := '⏳ Zastavit čas';
   end
   else
   begin
-    Button1.Caption := '⏳ Timer is OFF';
+    Button1.Caption := '⏳ Spustit čas';
   end;
 end;
 
@@ -847,6 +854,7 @@ end;
 procedure TfMain.BoardCurrentStation(ADate: TDateTime; APosition: double);
 var st: TStation;
     id: TStationID;
+    lIncrease: longint;
 begin
   id := CurrentStationId();
   st := CurrentStation();
@@ -872,17 +880,22 @@ begin
   end;
   wrdPassengers := wrdPassengers + st.intPassengersIn;
 
+  lIncrease := Round(((st.intPassengersIn + st.intPassengersOut) * PASSENGER_BOARDING) / bytNoOfDoors);
   intLoadingStationID := id;
   stLoadingStation := st;
-  dtLoadingEnd := IncSecond(Now, (st.intPassengersIn + st.intPassengersOut));
-  pbPassengersWait.Min:=0;
-  pbPassengersWait.Position:=0;
-  pbPassengersWait.Max:=(st.intPassengersIn + st.intPassengersOut);
+  dtLoadingEnd := IncSecond(Now, lIncrease);
+  pbPassengersWait.Min := 0;
+  pbPassengersWait.Position := lIncrease;
+  pbPassengersWait.Max := lIncrease;
   lblPassengersWaitIn.Caption := '⬇️ ' + IntToStr(st.intPassengersIn);
   lblPassengersWaitOut.Caption := '⬆️ ' + IntToStr(st.intPassengersOut);
   sim.ToggleLock();
   pnlPassengersWait.Show;
   tmrPassengers.Interval := (st.intPassengersIn + st.intPassengersOut) * 1000;
+  if tmrPassengers.Interval < 1000 then
+  begin
+    tmrPassengers.Interval := 1000;
+  end;
   tmrPassengers.Enabled := true;
   tmrPassengersWait.Enabled := true;
 end;
@@ -1265,19 +1278,19 @@ begin
  lblTrackSpeed.Caption := Format('%.0f km/h', [lSec.dblSpeed*3.6]);
  lblTrackSlope.Caption := Format('%.0f ‰', [lSec.dblSlope]);
  lblTrackArc.Caption := Format('%.0f m', [lSec.dblArc]);
- lblTrackTunnel.Caption := 'none';
+ lblTrackTunnel.Caption := 'ne';
  if lSec.tnlTunnel = tnSingle then
  begin
-   lblTrackTunnel.Caption := 'single';
+   lblTrackTunnel.Caption := '1kolej';
  end;
  if lSec.tnlTunnel = tnDouble then
  begin
-   lblTrackTunnel.Caption := 'double';
+   lblTrackTunnel.Caption := '2kolej';
  end;
- lblTrackMain.Caption := 'side';
+ lblTrackMain.Caption := 'vedlejsi';
  if lSec.boolMain then
  begin
-   lblTrackMain.Caption := 'main';
+   lblTrackMain.Caption := 'hlavni';
  end;
 
  if ((lwdCurrentSection+1) < Low(trcTrack)) or ((lwdCurrentSection+1) > High(trcTrack)) then
@@ -1288,19 +1301,19 @@ begin
  lblTrackSpeedNext.Caption := Format('%.0f km/h', [lNext.dblSpeed*3.6]);
  lblTrackSlopeNext.Caption := Format('%.0f ‰', [lNext.dblSlope]);
  lblTrackArcNext.Caption := Format('%.0f m', [lNext.dblArc]);
- lblTrackTunnelNext.Caption := 'none';
+ lblTrackTunnelNext.Caption := 'ne';
  if lNext.tnlTunnel = tnSingle then
  begin
-   lblTrackTunnelNext.Caption := 'single';
+   lblTrackTunnelNext.Caption := '1kolej';
  end;
  if lNext.tnlTunnel = tnDouble then
  begin
-   lblTrackTunnelNext.Caption := 'double';
+   lblTrackTunnelNext.Caption := '2kolej';
  end;
- lblTrackMainNext.Caption := 'side';
+ lblTrackMainNext.Caption := 'vedlejsi';
  if lNext.boolMain then
  begin
-   lblTrackMainNext.Caption := 'main';
+   lblTrackMainNext.Caption := 'hlavni';
  end;
 end;
 

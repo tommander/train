@@ -1,8 +1,0 @@
-object fProfile: TfProfile
-  Left = 3594
-  Height = 240
-  Top = 791
-  Width = 320
-  Caption = 'fProfile'
-  LCLVersion = '4.4.0.0'
-end
