@@ -12,6 +12,7 @@ object fMainMenu: TfMainMenu
   ClientWidth = 495
   Position = poScreenCenter
   LCLVersion = '4.4.0.0'
+  OnCreate = FormCreate
   object Button5: TButton
     Left = 24
     Height = 33

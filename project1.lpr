@@ -11,15 +11,13 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   SysUtils,
-  Forms, FrameViewer09, umain, uengine, //Unit2,
+  Forms, umain, uengine, //Unit2,
   DateUtils, utrackfinish, umainmenu, usplashscreen,
 udashboard, ucommon,
   udebug, uabout, uhelp, ututorial, usettings, uversionhelper,
-uprofile;
+uprofile, utrainmgr, utrackmgr, udrivestart;
 
 {$R *.res}
-var LNow: TDateTime;
-
 begin
   RequireDerivedFormResource:=True;
   Application.Scaled:=True;
@@ -37,31 +35,13 @@ begin
   Application.CreateForm(TfHelp, fHelp);
   Application.CreateForm(TfCertification, fCertification);
   Application.CreateForm(TfSettings, fSettings);
+  Application.CreateForm(TfDriveStart, fDriveStart);
   Application.CreateForm(TfMain, fMain);
-
-  fMain.Caption := Application.Title;
-  fMainMenu.Label1.Caption := GetExecVersion().strFileVersion;
 
   fSplash.ShowModal();
 
-  sim := TSimulation.Create();
-  sim.SetMass(20000);
-  sim.SetMaxPower(155000);
-  sim.SetMaxBrake(20000);
-  sim.SetMaxForce(28000);
-  sim.SetMaxVelocity(80, true);
-  sim.SetBrakeElmagControl(1);
-  sim.EValueChangedDouble := @fMain.SimOnValueChangedDouble;
-  sim.EValueChangedString := @fMain.SimOnValueChangedString;
-  sim.EValueChangedInteger := @fMain.SimOnValueChangedInteger;
-  sim.EValueChangedBoolean := @fMain.SimOnValueChangedBoolean;
-  sim.EValueChangedDateTime := @fMain.SimOnValueChangedDateTime;
-  sim.EValueChangedTunnel := @fMain.SimOnValueChangedTunnel;
-  sim.EValueChangedInteriorLights := @fMain.SimOnValueChangedInteriorLights;
-  sim.EValueChangedTrainLights := @fMain.SimOnValueChangedTrainLights;
-  sim.EValueChangedDoorStatus := @fMain.SimOnValueChangedDoorStatus;
-  sim.EValueChangedTrainRangeControl := @fMain.SimOnValueChangedTrainRangeControl;
-  sim.EValueChangedTrainDirection := @fMain.SimOnValueChangedTrainDirection;
+  InitTrains();
+  InitTracks();
 
   theProfile := TProfile.Create();
   theProfile.LoadFromFile(AppDir('profile.dat'));
@@ -73,21 +53,7 @@ begin
   end;
 
   try
-    LNow := VirtualNow();
-    fMain.BlockSort();
-    fMain.AddStation(Station('Stanice A 000-80-2', LNow,                IncMinute(LNow,  5), 0,   80, 2));
-    fMain.AddStation(Station('Stanice B 200-40-3', IncMinute(LNow, 15), IncMinute(LNow, 20), 200, 40, 3));
-    fMain.AddStation(Station('Stanice C 500-01-1', IncMinute(LNow, 30), IncMinute(LNow, 35), 500,  1, 1));
-    fMain.AddStation(Station('Stanice D 765-50-8', IncMinute(LNow, 50), IncMinute(LNow, 55), 765, 50, 8));
-    fMain.UnblockSort();
-
-    fMain.AddSection(Section(true,   0, 30/3.6,    0,    0, tnNone,   false));
-    fMain.AddSection(Section(true, 100, 50/3.6,  0.1,  321, tnNone,   false));
-    fMain.AddSection(Section(true, 200, 40/3.6, -0.1,  234, tnNone,   false));
-    fMain.AddSection(Section(true, 300, 40/3.6,    0,    0, tnSingle, false));
-    fMain.AddSection(Section(true, 400, 30/3.6,    0,    0, tnNone,   false));
-
-    fMain.RefreshUI();
+    //fMain.RefreshUI();
     Application.Run;
   finally
     try

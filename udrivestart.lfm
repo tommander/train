@@ -1,0 +1,84 @@
+object fDriveStart: TfDriveStart
+  Left = 796
+  Height = 436
+  Top = 180
+  Width = 859
+  BorderStyle = bsDialog
+  Caption = 'fDriveStart'
+  ClientHeight = 436
+  ClientWidth = 859
+  LCLVersion = '4.4.0.0'
+  object GroupBox1: TGroupBox
+    Left = 6
+    Height = 372
+    Top = 2
+    Width = 420
+    Align = alLeft
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    Caption = ' Vlak '
+    ClientHeight = 352
+    ClientWidth = 418
+    TabOrder = 0
+    object ListView1: TListView
+      Left = 0
+      Height = 352
+      Top = 0
+      Width = 418
+      Align = alClient
+      Columns = <>
+      TabOrder = 0
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 432
+    Height = 372
+    Top = 2
+    Width = 421
+    Align = alClient
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    Caption = ' Trať '
+    ClientHeight = 352
+    ClientWidth = 419
+    TabOrder = 1
+    object ListView2: TListView
+      Left = 0
+      Height = 352
+      Top = 0
+      Width = 419
+      Align = alClient
+      Columns = <>
+      TabOrder = 0
+    end
+  end
+  object Panel1: TPanel
+    Left = 6
+    Height = 50
+    Top = 380
+    Width = 847
+    Align = alBottom
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ClientHeight = 50
+    ClientWidth = 847
+    TabOrder = 2
+    object Button1: TButton
+      Left = 616
+      Height = 46
+      Top = 2
+      Width = 229
+      Align = alRight
+      Caption = 'Tak a teď už ale opravdu jedem!'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+  end
+end

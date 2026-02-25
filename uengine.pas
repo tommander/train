@@ -25,6 +25,30 @@ type
 
   TSimulation = class
     private
+      // Internal
+      var dblLastV: double; // [m/s]
+      var dblLastX: double; // [m]
+      var dblLastA: double; // [m/s^-2]
+      var dblLastEk: double; // [J]
+      var dblLastP: double; // [W]
+      var dblForce: double; // [N]
+      var dblForceNet: double; // [N]
+      var dblTotalPullForce: double; // [N]
+      var dblBrakeResistance: double; // [N]
+      var dblGravityResistance: double; // [N]
+      var boolTrainResistanceUseABC: boolean;
+      var dblTrainResistance: double; // [N]
+      var dblTrainResistanceRoll: double; // [N]
+      var dblTrainResistanceAero: double; // [N]
+      var dblTrainResistanceAccel: double; // [N]
+      var dblTrackResistance: double; // [N]
+      var dblTrackResistanceArc: double; // [N]
+      var dblTrackResistanceTunnel: double; // [N]
+      var dblAlsoMaxForce: double; // [N]
+      var dtLastT: TDateTime; // [s]
+      var boolBlockedDoor: boolean; // ...
+
+      // Controls
       var dblPowerControl: double; //<0;1>
       var dblBrakeDynaControl: double; //<0;1>
       var dblBrakeElmagControl: double; //<0;1>
@@ -38,40 +62,23 @@ type
       var boolMainSwitch: boolean; // ...
       var boolLock: boolean; // ...
       var boolWakeUp: boolean; // ...
+      var dirDirection: TTrainDirection; //
+
+      // Train
       var dblMaxV: double; // [m/s]
-      var dblLastV: double; // [m/s]
-      var dblLastX: double; // [m]
-      var dblLastA: double; // [m/s^-2]
-      var dblLastEk: double; // [J]
-      var dblLastP: double; // [W]
-      var dblForce: double; // [N]
-      var dblForceNet: double; // [N]
-      var dblTotalPullForce: double; // [N]
-      var dblBrakeResistance: double; // [N]
-      var dblGravityResistance: double; // [N]
-      var boolTrainResistanceUseABC: boolean;
-      var dblTrainResistance: double; // [N]
       var dblTrainResistanceA: double; // [-]
       var dblTrainResistanceB: double; // [-] A + B*V + C*V^2 (V in km/h)
       var dblTrainResistanceC: double; // [-]
-      var dblTrainResistanceRoll: double; // [N]
-      var dblTrainResistanceAero: double; // [N]
-      var dblTrainResistanceAccel: double; // [N]
-      var dblTrackResistance: double; // [N]
-      var dblTrackResistanceArc: double; // [N]
-      var dblTrackResistanceTunnel: double; // [N]
-      var dirDirection: TTrainDirection; //
-      var dblTrackArc: double; //radius [m]
-      var tnlTrackTunnel: TTunnel;
-      var dblTrackSlope: double; // slope [per mile, ‰]
-      var boolTrackMain: boolean; // main track? for arc res computation
       var dblMass: double; // [kg]
       var dblMaxBrake: double; // [N]
       var dblMaxPower: double; // [W]
       var dblMaxForce: double; // [N]
-      var dblAlsoMaxForce: double; // [N]
-      var dtLastT: TDateTime; // [s]
-      var boolBlockedDoor: boolean; // ...
+
+      // Track
+      var dblTrackArc: double; //radius [m]
+      var tnlTrackTunnel: TTunnel;
+      var dblTrackSlope: double; // slope [per mile, ‰]
+      var boolTrackMain: boolean; // main track? for arc res computation
 
     public
       constructor Create();

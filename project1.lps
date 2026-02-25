@@ -7,8 +7,8 @@
       <Unit>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="47"/>
-        <CursorPos X="46" Y="60"/>
+        <TopLine Value="22"/>
+        <CursorPos X="18" Y="39"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit>
@@ -19,8 +19,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="274"/>
-        <CursorPos Y="295"/>
+        <TopLine Value="709"/>
+        <CursorPos X="55" Y="715"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -28,9 +28,9 @@
       <Unit>
         <Filename Value="uengine.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="694"/>
-        <CursorPos X="28" Y="718"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="55"/>
+        <CursorPos Y="82"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit>
@@ -40,10 +40,10 @@
         <ComponentName Value="fTrackFinish"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="12"/>
         <CursorPos Y="38"/>
-        <UsageCount Value="141"/>
+        <UsageCount Value="187"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -53,10 +53,9 @@
         <ComponentName Value="fMainMenu"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="65"/>
-        <CursorPos X="31" Y="82"/>
-        <UsageCount Value="140"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="30" Y="10"/>
+        <UsageCount Value="186"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -66,10 +65,10 @@
         <ComponentName Value="fSplash"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="16"/>
         <TopLine Value="28"/>
         <CursorPos X="3" Y="36"/>
-        <UsageCount Value="140"/>
+        <UsageCount Value="186"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -79,19 +78,21 @@
         <ComponentName Value="fDashboard"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="80"/>
         <CursorPos X="56" Y="116"/>
-        <UsageCount Value="133"/>
+        <UsageCount Value="179"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="ucommon.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="26" Y="11"/>
-        <UsageCount Value="128"/>
+        <TopLine Value="37"/>
+        <CursorPos Y="55"/>
+        <UsageCount Value="174"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -100,8 +101,8 @@
         <ComponentName Value="fDebug"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="14"/>
-        <UsageCount Value="119"/>
+        <EditorIndex Value="17"/>
+        <UsageCount Value="165"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -111,10 +112,10 @@
         <ComponentName Value="fAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="11"/>
         <TopLine Value="33"/>
         <CursorPos X="9" Y="72"/>
-        <UsageCount Value="116"/>
+        <UsageCount Value="162"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -124,9 +125,9 @@
         <ComponentName Value="fHelp"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="12"/>
         <CursorPos X="33" Y="16"/>
-        <UsageCount Value="116"/>
+        <UsageCount Value="162"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -136,8 +137,8 @@
         <ComponentName Value="fCertification"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="7"/>
-        <UsageCount Value="116"/>
+        <EditorIndex Value="10"/>
+        <UsageCount Value="162"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -147,30 +148,60 @@
         <ComponentName Value="fSettings"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="15"/>
         <CursorPos X="25" Y="19"/>
-        <UsageCount Value="113"/>
+        <UsageCount Value="159"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="uversionhelper.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="14"/>
         <TopLine Value="16"/>
         <CursorPos Y="26"/>
-        <UsageCount Value="113"/>
+        <UsageCount Value="159"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="uprofile.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="106"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="88"/>
         <CursorPos X="24" Y="79"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="75"/>
         <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utrainmgr.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="31"/>
+        <CursorPos X="25" Y="46"/>
+        <UsageCount Value="66"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utrackmgr.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="76"/>
+        <CursorPos Y="281"/>
+        <UsageCount Value="57"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="udrivestart.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fDriveStart"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="40"/>
+        <CursorPos X="20" Y="58"/>
+        <UsageCount Value="56"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="utrains.pas"/>
@@ -179,7 +210,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="9"/>
-        <UsageCount Value="120"/>
+        <UsageCount Value="115"/>
       </Unit>
       <Unit>
         <Filename Value="utracks.pas"/>
@@ -188,33 +219,33 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="9"/>
-        <UsageCount Value="111"/>
+        <UsageCount Value="106"/>
       </Unit>
       <Unit>
         <Filename Value="anysort.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="40" Y="28"/>
-        <UsageCount Value="78"/>
+        <UsageCount Value="73"/>
       </Unit>
       <Unit>
         <Filename Value="ustations.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="3"/>
-        <UsageCount Value="37"/>
+        <UsageCount Value="32"/>
       </Unit>
       <Unit>
         <Filename Value="utack.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="29" Y="38"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="23"/>
       </Unit>
       <Unit>
         <Filename Value="uhelper.pas"/>
         <UnitName Value="uHelper"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="12"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="11"/>
       </Unit>
       <Unit>
         <Filename Value="unit2.pas"/>
@@ -222,14 +253,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="117"/>
         <CursorPos X="6" Y="138"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="89"/>
       </Unit>
       <Unit>
         <Filename Value="unit2.pas.bak2"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="140"/>
         <CursorPos X="14" Y="7"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="5"/>
         <DefaultSyntaxHighlighter Value="None"/>
       </Unit>
       <Unit>
@@ -237,14 +268,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1124"/>
         <CursorPos Y="1151"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/include/monitor.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="61"/>
         <CursorPos Y="100"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="5"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/interfaces/gtk2/gtk2proc.pp"/>
@@ -252,21 +283,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="964"/>
         <CursorPos Y="984"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/interfaces/gtk2/gtk2proc.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3366"/>
         <CursorPos X="25" Y="3386"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/include/application.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="497"/>
         <CursorPos Y="516"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/interfacebase.pp"/>
@@ -274,14 +305,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="114"/>
         <CursorPos X="15" Y="135"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/include/icon.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1416"/>
         <CursorPos Y="1449"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/4.4.0/lcl/widgetset/wslclclasses.pp"/>
@@ -289,42 +320,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="391"/>
         <CursorPos Y="411"/>
-        <UsageCount Value="8"/>
-      </Unit>
-      <Unit>
-        <Filename Value="/usr/share/lazarus/4.4.0/lcl/include/control.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="3517"/>
-        <CursorPos Y="3538"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2276"/>
         <CursorPos X="16" Y="1894"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/classes/compon.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="57"/>
         <CursorPos X="32" Y="63"/>
-        <UsageCount Value="2"/>
-      </Unit>
-      <Unit>
-        <Filename Value="/usr/share/lazarus/4.4.0/lcl/forms.pp"/>
-        <UnitName Value="Forms"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1964"/>
-        <CursorPos X="28" Y="1985"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="docs.md"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="18"/>
         <CursorPos Y="40"/>
-        <UsageCount Value="71"/>
+        <UsageCount Value="95"/>
         <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="None"/>
       </Unit>
@@ -334,140 +350,141 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="3" Y="51"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/packages/rtl-objpas/src/inc/dateutil.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15" Y="18"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="5"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/rtl/objpas/sysutils/intfh.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="16"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="5"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="28">
       <Position>
-        <Filename Value="ututorial.pas"/>
+        <Filename Value="project1.lpr"/>
+        <Caret Line="80" Column="20" TopLine="59"/>
       </Position>
       <Position>
-        <Filename Value="ucommon.pas"/>
-        <Caret Line="81" Column="29" TopLine="52"/>
+        <Filename Value="utrackmgr.pas"/>
+        <Caret Line="52" Column="15" TopLine="31"/>
       </Position>
       <Position>
-        <Filename Value="ucommon.pas"/>
-        <Caret Line="106" Column="3" TopLine="89"/>
+        <Filename Value="utrackmgr.pas"/>
+        <Caret Line="281" Column="136" TopLine="149"/>
       </Position>
       <Position>
-        <Filename Value="ucommon.pas"/>
-        <Caret Line="82" Column="24" TopLine="60"/>
+        <Filename Value="utrackmgr.pas"/>
+        <Caret Line="52" Column="13" TopLine="30"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="9" Column="15" TopLine="3"/>
+        <Filename Value="umain.pas"/>
+        <Caret Line="235" Column="24" TopLine="225"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="73" TopLine="35"/>
+        <Filename Value="umain.pas"/>
+        <Caret Line="709" TopLine="704"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="72" TopLine="35"/>
+        <Filename Value="udrivestart.pas"/>
+        <Caret Line="20" Column="22"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="71" TopLine="34"/>
+        <Filename Value="umainmenu.pas"/>
+        <Caret Line="82" Column="31" TopLine="65"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="77" TopLine="36"/>
+        <Filename Value="udrivestart.pas"/>
+        <Caret Line="56" Column="13" TopLine="22"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="67" Column="63" TopLine="36"/>
+        <Filename Value="umainmenu.pas"/>
+        <Caret Line="97" TopLine="66"/>
       </Position>
       <Position>
-        <Filename Value="uprofile.pas"/>
-        <Caret Line="54" TopLine="46"/>
+        <Filename Value="umain.pas"/>
+        <Caret Line="712" Column="7" TopLine="692"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="222" Column="22" TopLine="202"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="290" Column="2" TopLine="274"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="240" Column="33" TopLine="225"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="416" Column="19" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="417" Column="19" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="418" Column="54" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="819" Column="19" TopLine="785"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="243" Column="41" TopLine="220"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="793" Column="3" TopLine="787"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="310" TopLine="291"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="819" TopLine="798"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="804" Column="65" TopLine="783"/>
+      </Position>
+      <Position>
+        <Filename Value="umain.pas"/>
+        <Caret Line="825" Column="54" TopLine="803"/>
+      </Position>
+      <Position>
+        <Filename Value="umainmenu.pas"/>
+        <Caret Line="91" Column="24" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="umainmenu.pas"/>
+        <Caret Line="84" TopLine="67"/>
       </Position>
       <Position>
         <Filename Value="project1.lpr"/>
-        <Caret Line="13" Column="12"/>
+        <Caret Line="17" Column="62"/>
       </Position>
       <Position>
-        <Filename Value="uprofile.pas"/>
-        <Caret Line="145" TopLine="143"/>
+        <Filename Value="umain.pas"/>
+        <Caret Line="724" Column="65" TopLine="709"/>
       </Position>
       <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="74" Column="36" TopLine="40"/>
+        <Filename Value="utrainmgr.pas"/>
+        <Caret Line="105" Column="57" TopLine="82"/>
       </Position>
       <Position>
-        <Filename Value="usplashscreen.pas"/>
-        <Caret Line="59" Column="28" TopLine="28"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="80" Column="36" TopLine="40"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="74" Column="3" TopLine="40"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="79" Column="3" TopLine="40"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="85" Column="15" TopLine="47"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="97" TopLine="58"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="104" TopLine="63"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="98" Column="16" TopLine="64"/>
-      </Position>
-      <Position>
-        <Filename Value="uprofile.pas"/>
-        <Caret Line="104" Column="28" TopLine="86"/>
-      </Position>
-      <Position>
-        <Filename Value="ucommon.pas"/>
-        <Caret Line="83" Column="10" TopLine="61"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="73" Column="54" TopLine="58"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="74" Column="33" TopLine="52"/>
-      </Position>
-      <Position>
-        <Filename Value="uprofile.pas"/>
-        <Caret Line="55" Column="17" TopLine="36"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="73" Column="3" TopLine="65"/>
-      </Position>
-      <Position>
-        <Filename Value="ucommon.pas"/>
-        <Caret Line="11" Column="26"/>
-      </Position>
-      <Position>
-        <Filename Value="udashboard.pas"/>
-        <Caret Line="63" Column="24" TopLine="52"/>
+        <Filename Value="utrainmgr.pas"/>
+        <Caret Line="50" Column="10" TopLine="28"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
   StdCtrls, Buttons, DateUtils, uengine, ucommon, utrackfinish, udebug, LCLType,
-  uprofile;
+  uprofile, utrainmgr, utrackmgr;
 
 const
   PASSENGER_BOARDING: single = 1.01;
@@ -231,42 +231,17 @@ type
       var intBrakeAirControlMax: shortint;
     private
       var boolTickBlocker: boolean;
-    // Stations - props
-    private intCurrentStation: TStationID;
-    private arrStations: array of TStation;
-    private boolBlockSort: boolean;
-    // Stations - methods
-    function DirectionChangeBlocked(): boolean;
-    public procedure BlockSort();
-    public procedure UnblockSort();
-    public function BlockedSort(): boolean;
-    public function CurrentStationId(): TStationID;
-    public function CurrentStation(): TStation;
-    public procedure AdvanceStation(AValue: longint);
-    public procedure BoardCurrentStation(ADate: TDateTime; APosition: double);
-    public procedure QuickSort(var AI: TStationList; ALo, AHi: Integer);
-    public procedure SortStations();
-    public function AddStation(AStation: TStation): TStationID;
-    public procedure UpdateStation(AID: TStationID; AStation: TStation);
-    public procedure DeleteStation(AID: TStationID);
-    public function ListStations(): TStationList;
+    public function DirectionChangeBlocked(): boolean;
     // Passengers
-    private var bytNoOfDoors: byte;
-    private var wrdPassengers: word;
-    private var wrdCapacity: word;
+    //private var bytNoOfDoors: byte;
+    //private var wrdPassengers: word;
+    //private var wrdCapacity: word;
     private var intLoadingStationID: TStationID;
     private var stLoadingStation: TStation;
     private var dtLoadingEnd: TDateTime;
     //
-    private var lwdCurrentSection: longword;
-    private var trcTrack: TTrackDefinition;
-    public procedure UpdateCurrentSection();
-    public function CurrentSectionId(): longword;
-    public function CurrentSection(): TTrackSection;
-    public function AddSection(ASection: TTrackSection): longword;
-    public procedure UpdateSection(AID: longword; ASection: TTrackSection);
-    public procedure DeleteSection(AID: longword);
-    public function GetSection(AID: longword): TTrackSection;
+    public procedure BoardCurrentStation(ADate: TDateTime; APosition: double);
+//    public procedure UpdateCurrentSection();
     // Events from simulation
     public
     procedure SimOnValueChangedDouble(AName: string; AValue, AOldValue: double);
@@ -299,9 +274,10 @@ implementation
 
 procedure TfMain.InitProps();
 begin
- intCurrentStation := 0;
- SetLength(arrStations, 0);
- boolBlockSort := false;
+ //lwdCurrentStation := 0;
+ //SetLength(trcTrack.arrStations, 0);
+ //boolBlockSort := false;
+
  intPowerControl := 0;
  intBrakeAirControl := 0;
  intBrakeElmagControl := 0;
@@ -310,9 +286,10 @@ begin
  intBrakeAirControlMax := 7;
  intBrakeElmagControlMax := 7;
  intBrakeDynaControlMax := 7;
- wrdPassengers := 0;
- wrdCapacity := 512;
- lwdCurrentSection := 0;
+
+ //wrdPassengers := 0;
+ //wrdCapacity := 512;
+ //lwdCurrentSection := 0;
 
  pbVelocity.Min := 0;
  pbVelocity.Max := 160;
@@ -330,8 +307,6 @@ begin
  pbAirBrake2.Position := 1;
  lblAirBrake2.Caption := IntToStr(pbAirBrake2.Position);
  lblAirBrake2Max.Caption := IntToStr(pbAirBrake2.Max);
-
- bytNoOfDoors := 2;
 end;
 
 procedure TfMain.RefreshUI();
@@ -343,14 +318,14 @@ var intVelocity: int64;
     lSection,lNextSection: TTrackSection;
     lPenaltyValid: boolean;
 begin
- lNow := VirtualNow();
+ lNow := Now();
  lPosition := sim.Position();
 
  Label2.Caption := Format('%.2d:%.2d:%.2d', [HourOf(lNow), MinuteOf(lNow), SecondOf(lNow)]);
  Label3.Caption := Format('%.2d.%.2d.%.4d', [DayOf(lNow), MonthOf(lNow), YearOf(lNow)]);
  Label4.Caption := NiceNumber(lPosition, 'm', 3);
 
- lblStationNowDistance.Caption := '🛤️' + NiceNumber(arrStations[intCurrentStation].dblPosition - lPosition, 'm', 3);
+ lblStationNowDistance.Caption := '🛤️' + NiceNumber(trcTrack.arrStations[lwdCurrentStation].dblPosition - lPosition, 'm', 3);
 
  lSection := GetSection(CurrentSectionId());
  lNextSection := GetSection(CurrentSectionId()+1);
@@ -439,7 +414,7 @@ begin
   stLoadingStation.boolVisited := true;
   stLoadingStation.dtRealDeparture := Now();
   UpdateStation(intLoadingStationID, stLoadingStation);
-  if intLoadingStationID = High(arrStations) then
+  if intLoadingStationID = High(trcTrack.arrStations) then
   begin
     fTrackFinish.SetRating(2);
     fTrackFinish.Show;
@@ -723,10 +698,10 @@ begin
     tmrPassengers.Enabled := false;
   end;
   try
-    intCurrentStation := 0;
+    lwdCurrentStation := 0;
     boolBlockSort := false;
-    delete(arrStations, Low(arrStations), Length(arrStations));
-    arrStations := nil;
+    delete(trcTrack.arrStations, Low(trcTrack.arrStations), Length(trcTrack.arrStations));
+    trcTrack.arrStations := nil;
   finally
     CanClose := true;
   end;
@@ -734,7 +709,10 @@ end;
 
 procedure TfMain.FormCreate(Sender: TObject);
 begin
+  fMain.Caption := Application.Title;
   InitProps();
+  evtAskForPosition := @sim.Position;
+  evtOnCurrentSectionChanged := @OnTrackSectionChange;
 end;
 
 procedure TfMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -804,52 +782,7 @@ end;
 //  //inherited Destroy();
 //end;
 
-procedure TfMain.BlockSort();
-begin
-  boolBlockSort := true;
-end;
 
-procedure TfMain.UnblockSort();
-begin
-  boolBlockSort := false;
-  SortStations();
-end;
-
-function TfMain.BlockedSort(): boolean;
-begin
-  result := boolBlockSort;
-end;
-
-function TfMain.CurrentStationId(): TStationID;
-begin
-  result := intCurrentStation;
-end;
-
-function TfMain.CurrentStation(): TStation;
-begin
-  result := NullStation();
-  if (intCurrentStation > High(arrStations)) then
-  begin
-    Exit;
-  end;
-
-  result := arrStations[intCurrentStation];
-end;
-
-procedure TfMain.AdvanceStation(AValue: longint);
-begin
-  if AValue < (-1*intCurrentStation) then
-  begin
-    intCurrentStation := 0;
-    Exit;
-  end;
-  if (intCurrentStation + AValue) > High(arrStations) then
-  begin
-    intCurrentStation := High(arrStations);
-    Exit;
-  end;
-  intCurrentStation := intCurrentStation + AValue;
-end;
 
 procedure TfMain.BoardCurrentStation(ADate: TDateTime; APosition: double);
 var st: TStation;
@@ -867,20 +800,24 @@ begin
   st.dtRealArrival := ADate;
 
   st.intPassengersOut := Round(Random()*st.dblMaxPassengers);
-  if (st.intPassengersOut > wrdPassengers) then
+  if (st.intPassengersOut > trnTrain.arrCargo[0].sglAmount) then
   begin
-    st.intPassengersOut := wrdPassengers;
+    st.intPassengersOut := Round(trnTrain.arrCargo[0].sglAmount);
   end;
-  wrdPassengers := wrdPassengers - st.intPassengersOut;
+  trnTrain.arrCargo[0].sglAmount := trnTrain.arrCargo[0].sglAmount - st.intPassengersOut;
 
   st.intPassengersIn := Round(Random()*st.dblMaxPassengers);
-  if st.intPassengersIn > (wrdCapacity - wrdPassengers) then
+  if st.intPassengersIn > (trnTrain.arrCargo[0].sglCapacity - trnTrain.arrCargo[0].sglAmount) then
   begin
-    st.intPassengersIn := (wrdCapacity - wrdPassengers);
+    st.intPassengersIn := Round((trnTrain.arrCargo[0].sglCapacity - trnTrain.arrCargo[0].sglAmount));
   end;
-  wrdPassengers := wrdPassengers + st.intPassengersIn;
+  trnTrain.arrCargo[0].sglAmount := trnTrain.arrCargo[0].sglAmount + st.intPassengersIn;
 
-  lIncrease := Round(((st.intPassengersIn + st.intPassengersOut) * PASSENGER_BOARDING) / bytNoOfDoors);
+  lIncrease :=
+    Round((st.intPassengersIn * trnTrain.arrCargo[0].sglLoaderSpeed) / trnTrain.arrCargo[0].sglLoaderAmount)
+    +
+    Round((st.intPassengersOut * trnTrain.arrCargo[0].sglUnloaderSpeed) / trnTrain.arrCargo[0].sglUnloaderAmount)
+  ;
   intLoadingStationID := id;
   stLoadingStation := st;
   dtLoadingEnd := IncSecond(Now, lIncrease);
@@ -900,156 +837,11 @@ begin
   tmrPassengersWait.Enabled := true;
 end;
 
-procedure TfMain.QuickSort(var AI: TStationList; ALo, AHi: Integer);
- var
-  Lo, Hi: Integer;
-  Pivot, T: TStation;
- begin
-  Lo := ALo;
-  Hi := AHi;
-  Pivot := AI[(Lo + Hi) div 2];
-  repeat
-    while AI[Lo].dblPosition < Pivot.dblPosition do
-      Inc(Lo);
-    while AI[Hi].dblPosition > Pivot.dblPosition do
-      Dec(Hi);
-    if Lo <= Hi then
-    begin
-      T := AI[Lo];
-      AI[Lo] := AI[Hi];
-      AI[Hi] := T;
-      Inc(Lo) ;
-      Dec(Hi) ;
-    end;
-  until Lo > Hi;
-  if Hi > ALo then
-    QuickSort(AI, ALo, Hi) ;
-  if Lo < AHi then
-    QuickSort(AI, Lo, AHi) ;
-end;
 
-procedure TfMain.SortStations();
-begin
-  if BlockedSort() then
-  begin
-    Exit;
-  end;
-  QuickSort(arrStations, Low(arrStations), High(arrStations));
-end;
 
-function TfMain.AddStation(AStation: TStation): TStationID;
-begin
-  result := 0;
-  SetLength(arrStations, Length(arrStations) + 1);
-  result := High(arrStations);
-  arrStations[result] := AStation;
-  SortStations();
-end;
 
-procedure TfMain.UpdateStation(AID: TStationID; AStation: TStation);
-begin
-  if (AID <= High(arrStations)) then
-  begin
-    arrStations[AID] := AStation;
-    SortStations();
-  end;
-end;
 
-procedure TfMain.DeleteStation(AID: TStationID);
-begin
-  if (AID <= High(arrStations)) then
-  begin
-    arrStations[AID] := NullStation();
-    SortStations();
-  end;
-end;
 
-function TfMain.ListStations(): TStationList;
-begin
-  result := arrStations;
-end;
-
-procedure TfMain.UpdateCurrentSection();
-var lSectionChanged: boolean;
-    lPosition: double;
-begin
- if (Length(trcTrack) = 0) and (lwdCurrentSection > 0) then
- begin
-   lwdCurrentSection := 0;
-   OnTrackSectionChange();
-   Exit;
- end;
-
- lSectionChanged := false;
- lPosition := sim.Position();
- while ((lwdCurrentSection+1) <= High(trcTrack)) and (trcTrack[lwdCurrentSection+1].dblStartPosition <= lPosition) do
- begin
-   Inc(lwdCurrentSection);
-   lSectionChanged := true;
- end;
-  if lwdCurrentSection > High(trcTrack) then
-  begin
-    lwdCurrentSection := High(trcTrack);
-    lSectionChanged := true;
-  end;
- if lSectionChanged then
- begin
-   sim.SetTrackArc(trcTrack[lwdCurrentSection].dblArc);
-   sim.SetTrackSlope(trcTrack[lwdCurrentSection].dblSlope);
-   sim.SetTrackTunnel(trcTrack[lwdCurrentSection].tnlTunnel);
-   sim.SetTrackMain(trcTrack[lwdCurrentSection].boolMain);
-   OnTrackSectionChange();
- end;
-end;
-
-function TfMain.CurrentSectionId(): longword;
-begin
-  UpdateCurrentSection();
-  result := lwdCurrentSection;
-end;
-
-function TfMain.CurrentSection(): TTrackSection;
-begin
-  if Length(trcTrack) = 0 then
-  begin
-    Exit;
-  end;
-  UpdateCurrentSection();
-  result := trcTrack[lwdCurrentSection];
-end;
-
-function TfMain.AddSection(ASection: TTrackSection): longword;
-begin
-  result := 0;
-  SetLength(trcTrack, Length(trcTrack) + 1);
-  result := High(trcTrack);
-  trcTrack[result] := ASection;
-end;
-
-procedure TfMain.UpdateSection(AID: longword; ASection: TTrackSection);
-begin
-  if (AID <= High(trcTrack)) then
-  begin
-    trcTrack[AID] := ASection;
-  end;
-end;
-
-procedure TfMain.DeleteSection(AID: longword);
-begin
-  if (AID <= High(trcTrack)) then
-  begin
-    trcTrack[AID] := NullSection();
-  end;
-end;
-
-function TfMain.GetSection(AID: longword): TTrackSection;
-begin
-  result := NullSection();
-  if (AID <= High(trcTrack)) then
-  begin
-    result := trcTrack[AID];
-  end;
-end;
 
 procedure TfMain.SimOnValueChangedDouble(AName: string; AValue, AOldValue: double);
 begin
@@ -1235,7 +1027,7 @@ begin
     doorOpen:
     begin
       LED(Panel7, LEDStatus(ledRed, ledNormal, '| |'));
-      BoardCurrentStation(VirtualNow(), sim.Position());
+      BoardCurrentStation(Now(), sim.Position());
       OnStationChange();
     end;
     doorAlarm: LED(Panel7, LEDStatus(ledRed, ledLight, '*'));
@@ -1258,6 +1050,11 @@ end;
 procedure TfMain.OnTrackSectionChange();
 var lSec,lNext: TTrackSection;
 begin
+ sim.SetTrackArc(trcTrack.arrSections[lwdCurrentSection].dblArc);
+ sim.SetTrackSlope(trcTrack.arrSections[lwdCurrentSection].dblSlope);
+ sim.SetTrackTunnel(trcTrack.arrSections[lwdCurrentSection].tnlTunnel);
+ sim.SetTrackMain(trcTrack.arrSections[lwdCurrentSection].boolMain);
+
  lblTrackSpeed.Caption := '';
  lblTrackSlope.Caption := '';
  lblTrackArc.Caption := '';
@@ -1269,11 +1066,11 @@ begin
  lblTrackTunnelNext.Caption := '';
  lblTrackMainNext.Caption := '';
 
- if lwdCurrentSection > High(trcTrack) then
+ if lwdCurrentSection > High(trcTrack.arrSections) then
  begin
    Exit;
  end;
- lSec := trcTrack[lwdCurrentSection];
+ lSec := trcTrack.arrSections[lwdCurrentSection];
 
  lblTrackSpeed.Caption := Format('%.0f km/h', [lSec.dblSpeed*3.6]);
  lblTrackSlope.Caption := Format('%.0f ‰', [lSec.dblSlope]);
@@ -1293,11 +1090,11 @@ begin
    lblTrackMain.Caption := 'hlavni';
  end;
 
- if ((lwdCurrentSection+1) < Low(trcTrack)) or ((lwdCurrentSection+1) > High(trcTrack)) then
+ if ((lwdCurrentSection+1) < Low(trcTrack.arrSections)) or ((lwdCurrentSection+1) > High(trcTrack.arrSections)) then
  begin
    Exit;
  end;
- lNext := trcTrack[lwdCurrentSection+1];
+ lNext := trcTrack.arrSections[lwdCurrentSection+1];
  lblTrackSpeedNext.Caption := Format('%.0f km/h', [lNext.dblSpeed*3.6]);
  lblTrackSlopeNext.Caption := Format('%.0f ‰', [lNext.dblSlope]);
  lblTrackArcNext.Caption := Format('%.0f m', [lNext.dblArc]);
@@ -1336,9 +1133,9 @@ begin
  lblStationNextPlanArrival.Caption := '';
  lblStationNextPlanDeparture.Caption := '';
 
- if intCurrentStation > Low(arrStations) then
+ if lwdCurrentStation > Low(trcTrack.arrStations) then
  begin
-   stLast := arrStations[intCurrentStation-1];
+   stLast := trcTrack.arrStations[lwdCurrentStation-1];
    lblStationLastName.Caption := '🚉  ' + stLast.strName;
    lblStationLastPlanArrival.Caption := '⬇️ ' + HrMin(stLast.dtArrival);
    lblStationLastPlanDeparture.Caption := '⬆️ ' + HrMin(stLast.dtDeparture);
@@ -1348,16 +1145,16 @@ begin
    lblStationLastPassengersOut.Caption := '➖ ' + IntToStr(stLast.intPassengersOut);
  end;
 
- stNow := arrStations[intCurrentStation];
+ stNow := trcTrack.arrStations[lwdCurrentStation];
  lblStationNowName.Caption := '🚉  ' + stNow.strName;
  lblStationNowPlanArrival.Caption := '⬇️ ' + HrMin(stNow.dtArrival);
  lblStationNowPlanDeparture.Caption := '⬆️ ' + HrMin(stNow.dtDeparture);
  lblStationNowEta.Caption := '⌚ ' + HrMin(stNow.dtRealArrival);
  lblStationNowDistance.Caption := NiceNumber(stNow.dblPosition - sim.Position(), 'm', 2);
 
- if intCurrentStation < High(arrStations) then
+ if lwdCurrentStation < High(trcTrack.arrStations) then
  begin
-   stNext := arrStations[intCurrentStation+1];
+   stNext := trcTrack.arrStations[lwdCurrentStation+1];
    lblStationNextName.Caption := '🚉  ' + stNext.strName;
    lblStationNextPlanArrival.Caption := '⬇️ ' + HrMin(stNext.dtArrival);
    lblStationNextPlanDeparture.Caption := '⬆️ ' + HrMin(stNext.dtDeparture);

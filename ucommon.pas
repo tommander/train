@@ -10,22 +10,6 @@ uses
 type
   //                   //novacek       junior        certifikovan     pokrocily       zkuseny            mentor        vlakmistr
   TProfessionalStatus = (psNovice = 1, psJunior = 2, psCertified = 3, psAdvanced = 4, psExperienced = 5, psMentor = 6, psMaster = 7);
-  TStationID = longword;
-  TStation = packed record
-    strName: shortstring;
-    dtArrival: TDateTime;
-    dtDeparture: TDateTime;
-    dblPosition: double;
-    dtRealArrival: TDateTime;
-    dtRealDeparture: TDateTime;
-    dblRealPosition: double;
-    dblMaxPassengers: double;
-    dblStretchRushHours: double;
-    intPassengersOut: word;
-    intPassengersIn: word;
-    boolVisited: boolean;
-  end;
-  TStationList = array of TStation;
   TLEDColor = (ledOff, ledWhite, ledSilver, ledGray, ledBlack, ledRed, ledYellow, ledGreen, ledAqua, ledBlue, ledViolet);
   TLEDPower = (ledLight, ledNormal, ledDark);
   TLED = record
@@ -44,38 +28,19 @@ type
     intValue: shortint;
     intMax: shortint;
   end;
-  TTrainRangeControlType = (rctPower,rctBrakeDynamic,rctBrakeElmag,rctBrakeAir);
+  //TTrainRangeControlType = (rctPower,rctBrakeDynamic,rctBrakeElmag,rctBrakeAir);
   TTrainDirection = (dirReverse = -1, dirNeutral = 0, dirForward = 1);
-  TTrackSection = record
-    boolValid: boolean;
-    dblStartPosition: double;
-    dblSpeed: double;
-    dblSlope: double;
-    dblArc: double;
-    tnlTunnel: TTunnel;
-    boolMain: boolean;
-  end;
-  TTrackDefinition = array of TTrackSection;
 
 function BoolToStr(ABool: boolean; const ATrue, AFalse: string): string;
 function HrMin(ADate: TDateTime; const AFormat: string = '%.2d:%.2d'): string;
 function NiceNumber(ANum: double; const AUnit: shortstring; ADigits: byte = 1): string;
-function SameSection(ASection1, ASection2: TTrackSection): boolean;
-function IsNullSection(ASection: TTrackSection): boolean;
-function NullSection(): TTrackSection;
-function Section(AValid: boolean = false; AStartPosition: double = 0; ASpeed: double = 0; ASlope: double = 0; AArc: double = 0; ATunnel: TTunnel = tnNone; AMain: boolean = false): TTrackSection;
-function SameStation(AStation1, AStation2: TStation): boolean;
-function IsNullStation(AStation: TStation): boolean;
-function NullStation(): TStation;
-function Station(AName: shortstring = ''; AArrival: TDateTime = 0; ADeparture: TDateTime = 0; APosition: double = 0; AMaxPassengers: double = 1; AStretchRushHours: double = 2): TStation;
-function CompareStations(const s1,s2): integer;
 function timeint(ATime: TDateTime): double;
 function gauss(ATime,AMaxPassengers,AStretchRushHours: double): double;
 procedure LED(APanel: TPanel; AStatus: TLED);
 function LEDStatus(AColor: TLEDColor; APower: TLEDPower = ledNormal; AText: shortstring = ''): TLED;
-function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
-function VirtualizeTime(ATime: TDateTime): TDateTime;
-function VirtualNow(): TDateTime;
+//function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
+//function VirtualizeTime(ATime: TDateTime): TDateTime;
+//function VirtualNow(): TDateTime;
 function sign(AValue: double): double;
 function AppDir(const APath: string = ''): string;
 function ProfessionalStatusLabel(AStatus: TProfessionalStatus): string;
@@ -84,8 +49,85 @@ function StrToProfessionalStatus(AStatus: string): TProfessionalStatus;
 function CzechDate(ADT: TDateTime): string;
 function CzechTime(ADT: TDateTime): string;
 function CzechDateTime(ADT: TDateTime): string;
+procedure Explode(const AString: string; var AArray: TStringArray; const ASeparator: string = ','; AAddEmpty: boolean = false);
+procedure Implode(const AArray: TStringArray; var AString: string; const ASeparator: string = ',');
+function SplitByChar(const AText: string; const ASeparator: string; var ALeft: string): string;
 
 implementation
+
+(**
+lItem := '';
+lStr := 'a,b,c,';
+i := 0;
+while Length(lStr) > 0 do
+begin
+  lOld := Length(lStr);
+  lStr := SplitByChar(lStr, ',', lItem);
+  if lOld = Length(lStr) then
+  begin
+    break;
+  end;
+  //do something with lItem
+  Inc(i);
+end;
+*)
+function SplitByChar(const AText: string; const ASeparator: string; var ALeft: string): string;
+var lSep: integer;
+begin
+  lSep := Pos(ASeparator, AText);
+  if lSep > 0 then
+  begin
+    ALeft := Copy(AText, 1, lSep - 1);
+    result := Copy(AText, lSep + 1, Length(AText) - lSep);
+    Exit;
+  end;
+
+  ALeft := AText;
+  result := '';
+end;
+
+procedure Explode(const AString: string; var AArray: TStringArray; const ASeparator: string = ','; AAddEmpty: boolean = false);
+var lSep,lOff,lLen: int64;
+    lAdd: string;
+begin
+  SetLength(AArray, 0);
+  lOff := 1;
+  repeat
+    lSep := Pos(ASeparator, AString, lOff);
+    if lSep <= 0 then
+    begin
+      lSep := Length(AString)+1;
+    end;
+    lAdd := '';
+    lLen := (lSep - lOff);
+    if lLen > 0 then
+    begin
+      lAdd := Trim(Copy(AString, lOff, lLen));
+    end;
+    if (Length(lAdd) > 0) or AAddEmpty then
+    begin
+      SetLength(AArray, Length(AArray) + 1);
+      AArray[High(AArray)] := lAdd;
+    end;
+    lOff := lSep + 1;
+  until
+    lOff > Length(AString);
+end;
+
+procedure Implode(const AArray: TStringArray; var AString: string; const ASeparator: string = ',');
+var i: integer;
+begin
+  AString := '';
+  if Length(AArray) <= 0 then
+  begin
+    Exit;
+  end;
+  AString := AArray[0];
+  for i := 1 to High(AArray) do
+  begin
+    AString := AString + ASeparator + AArray[i];
+  end;
+end;
 
 function CzechDate(ADT: TDateTime): string;
 begin
@@ -200,98 +242,6 @@ begin
   result := Format('%.*f %s%s', [ADigits, dblValue, strPrefix, AUnit]);
 end;
 
-function SameSection(ASection1, ASection2: TTrackSection): boolean;
-begin
-  result :=
-  (ASection1.boolValid = ASection2.boolValid) and
-  (ASection1.dblStartPosition = ASection2.dblStartPosition) and
-  (ASection1.dblSpeed = ASection2.dblSpeed) and
-  (ASection1.dblSlope = ASection2.dblSlope) and
-  (ASection1.dblArc = ASection2.dblArc) and
-  (ASection1.tnlTunnel = ASection2.tnlTunnel) and
-  (ASection1.boolMain = ASection2.boolMain);
-end;
-
-function IsNullSection(ASection: TTrackSection): boolean;
-begin
-  result := SameSection(ASection, NullSection);
-end;
-
-function NullSection(): TTrackSection;
-begin
-  result := Section();
-end;
-
-function Section(AValid: boolean = false; AStartPosition: double = 0; ASpeed: double = 0; ASlope: double = 0; AArc: double = 0; ATunnel: TTunnel = tnNone; AMain: boolean = false): TTrackSection;
-begin
-  result.boolValid := AValid;
-  result.dblStartPosition := AStartPosition;
-  result.dblSpeed := ASpeed;
-  result.dblSlope := ASlope;
-  result.dblArc := AArc;
-  result.tnlTunnel := ATunnel;
-  result.boolMain := AMain;
-end;
-
-function SameStation(AStation1, AStation2: TStation): boolean;
-begin
-  result :=
-  (AStation1.strName = AStation2.strName) and
-  (AStation1.dtArrival = AStation2.dtArrival) and
-  (AStation1.dtDeparture = AStation2.dtDeparture) and
-  (AStation1.dblPosition = AStation2.dblPosition) and
-  (AStation1.dtRealArrival = AStation2.dtRealArrival) and
-  (AStation1.dtRealDeparture = AStation2.dtRealDeparture) and
-  (AStation1.dblRealPosition = AStation2.dblRealPosition) and
-  (AStation1.dblMaxPassengers = AStation2.dblMaxPassengers) and
-  (AStation1.dblStretchRushHours = AStation2.dblStretchRushHours) and
-  (AStation1.intPassengersOut = AStation2.intPassengersOut) and
-  (AStation1.intPassengersIn = AStation2.intPassengersIn) and
-  (AStation1.boolVisited = AStation2.boolVisited);
-end;
-
-function IsNullStation(AStation: TStation): boolean;
-begin
-  result := SameStation(AStation, NullStation);
-end;
-
-function NullStation(): TStation;
-begin
-  result.strName := '';
-  result.dtArrival := 0;
-  result.dtDeparture := 0;
-  result.dblPosition := 0;
-  result.dtRealArrival := 0;
-  result.dtRealDeparture := 0;
-  result.dblRealPosition := 0;
-  result.dblMaxPassengers := 1;
-  result.dblStretchRushHours := 2;
-  result.intPassengersOut := 0;
-  result.intPassengersIn := 0;
-  result.boolVisited := false;
-end;
-
-function Station(AName: shortstring = ''; AArrival: TDateTime = 0; ADeparture: TDateTime = 0; APosition: double = 0; AMaxPassengers: double = 1; AStretchRushHours: double = 2): TStation;
-begin
-  result := NullStation();
-  result.strName := AName;
-  result.dtArrival := AArrival;
-  result.dtDeparture := ADeparture;
-  result.dblPosition := APosition;
-  result.dblMaxPassengers := AMaxPassengers;
-  result.dblStretchRushHours := AStretchRushHours;
-end;
-
-function CompareStations(const s1,s2): integer;
-var
-  i1 : TStation absolute s1;
-  i2 : TStation absolute s2;
-begin
-  if i1.dblPosition=i2.dblPosition then Result:=0
-  else if i1.dblPosition<i2.dblPosition then Result:=-1
-  else Result:=1;
-end;
-
 function timeint(ATime: TDateTime): double;
 begin
   result := HourOf(ATime) + (MinuteOf(ATime) / 60);
@@ -347,20 +297,20 @@ begin
   end;
 end;
 
-function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
-begin
-  result := EncodeDateTime(1996,01,01,AHour, AMinute, ASecond, AMillsecond);
-end;
-
-function VirtualizeTime(ATime: TDateTime): TDateTime;
-begin
-  result := VirtualTime(HourOf(ATime), MinuteOf(ATime), SecondOf(ATime), MilliSecondOf(ATime));
-end;
-
-function VirtualNow(): TDateTime;
-begin
-  result := VirtualizeTime(Now());
-end;
+//function VirtualTime(AHour: word = 0; AMinute: word = 0; ASecond: word = 0; AMillsecond: word = 0): TDateTime;
+//begin
+//  result := EncodeDateTime(1996,01,01,AHour, AMinute, ASecond, AMillsecond);
+//end;
+//
+//function VirtualizeTime(ATime: TDateTime): TDateTime;
+//begin
+//  result := VirtualTime(HourOf(ATime), MinuteOf(ATime), SecondOf(ATime), MilliSecondOf(ATime));
+//end;
+//
+//function VirtualNow(): TDateTime;
+//begin
+//  result := VirtualizeTime(Now());
+//end;
 
 function sign(AValue: double): double;
 begin

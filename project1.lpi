@@ -98,9 +98,6 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="FrameViewer09"/>
-      </Item>
-      <Item>
         <PackageName Value="richmemo_design"/>
       </Item>
       <Item>
@@ -200,6 +197,21 @@
       <Unit>
         <Filename Value="uprofile.pas"/>
         <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utrainmgr.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utrackmgr.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="udrivestart.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fDriveStart"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>
   </ProjectOptions>

@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  umain, uhelp, uabout, ututorial, utrains, utracks, udashboard, usettings;
+  umain, uhelp, uabout, ututorial, utrains, utracks, udashboard, usettings,
+  udrivestart, uversionhelper;
 
 type
 
@@ -42,6 +43,7 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
 
   public
@@ -77,6 +79,11 @@ begin
   fTrains.ShowModal;
 end;
 
+procedure TfMainMenu.FormCreate(Sender: TObject);
+begin
+  Label1.Caption := GetExecVersion().strFileVersion;
+end;
+
 procedure TfMainMenu.Button3Click(Sender: TObject);
 begin
   fAbout.ShowModal;
@@ -89,6 +96,7 @@ end;
 
 procedure TfMainMenu.Button1Click(Sender: TObject);
 begin
+  fDriveStart.ShowModal();
   Hide();
   fMain.ShowModal();
   Show();
