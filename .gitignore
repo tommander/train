@@ -4,3 +4,4 @@ project1.exe
 *.bak*
 lib
 backup
+*.lps
